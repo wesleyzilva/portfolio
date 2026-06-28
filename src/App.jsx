@@ -307,9 +307,9 @@ const chronologyEntries = [
     text: 'Led data squads on modernization and ETL programs with strong governance across Databricks, Pentaho, DevSecOps and compliance requirements.',
   },
   {
-    year: '2027 – next',
+    year: 'Present',
     title: 'LATAM Agile Project Delivery | AI Agents',
-    company: 'Contractor · Global',
+    company: 'Contractor / Part Time · Global',
     text: 'Running distributed teams with an AI-powered squad framework and supporting global stakeholders from LATAM with async-first delivery.',
   },
 ];
@@ -343,7 +343,10 @@ const cvDownloads = [
 
 function App() {
   const [activeTab, setActiveTab] = React.useState(0);
-  const [selectedProject, setSelectedProject] = React.useState(() => projectCards[0]?.id ?? null);
+  const [selectedProject, setSelectedProject] = React.useState(null);
+  const [detailPulseKey, setDetailPulseKey] = React.useState(0);
+  const [detailExpanded, setDetailExpanded] = React.useState(false);
+  const [portfolioOpen, setPortfolioOpen] = React.useState(false);
   const detailsRef = React.useRef(null);
 
   const syncHash = React.useCallback((tabId) => {
@@ -402,12 +405,6 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    if (!selectedProject && projectCards[0]) {
-      setSelectedProject(projectCards[0].id);
-    }
-  }, [selectedProject]);
-
-  React.useEffect(() => {
     const project = projectCards.find((entry) => entry.id === selectedProject);
     if (project) {
       trackEvent('project_detail_view', {
@@ -417,12 +414,21 @@ function App() {
     }
   }, [selectedProject]);
 
-  const expanded = (index) => index === activeTab;
-  const selectedProjectData = projectCards.find((project) => project.id === selectedProject) ?? projectCards[0] ?? null;
+  const expanded = (index) => {
+    if (tabs[index]?.id === 'portfolio') {
+      return portfolioOpen && index === activeTab;
+    }
+
+    return index === activeTab;
+  };
+  const selectedProjectData = projectCards.find((project) => project.id === selectedProject) ?? null;
 
   const handleTabChange = (index) => {
     const tab = tabs[index];
     setActiveTab(index);
+    if (tab.id === 'portfolio') {
+      setPortfolioOpen(true);
+    }
     syncHash(tab.id);
     trackEvent('section_selected', {
       section_id: tab.id,
@@ -432,9 +438,20 @@ function App() {
 
   const handleSelectProject = (project) => {
     setSelectedProject(project.id);
-    window.requestAnimationFrame(() => {
-      detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    setPortfolioOpen(true);
+    setDetailExpanded(true);
+    setDetailPulseKey((value) => value + 1);
+    window.setTimeout(() => {
+      if (!detailsRef.current) return;
+
+      const rect = detailsRef.current.getBoundingClientRect();
+      const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+
+      if (!isVisible) {
+        detailsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 120);
+
     trackEvent('project_card_click', {
       project_id: project.id,
       project_title: project.title,
@@ -446,7 +463,10 @@ function App() {
       <header className="topbar">
         <div className="identity">
           <div className="profile-wrap">
-            <img src={`${import.meta.env.BASE_URL}assets/profile.jpg`} alt="Wesley Silva" className="profile-photo" />
+            <div className="profile-preview-shell">
+              <img src={`${import.meta.env.BASE_URL}assets/profile.jpg`} alt="Wesley Silva" className="profile-photo" />
+              <img src={`${import.meta.env.BASE_URL}assets/profile.jpg`} alt="Wesley Silva preview" className="profile-preview" />
+            </div>
             <div>
               <p className="eyebrow">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents in 4 steps below</p>
               <h1>Wesley Silva</h1>
@@ -456,9 +476,15 @@ function App() {
         </div>
 
         <div className="topbar-actions">
-          <div className="availability" aria-label="Availability status">
-            <span className="dot" aria-hidden="true" />
-            Available for nearshore / offshore projects
+          <div className="availability-block" aria-label="Availability status">
+            <div className="availability">
+              <span className="dot" aria-hidden="true" />
+              Available for nearshore / offshore projects
+            </div>
+            <div className="availability availability-secondary">
+              <span className="dot dot-secondary" aria-hidden="true" />
+              Timezone overlap compatible with Brazil (±4h)
+            </div>
           </div>
         </div>
       </header>
@@ -497,48 +523,50 @@ function App() {
                     <p>Click any card to see the case study details right above the list, then continue browsing.</p>
                   </div>
 
-                  {selectedProjectData ? (
-                    <article ref={detailsRef} className="project-detail" aria-live="polite">
+                  {selectedProjectData && detailExpanded ? (
+                    <article key={detailPulseKey} ref={detailsRef} className={`project-detail ${detailExpanded ? 'expanded' : 'collapsed'}`} aria-live="polite">
                       <div className="detail-header">
                         <p className="detail-kicker">Selected case study</p>
                         <h3>{selectedProjectData.title}</h3>
                         <p className="detail-summary">{selectedProjectData.summary}</p>
                       </div>
 
-                      <div className="detail-grid">
-                        <section className="detail-section">
-                          <h4>Context</h4>
-                          <p>{selectedProjectData.context}</p>
-                        </section>
-                        <section className="detail-section">
-                          <h4>Role</h4>
-                          <p>{selectedProjectData.role}</p>
-                        </section>
-                        <section className="detail-section">
-                          <h4>Actions</h4>
-                          <ul>
-                            {selectedProjectData.actions.map((item) => (
-                              <li key={item}>{item}</li>
-                            ))}
-                          </ul>
-                        </section>
-                        <section className="detail-section">
-                          <h4>Results</h4>
-                          <ul>
-                            {selectedProjectData.results.map((item) => (
-                              <li key={item}>{item}</li>
-                            ))}
-                          </ul>
-                        </section>
-                      </div>
+                      <div className="detail-body">
+                        <div className="detail-grid">
+                          <section className="detail-section">
+                            <h4>Context</h4>
+                            <p>{selectedProjectData.context}</p>
+                          </section>
+                          <section className="detail-section">
+                            <h4>Role</h4>
+                            <p>{selectedProjectData.role}</p>
+                          </section>
+                          <section className="detail-section">
+                            <h4>Actions</h4>
+                            <ul>
+                              {selectedProjectData.actions.map((item) => (
+                                <li key={item}>{item}</li>
+                              ))}
+                            </ul>
+                          </section>
+                          <section className="detail-section">
+                            <h4>Results</h4>
+                            <ul>
+                              {selectedProjectData.results.map((item) => (
+                                <li key={item}>{item}</li>
+                              ))}
+                            </ul>
+                          </section>
+                        </div>
 
-                      <div className="detail-footer">
-                        <h4>References</h4>
-                        <ul>
-                          {selectedProjectData.references.map((item) => (
-                            <li key={item}>{item}</li>
-                          ))}
-                        </ul>
+                        <div className="detail-footer">
+                          <h4>References</h4>
+                          <ul>
+                            {selectedProjectData.references.map((item) => (
+                              <li key={item}>{item}</li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     </article>
                   ) : null}
@@ -564,13 +592,13 @@ function App() {
                           <h3>{project.title}</h3>
                           <p className="project-summary">{project.summary}</p>
                           <div className="project-stats">
-                            <span>{project.duration}</span>
-                            <span>{project.status}</span>
-                            <span>{project.location.join(' · ')}</span>
+                            <span className="project-chip project-chip-duration">{project.duration}</span>
+                            <span className="project-chip project-chip-status">{project.status}</span>
+                            <span className="project-chip project-chip-location">{project.location.join(' · ')}</span>
                           </div>
                           <div className="project-tags">
                             {project.tags.map((tag) => (
-                              <span key={tag}>{tag}</span>
+                              <span key={tag} className="project-tag">{tag}</span>
                             ))}
                           </div>
                           <span className="project-link">Open details →</span>
@@ -643,7 +671,7 @@ function App() {
                     <div className="timeline-list">
                       {chronologyEntries.map((entry) => (
                         <article key={`${entry.year}-${entry.title}`} className="timeline-entry">
-                          <div className="timeline-year">{entry.year}</div>
+                          <div className={`timeline-year${entry.year === 'Present' ? ' timeline-year-present' : ''}`}>{entry.year}</div>
                           <div className="timeline-content">
                             <h4>{entry.title}</h4>
                             <p className="timeline-company">{entry.company}</p>

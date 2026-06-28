@@ -1,6 +1,19 @@
 # Portfolio
 
-A simple Vite + React portfolio site with a horizontal panel layout, Loom embed, and contact information.
+A polished Vite + React portfolio for Wesley Silva, designed as a high-contrast, nearshore-ready showcase for delivery leadership, product ownership, AI-enabled execution and global collaboration.
+
+## Highlights
+- Horizontal, panel-based portfolio experience
+- Project case study cards with contextual detail
+- bilingual and multilingual CV download options
+- GitHub Pages-ready build configuration
+- Stronger visual palette for higher readability and impact
+
+## Tech stack
+- React
+- Vite
+- CSS custom theming
+- GitHub Pages deployment workflow
 
 ## Local development
 
@@ -9,7 +22,7 @@ npm install
 npm run dev
 ```
 
-## Build
+## Production build
 
 ```bash
 npm run build
@@ -25,6 +38,6 @@ npm run preview
 - CV हिंदी: public/CV_HINDI_ WesleySilva_GlobalAgileDeliveryManager.pdf
 - CV 中文: public/CV_CH_ WesleySilva_GlobalAgileDeliveryManager.pdf
 
-## Notes
-- The portfolio download section now supports six CV languages.
-- The profile image is served from `public/assets/profile.jpg`.
+## Deployment notes
+- The site is configured for GitHub Pages through the Vite base path.
+- The production bundle should be published from the dist output to the Pages branch.
