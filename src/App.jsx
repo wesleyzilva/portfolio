@@ -462,17 +462,9 @@ function App() {
     <div className="app-shell">
       <header className="topbar">
         <div className="identity">
-          <div className="profile-wrap">
-            <div className="profile-preview-shell">
-              <img src={`${import.meta.env.BASE_URL}assets/profile.jpg`} alt="Wesley Silva" className="profile-photo" />
-              <img src={`${import.meta.env.BASE_URL}assets/profile.jpg`} alt="Wesley Silva preview" className="profile-preview" />
-            </div>
-            <div>
-              <p className="eyebrow">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents in 4 steps below</p>
-              <h1>Wesley Silva</h1>
-              <p className="subtitle">Let’s connect and deliver your project faster as LATAM.AIgile</p>
-            </div>
-          </div>
+          <p className="eyebrow">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents in 4 steps below</p>
+          <h1>Wesley Silva</h1>
+          <p className="subtitle">Let’s connect and deliver your project faster as LATAM.AIgile</p>
         </div>
 
         <div className="topbar-actions">
@@ -519,8 +511,19 @@ function App() {
               {tab.id === 'portfolio' ? (
                 <div className="portfolio-layout">
                   <div className="portfolio-header">
-                    <p className="portfolio-kicker">12 projects · real results</p>
-                    <p>Click any card to see the case study details right above the list, then continue browsing.</p>
+                    <div className="portfolio-hero">
+                      <div className="portfolio-hero-photo-shell">
+                        <img
+                          src={`${import.meta.env.BASE_URL}assets/profile.png`}
+                          alt="Wesley Silva"
+                          className="portfolio-hero-photo"
+                        />
+                      </div>
+                      <div>
+                        <p className="portfolio-kicker">12 projects · real results</p>
+                        <p>Click any card to see the case study details right above the list, then continue browsing.</p>
+                      </div>
+                    </div>
                   </div>
 
                   {selectedProjectData && detailExpanded ? (
