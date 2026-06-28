@@ -461,6 +461,13 @@ function App() {
   return (
     <div className="app-shell">
       <header className="topbar">
+        <div className="topbar-photo-shell">
+          <img
+            src={`${import.meta.env.BASE_URL}assets/profile.png`}
+            alt="Wesley Silva"
+            className="topbar-photo"
+          />
+        </div>
         <div className="identity">
           <p className="eyebrow">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents in 4 steps below</p>
           <h1>Wesley Silva</h1>
@@ -511,19 +518,8 @@ function App() {
               {tab.id === 'portfolio' ? (
                 <div className="portfolio-layout">
                   <div className="portfolio-header">
-                    <div className="portfolio-hero">
-                      <div className="portfolio-hero-photo-shell">
-                        <img
-                          src={`${import.meta.env.BASE_URL}assets/profile.png`}
-                          alt="Wesley Silva"
-                          className="portfolio-hero-photo"
-                        />
-                      </div>
-                      <div>
-                        <p className="portfolio-kicker">12 projects · real results</p>
-                        <p>Click any card to see the case study details right above the list, then continue browsing.</p>
-                      </div>
-                    </div>
+                    <p className="portfolio-kicker">12 projects · real results</p>
+                    <p>Click any card to see the case study details right above the list, then continue browsing.</p>
                   </div>
 
                   {selectedProjectData && detailExpanded ? (
