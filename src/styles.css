@@ -102,6 +102,9 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
 .pill-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
 .pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid var(--border);
   background: transparent;
   color: var(--fg);
@@ -110,6 +113,7 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
   transition: all 0.2s ease;
   font-size: 0.6rem;
   border-radius: 999px;
+  text-decoration: none;
 }
 
 .pill:hover, .pill.active {

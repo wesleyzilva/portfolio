@@ -3,28 +3,28 @@ import React from 'react';
 const tabs = [
   {
     id: 'about',
-    label: 'About',
+    label: '1. About',
     title: 'About / Chronology',
     summary: 'Global Agile Delivery Manager and Tech Product Owner shaping high-impact delivery, operating models, and intelligent product execution.',
     points: ['Global delivery leadership', 'Product strategy and execution', 'Executive communication and alignment'],
   },
   {
     id: 'portfolio',
-    label: 'Portfolio',
+    label: '2. Portfolio',
     title: 'Portfolio Projects',
     summary: 'A track record of building delivery systems and product experiences that combine speed, governance and measurable impact.',
     points: ['Platform and product initiatives', 'Operational design', 'Growth-oriented experimentation'],
   },
   {
     id: 'skills',
-    label: 'Skills',
+    label: '3. Skills',
     title: 'Skills & Tools',
     summary: 'A modern operating toolkit combining leadership, product thinking, delivery rigor and AI-enabled execution.',
     points: ['Product strategy', 'AI agents and automation', 'Agile delivery', 'Stakeholder orchestration'],
   },
   {
     id: 'contact',
-    label: 'Contact',
+    label: '4. Contact',
     title: 'Case Walkthrough / Loom & Contact',
     summary: 'Open to conversations around product leadership, delivery design, nearshore execution and AI-enabled operations.',
     points: ['Email: wesley.zilva@gmail.com', 'LinkedIn: linkedin.com/in/wesleyzilva'],
@@ -343,13 +343,12 @@ const cvDownloads = [
 
 function App() {
   const [activeTab, setActiveTab] = React.useState(0);
-  const [hoveredTab, setHoveredTab] = React.useState(null);
   const [selectedProject, setSelectedProject] = React.useState(() => projectCards[0]?.id ?? null);
   const detailsRef = React.useRef(null);
 
   const syncHash = React.useCallback((tabId) => {
     if (typeof window === 'undefined') return;
-    const nextHash = tabId ? `#${tabId}` : '#about';
+    const nextHash = tabId ? `#${tabId}` : '';
     window.history.replaceState({}, '', `${window.location.pathname}${nextHash}`);
   }, []);
 
@@ -382,8 +381,6 @@ function App() {
     const initialTab = tabs.findIndex((tab) => tab.id === initialHash);
     if (initialTab >= 0) {
       setActiveTab(initialTab);
-    } else {
-      syncHash(tabs[0].id);
     }
 
     trackEvent('portfolio_page_view', {
@@ -420,7 +417,7 @@ function App() {
     }
   }, [selectedProject]);
 
-  const expanded = (index) => index === activeTab || index === hoveredTab;
+  const expanded = (index) => index === activeTab;
   const selectedProjectData = projectCards.find((project) => project.id === selectedProject) ?? projectCards[0] ?? null;
 
   const handleTabChange = (index) => {
@@ -451,30 +448,14 @@ function App() {
           <div className="profile-wrap">
             <img src={`${import.meta.env.BASE_URL}assets/profile.jpg`} alt="Wesley Silva" className="profile-photo" />
             <div>
-              <p className="eyebrow">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents / Trainer / Rubric</p>
+              <p className="eyebrow">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents in 4 steps below</p>
               <h1>Wesley Silva</h1>
-              <p className="subtitle">Let’s connect and deliver your project faster as LATAM.AI.Agile.</p>
+              <p className="subtitle">Let’s connect and deliver your project faster as LATAM.AIgile</p>
             </div>
           </div>
         </div>
 
         <div className="topbar-actions">
-          <nav className="pill-nav" aria-label="Section navigation">
-            {tabs.map((tab, index) => (
-              <button
-                key={tab.id}
-                type="button"
-                className={index === activeTab ? 'pill active' : 'pill'}
-                onClick={() => handleTabChange(index)}
-                onMouseEnter={() => setHoveredTab(index)}
-                onMouseLeave={() => setHoveredTab(null)}
-                aria-pressed={index === activeTab}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </nav>
-
           <div className="availability" aria-label="Availability status">
             <span className="dot" aria-hidden="true" />
             Available for nearshore / offshore projects
@@ -487,8 +468,6 @@ function App() {
           <section
             key={tab.id}
             className={`panel ${expanded(index) ? 'expanded' : 'collapsed'} ${index === activeTab ? 'active' : ''}`}
-            onMouseEnter={() => setHoveredTab(index)}
-            onMouseLeave={() => setHoveredTab(null)}
             onClick={() => handleTabChange(index)}
             role="button"
             tabIndex={0}
