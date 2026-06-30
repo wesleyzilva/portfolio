@@ -343,6 +343,7 @@ const cvDownloads = [
 
 function App() {
   const [activeTab, setActiveTab] = React.useState(0);
+  const [expandedPanel, setExpandedPanel] = React.useState(null); // null = all collapsed
   const [selectedProject, setSelectedProject] = React.useState(null);
   const [detailPulseKey, setDetailPulseKey] = React.useState(0);
   const [detailExpanded, setDetailExpanded] = React.useState(false);
@@ -415,17 +416,20 @@ function App() {
   }, [selectedProject]);
 
   const expanded = (index) => {
+    if (expandedPanel === null) return false; // All collapsed by default
+    
     if (tabs[index]?.id === 'portfolio') {
-      return portfolioOpen && index === activeTab;
+      return portfolioOpen && expandedPanel === index;
     }
 
-    return index === activeTab;
+    return expandedPanel === index;
   };
   const selectedProjectData = projectCards.find((project) => project.id === selectedProject) ?? null;
 
   const handleTabChange = (index) => {
     const tab = tabs[index];
     setActiveTab(index);
+    setExpandedPanel(index); // Expand clicked panel
     if (tab.id === 'portfolio') {
       setPortfolioOpen(true);
     }
@@ -439,6 +443,7 @@ function App() {
   const handleSelectProject = (project) => {
     setSelectedProject(project.id);
     setPortfolioOpen(true);
+    setExpandedPanel(1); // Ensure portfolio panel (index 1) is expanded
     setDetailExpanded(true);
     setDetailPulseKey((value) => value + 1);
     window.setTimeout(() => {
