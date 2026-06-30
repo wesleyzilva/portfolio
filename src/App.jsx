@@ -385,6 +385,7 @@ function App() {
     const initialTab = tabs.findIndex((tab) => tab.id === initialHash);
     if (initialTab >= 0) {
       setActiveTab(initialTab);
+      setExpandedPanel(initialTab); // Also expand if hash is present
     }
 
     trackEvent('portfolio_page_view', {
@@ -398,6 +399,7 @@ function App() {
       const nextTab = tabs.findIndex((tab) => tab.id === hashValue);
       if (nextTab >= 0) {
         setActiveTab(nextTab);
+        setExpandedPanel(nextTab); // Expand panel when hash changes
       }
     };
 
