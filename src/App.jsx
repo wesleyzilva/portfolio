@@ -469,7 +469,7 @@ function App() {
           />
         </div>
         <div className="identity">
-          <p className="eyebrow">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents in 4 steps below</p>
+          <p className="eyebrow">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents | Know your next Project Manager in 4 steps below</p>
           <h1>Wesley Silva</h1>
           <p className="subtitle">Let’s connect and deliver your project faster as LATAM.AIgile</p>
         </div>
