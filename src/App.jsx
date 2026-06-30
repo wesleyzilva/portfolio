@@ -490,7 +490,7 @@ function App() {
       <header className="topbar">
         <div className="topbar-photo-shell">
           <img
-            src={`${import.meta.env.BASE_URL}assets/profile.jpg?v=2`}
+            src={`${import.meta.env.BASE_URL}assets/profile.png?v=3`}
             alt="Wesley Silva"
             className="topbar-photo"
           />
