@@ -341,6 +341,17 @@ const cvDownloads = [
   { label: '中文', flag: '🇨🇳', fileName: 'CV_CH_ WesleySilva_GlobalAgileDeliveryManager.pdf' },
 ];
 
+const mobileHighlights = [
+  { value: '6+', label: 'Global markets', insight: 'LATAM, Europe and North America delivery.' },
+  { value: '30+', label: 'Tools in production', insight: 'Jira, ServiceNow, Power BI, Databricks and AI stacks.' },
+  { value: '15+', label: 'Projects delivered', insight: 'Security, data, modernization and AI programs.' },
+  { value: '24/7', label: 'Coverage', insight: 'Follow-the-sun coordination for critical delivery.' },
+  { value: '5+', label: 'Squads delivered', insight: 'Scaled squads with clear ownership and outcomes.' },
+  { value: '98%', label: 'Availability', insight: 'Reliable execution with strong timezone overlap.' },
+  { value: '9x', label: 'Delivery focus', insight: 'Built operating models for speed and governance.' },
+  { value: 'AI', label: 'Product edge', insight: 'Applied AI to accelerate product and delivery work.' },
+];
+
 function App() {
   const [activeTab, setActiveTab] = React.useState(0);
   const [expandedPanel, setExpandedPanel] = React.useState(null); // null = all collapsed
@@ -348,6 +359,7 @@ function App() {
   const [detailPulseKey, setDetailPulseKey] = React.useState(0);
   const [detailExpanded, setDetailExpanded] = React.useState(false);
   const [portfolioOpen, setPortfolioOpen] = React.useState(false);
+  const [highlightCycle, setHighlightCycle] = React.useState(0);
   const detailsRef = React.useRef(null);
 
   const syncHash = React.useCallback((tabId) => {
@@ -417,6 +429,14 @@ function App() {
     }
   }, [selectedProject]);
 
+  React.useEffect(() => {
+    const timer = window.setInterval(() => {
+      setHighlightCycle((value) => (value + 1) % mobileHighlights.length);
+    }, 2400);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
   const expanded = (index) => {
     if (expandedPanel === null) return false; // All collapsed by default
     
@@ -470,7 +490,7 @@ function App() {
       <header className="topbar">
         <div className="topbar-photo-shell">
           <img
-            src={`${import.meta.env.BASE_URL}assets/profile.png`}
+            src={`${import.meta.env.BASE_URL}assets/profile.jpg?v=2`}
             alt="Wesley Silva"
             className="topbar-photo"
           />
@@ -482,6 +502,20 @@ function App() {
         </div>
 
         <div className="topbar-actions">
+          <div className="mobile-metrics" aria-label="Mobile highlights">
+            {mobileHighlights.map((item, index) => {
+              const rotatedItem = mobileHighlights[(index + highlightCycle) % mobileHighlights.length];
+
+              return (
+                <div key={`${item.label}-${index}`} className={`mobile-metric ${index === highlightCycle ? 'active' : ''}`}>
+                  <strong>{rotatedItem.value}</strong>
+                  <span>{rotatedItem.label}</span>
+                  <small>{rotatedItem.insight}</small>
+                </div>
+              );
+            })}
+          </div>
+
           <div className="availability-block" aria-label="Availability status">
             <div className="availability">
               <span className="dot" aria-hidden="true" />
@@ -526,7 +560,7 @@ function App() {
                 <div className="portfolio-layout">
                   <div className="portfolio-header">
                     <p className="portfolio-kicker">12 projects · real results</p>
-                    <p>Click any card to see the case study details right above the list, then continue browsing.</p>
+                    <p><span className="pulse-text">Click any card to see the case study details right above the list, then continue browsing.</span></p>
                   </div>
 
                   {selectedProjectData && detailExpanded ? (
