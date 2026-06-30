@@ -496,9 +496,11 @@ function App() {
           />
         </div>
         <div className="identity">
-          <p className="eyebrow">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents | Know your next Project Manager in 4 steps below</p>
+          <p className="eyebrow eyebrow-top">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents Rubric and Guardrails auditor</p>
+          <p className="eyebrow eyebrow-bottom">Know your next Project Manager in 4 steps below</p>
           <h1>Wesley Silva</h1>
-          <p className="subtitle">Let’s connect and deliver your project faster as LATAM.AIgile</p>
+          <p className="subtitle-line">Let’s connect and deliver your project faster as</p>
+          <p className="subtitle-mark">LATAM.AIgile</p>
         </div>
 
         <div className="topbar-actions">
