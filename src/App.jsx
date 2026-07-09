@@ -4,29 +4,36 @@ const tabs = [
   {
     id: 'about',
     label: '1. About',
-    title: 'About / Chronology',
-    summary: 'Global Agile Delivery Manager and Tech Product Owner shaping high-impact delivery, operating models, and intelligent product execution.',
+    title: 'About',
+    summary: '10+ years. 3 continents. Technical enough to architect. Senior enough to own the outcome.',
     points: ['Global delivery leadership', 'Product strategy and execution', 'Executive communication and alignment'],
   },
   {
+    id: 'last-two-years',
+    label: '2. Last 2 years',
+    title: 'Last 2 years',
+    summary: 'Two deep execution programs — technical decisions, not just PM oversight.',
+    points: ['Cybersecurity', 'Data Management'],
+  },
+  {
     id: 'portfolio',
-    label: '2. Portfolio',
-    title: 'Portfolio Projects',
-    summary: 'A track record of building delivery systems and product experiences that combine speed, governance and measurable impact.',
+    label: '3. Projects portfolio',
+    title: 'Projects portfolio',
+    summary: 'From vulnerability remediation to AI-powered legal ops — context, role, actions and results on every card.',
     points: ['Platform and product initiatives', 'Operational design', 'Growth-oriented experimentation'],
   },
   {
     id: 'skills',
-    label: '3. Skills',
+    label: '4. Skills',
     title: 'Skills & Tools',
-    summary: 'A modern operating toolkit combining leadership, product thinking, delivery rigor and AI-enabled execution.',
+    summary: 'The full stack of a delivery leader — tools I’ve used to ship, not to list on a CV.',
     points: ['Product strategy', 'AI agents and automation', 'Agile delivery', 'Stakeholder orchestration'],
   },
   {
     id: 'contact',
-    label: '4. Contact',
-    title: 'Case Walkthrough / Loom & Contact',
-    summary: 'Open to conversations around product leadership, delivery design, nearshore execution and AI-enabled operations.',
+    label: '5. Contact',
+    title: 'Contact',
+    summary: 'Open to international contracts, nearshore delivery roles and product leadership positions. 24h response.',
     points: ['Email: wesley.zilva@gmail.com', 'LinkedIn: linkedin.com/in/wesleyzilva'],
   },
 ];
@@ -271,34 +278,10 @@ const skillGroups = [
 
 const chronologyEntries = [
   {
-    year: '2010',
-    title: 'International Consultant (France Contractor)',
-    company: 'Bernardin Consultants · France',
-    text: 'Bridge between French/Swiss high-tech manufacturers and the Brazilian market. Sectors: security and defense, precision industry, aviation and military.',
-  },
-  {
-    year: '2011 – 2013',
-    title: 'Product Owner',
-    company: 'XBot · Brazil',
-    text: 'Led 12 sales and partner teams across Brazil, focusing on technological education, robotics, energy systems, security and simulation solutions.',
-  },
-  {
-    year: '2013 – 2016',
-    title: 'Technical Support Specialist',
-    company: 'Amdocs Studios · USA / India',
-    text: 'Unix/OracleDB DBA. Shell Script and PL/SQL automation, middleware administration and incident management across an India–Brazil–USA shift model.',
-  },
-  {
-    year: '2016 – 2021',
-    title: 'Full Stack Developer – Billing, ITIL & Observability',
-    company: 'Serasa Experian · USA / India / Costa Rica',
-    text: 'Built full-stack solutions on core Billing and CRM systems, led observability efforts with Datadog and Dynatrace and improved reliability at scale.',
-  },
-  {
-    year: '2021 – 2024',
-    title: 'Agile Delivery Manager (HR · Legal · CS · Sales · Billing)',
-    company: 'Serasa Experian · UK / Global',
-    text: 'Led five squads and seven engineers, aligned roadmaps with OKRs and drove stakeholder delivery across London and the USA.',
+    year: 'Present',
+    title: 'LATAM Agile Project Delivery | AI Agents',
+    company: 'Contractor / Part Time · Global',
+    text: 'Running distributed teams with an AI-powered squad framework and supporting global stakeholders from LATAM with async-first delivery.',
   },
   {
     year: '2024 – present',
@@ -307,12 +290,77 @@ const chronologyEntries = [
     text: 'Led data squads on modernization and ETL programs with strong governance across Databricks, Pentaho, DevSecOps and compliance requirements.',
   },
   {
-    year: 'Present',
-    title: 'LATAM Agile Project Delivery | AI Agents',
-    company: 'Contractor / Part Time · Global',
-    text: 'Running distributed teams with an AI-powered squad framework and supporting global stakeholders from LATAM with async-first delivery.',
+    year: '2021 – 2024',
+    title: 'Agile Delivery Manager (HR · Legal · CS · Sales · Billing)',
+    company: 'Serasa Experian · UK / Global',
+    text: 'Led five squads and seven engineers, aligned roadmaps with OKRs and drove stakeholder delivery across London and the USA.',
+  },
+  {
+    year: '2016 – 2021',
+    title: 'Full Stack Developer – Billing, ITIL & Observability',
+    company: 'Serasa Experian · USA / India / Costa Rica',
+    text: 'Built full-stack solutions on core Billing and CRM systems, led observability efforts with Datadog and Dynatrace and improved reliability at scale.',
+  },
+  {
+    year: '2013 – 2016',
+    title: 'Technical Support Specialist',
+    company: 'Amdocs Studios · USA / India',
+    text: 'Unix/OracleDB DBA. Shell Script and PL/SQL automation, middleware administration and incident management across an India–Brazil–USA shift model.',
+  },
+  {
+    year: '2011 – 2013',
+    title: 'Product Owner',
+    company: 'XBot · Brazil',
+    text: 'Led 12 sales and partner teams across Brazil, focusing on technological education, robotics, energy systems, security and simulation solutions.',
+  },
+  {
+    year: '2010',
+    title: 'International Consultant (France Contractor)',
+    company: 'Bernardin Consultants · France',
+    text: 'Bridge between French/Swiss high-tech manufacturers and the Brazilian market. Sectors: security and defense, precision industry, aviation and military.',
   },
 ];
+
+const lastTwoYearsFocus = [
+  {
+    title: 'Cybersecurity',
+    summary: 'Dual-track execution: SRE squad for infra migration + developer squad for framework hardening — both running automated security gates and risk dashboards.',
+    loomUrl: 'https://www.loom.com/embed/REPLACE-CYBERSECURITY-VIDEO-ID',
+    highlights: [
+      'SRE track: infra migration with zero-downtime criteria and automated rollback controls.',
+      'Developer track: framework hardening, CI/CD guardrails and policy checks embedded in every release.',
+      'Data-driven prioritization using EPSS-scored QIZ dashboards — effort focused where risk was highest.',
+    ],
+  },
+  {
+    title: 'Data Management',
+    summary: 'M&A integration with a full ownership redesign: three streams, clear SLAs, MLOps-ready foundation and governance that held at 80M+ transactions/day.',
+    loomUrl: 'https://www.loom.com/embed/REPLACE-DATA-MANAGEMENT-VIDEO-ID',
+    highlights: [
+      'Restructured squad into three accountable streams: data engineering, processing and analysis.',
+      'Adapted legacy ETL workflows to MLOps standards — improving model lifecycle and reducing manual intervention.',
+      'Established observability, alerting and executive reporting that scaled with transaction volume.',
+    ],
+  },
+];
+
+const recruiterQuickRead = [
+  'Led programs in 6+ countries. English-first. Async-ready. Timezone-compatible with US and Europe.',
+  '1200 → 300 vulnerabilities. 80M+ transactions/day. 40% ETL reduction. Real numbers, not estimates.',
+  'Bridges CTO-level strategy and squad-level execution without losing either end.',
+  'Available for nearshore, offshore and international full-time roles — starting conversation now.',
+];
+
+const workModel = [
+  'Remote-first and distributed teams',
+  'Timezone overlap with US and Europe',
+  'Nearshore and offshore readiness',
+  '24h response for interview and project discussions',
+];
+
+const contactLoomUrl = 'https://www.loom.com/embed/3d9412b9affd42d4b438aa9bb0d58c21';
+const skillsLoomUrl = 'https://www.loom.com/embed/REPLACE-SKILLS-VIDEO-ID';
+const portfolioLoomUrl = 'https://www.loom.com/embed/REPLACE-PORTFOLIO-TOP5-VIDEO-ID';
 
 const trackEvent = (eventName, params = {}) => {
   if (typeof window === 'undefined') return;
@@ -463,9 +511,10 @@ function App() {
   };
 
   const handleSelectProject = (project) => {
+    const portfolioIndex = tabs.findIndex((tab) => tab.id === 'portfolio');
     setSelectedProject(project.id);
     setPortfolioOpen(true);
-    setExpandedPanel(1); // Ensure portfolio panel (index 1) is expanded
+    setExpandedPanel(portfolioIndex); // Ensure portfolio panel is expanded
     setDetailExpanded(true);
     setDetailPulseKey((value) => value + 1);
     window.setTimeout(() => {
@@ -485,6 +534,30 @@ function App() {
     });
   };
 
+  const handleExternalLinkClick = (linkLabel, url, section) => {
+    trackEvent('external_link_click', {
+      link_label: linkLabel,
+      link_url: url,
+      section,
+    });
+  };
+
+  const handleCvDownloadClick = (item) => {
+    trackEvent('cv_download_click', {
+      cv_language: item.label,
+      cv_file: item.fileName,
+      section: 'contact',
+    });
+  };
+
+  const handleLoomIntent = (videoName, section, url) => {
+    trackEvent('loom_video_intent', {
+      video_name: videoName,
+      section,
+      video_url: url,
+    });
+  };
+
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -497,7 +570,7 @@ function App() {
         </div>
         <div className="identity">
           <p className="eyebrow eyebrow-top">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents</p>
-          <p className="eyebrow eyebrow-bottom">Know your next Project Manager in 4 steps below</p>
+          <p className="eyebrow eyebrow-bottom">Know your next Project Manager in 5 steps below</p>
           <h1>Wesley Silva</h1>
           <p className="subtitle-line">Let’s connect and deliver</p>
           <p className="subtitle-mark">LATAM.AIgile</p>
@@ -561,8 +634,24 @@ function App() {
               {tab.id === 'portfolio' ? (
                 <div className="portfolio-layout">
                   <div className="portfolio-header">
-                    <p className="portfolio-kicker">12 projects · real results</p>
-                    <p><span className="pulse-text">Click any card to see the case study details right above the list, then continue browsing.</span></p>
+                    <p className="portfolio-kicker">12 programs · security · data · AI · modernization</p>
+                    <p><span className="pulse-text">Click any card — context, role, actions and results open above the list.</span></p>
+                    <div className="loom-wrapper portfolio-loom-wrapper">
+                      <iframe
+                        src={portfolioLoomUrl}
+                        title="Top 5 projects from last 3-5 years"
+                        allowFullScreen
+                      />
+                    </div>
+                    <a
+                      className="loom-open-link"
+                      href={portfolioLoomUrl.replace('/embed/', '/share/')}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => handleLoomIntent('Portfolio top 5 projects video', 'portfolio', portfolioLoomUrl)}
+                    >
+                      Open portfolio top 5 video on Loom
+                    </a>
                   </div>
 
                   {selectedProjectData && detailExpanded ? (
@@ -650,30 +739,79 @@ function App() {
                   </div>
 
                 </div>
+              ) : tab.id === 'last-two-years' ? (
+                <div className="about-layout">
+                  <div className="about-card">
+                    <p className="timeline-intro">Cybersecurity and Data Management — where I put the most reps in. See the execution below.</p>
+                    <div className="focus-list">
+                      {lastTwoYearsFocus.map((focus) => (
+                        <article key={focus.title} className="focus-card">
+                          <div className="focus-content">
+                            <h4>{focus.title}</h4>
+                            <p>{focus.summary}</p>
+                            <ul className="focus-highlights">
+                              {focus.highlights.map((item) => (
+                                <li key={`${focus.title}-${item}`}>{item}</li>
+                              ))}
+                            </ul>
+                            <div className="loom-wrapper focus-loom-wrapper">
+                              <iframe
+                                src={focus.loomUrl}
+                                title={`${focus.title} case video`}
+                                allowFullScreen
+                              />
+                            </div>
+                            <a
+                              className="loom-open-link"
+                              href={focus.loomUrl.replace('/embed/', '/share/')}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleLoomIntent(`${focus.title} case video`, 'last-two-years', focus.loomUrl);
+                              }}
+                            >
+                              Open video on Loom
+                            </a>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ) : tab.id === 'contact' ? (
                 <div className="contact-block">
                   <div className="contact-card">
-                    <p className="contact-kicker">Available for nearshore / offshore projects. I respond within 24h.</p>
+                    <p className="contact-kicker">Skip the formalities — pick your preferred channel below. I respond within 24h.</p>
                     <div className="contact-links">
-                      <a href="tel:+5516997212966">Call Direct</a>
-                      <a href="https://wa.me/5516997212966?text=Hi%20Wesley%20%E2%80%94%20I%20found%20your%20portfolio" target="_blank" rel="noreferrer">WhatsApp</a>
-                      <a href="mailto:wesley.zilva@gmail.com?subject=Interview%20Request%20%E2%80%94%20Wesley%20Zilva">Email</a>
-                      <a href="https://www.linkedin.com/in/wesleyzilva/" target="_blank" rel="noreferrer">LinkedIn</a>
-                      <a href="https://github.com/wesleyzilva" target="_blank" rel="noreferrer">GitHub</a>
+                      <a href="tel:+5516997212966" onClick={() => handleExternalLinkClick('Call Direct', 'tel:+5516997212966', 'contact')}>Call Direct</a>
+                      <a href="https://wa.me/5516997212966?text=Hi%20Wesley%20%E2%80%94%20I%20found%20your%20portfolio" target="_blank" rel="noreferrer" onClick={() => handleExternalLinkClick('WhatsApp', 'https://wa.me/5516997212966', 'contact')}>WhatsApp</a>
+                      <a href="mailto:wesley.zilva@gmail.com?subject=Interview%20Request%20%E2%80%94%20Wesley%20Zilva" onClick={() => handleExternalLinkClick('Email', 'mailto:wesley.zilva@gmail.com', 'contact')}>Email</a>
+                      <a href="https://www.linkedin.com/in/wesleyzilva/" target="_blank" rel="noreferrer" onClick={() => handleExternalLinkClick('LinkedIn', 'https://www.linkedin.com/in/wesleyzilva/', 'contact')}>LinkedIn</a>
+                      <a href="https://github.com/wesleyzilva" target="_blank" rel="noreferrer" onClick={() => handleExternalLinkClick('GitHub', 'https://github.com/wesleyzilva', 'contact')}>GitHub</a>
                     </div>
                   </div>
                   <div className="loom-wrapper">
                     <iframe
-                      src="https://www.loom.com/embed/3d9412b9affd42d4b438aa9bb0d58c21"
-                      title="Wesley Zilva introduction video"
+                      src={contactLoomUrl}
+                      title="Wesley Silva introduction video"
                       allowFullScreen
                     />
                   </div>
+                  <a
+                    className="loom-open-link"
+                    href={contactLoomUrl.replace('/embed/', '/share/')}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => handleLoomIntent('Contact intro video', 'contact', contactLoomUrl)}
+                  >
+                    Open contact video on Loom
+                  </a>
                   <div className="cv-card">
                     <p className="contact-kicker">Download CV</p>
                     <div className="cv-downloads" aria-label="Download CV in multiple languages">
                       {cvDownloads.map((item) => (
-                        <a key={item.label} href={`${import.meta.env.BASE_URL}${encodeURIComponent(item.fileName)}`} download>
+                        <a key={item.label} href={`${import.meta.env.BASE_URL}${encodeURIComponent(item.fileName)}`} download onClick={() => handleCvDownloadClick(item)}>
                           <span className="flag" aria-hidden="true">{item.flag}</span>
                           <span>{item.label}</span>
                         </a>
@@ -684,8 +822,24 @@ function App() {
               ) : tab.id === 'skills' ? (
                 <div className="skills-shell">
                   <div className="skills-hero">
-                    <p className="skills-kicker">10 years developing skills</p>
-                    <p>A battle-tested toolbox combining delivery, operations, analytics and AI-enabled execution.</p>
+                    <p className="skills-kicker">10+ years · 8 domains covered</p>
+                    <p>Not built on tutorials. Each group reflects tools used in real programs — fintech, data, security, AI and enterprise delivery.</p>
+                    <div className="loom-wrapper skills-loom-wrapper">
+                      <iframe
+                        src={skillsLoomUrl}
+                        title="Skills walkthrough video"
+                        allowFullScreen
+                      />
+                    </div>
+                    <a
+                      className="loom-open-link"
+                      href={skillsLoomUrl.replace('/embed/', '/share/')}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={() => handleLoomIntent('Skills walkthrough video', 'skills', skillsLoomUrl)}
+                    >
+                      Open skills video on Loom
+                    </a>
                   </div>
                   <div className="skill-groups">
                     {skillGroups.map((group) => (
@@ -705,7 +859,23 @@ function App() {
                 <div className="about-layout">
                   <div className="about-card">
                     <h3>About</h3>
-                    <p>Full Stack specialist PM empowering remote teams to ship faster through AI agents and deep technical leadership, leveraging the best professionals from around the world and delivering your project.</p>
+                    <p>I bridge the gap between technical complexity and stakeholder clarity. Ran distributed squads across 6 countries, shipped security programs with audit-ready compliance, modernized data stacks from Pentaho to Databricks and built AI workflows that cut SLA by double digits.</p>
+                    <div className="quick-read-block">
+                      <h4>Recruiter quick read</h4>
+                      <ul className="quick-read-list">
+                        {recruiterQuickRead.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="work-model-block">
+                      <h4>Work model</h4>
+                      <div className="work-model-chips">
+                        {workModel.map((item) => (
+                          <span key={item} className="work-chip">{item}</span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                   <div className="timeline-card">
                     <h3>Chronology</h3>

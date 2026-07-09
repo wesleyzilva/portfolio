@@ -940,6 +940,59 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
   background: linear-gradient(135deg, rgba(76, 201, 240, 0.08), rgba(247, 37, 133, 0.04));
 }
 
+.quick-read-block,
+.work-model-block {
+  margin-top: 0.8rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 0.8rem 0.85rem;
+  background: rgba(255,255,255,0.02);
+}
+
+.quick-read-block h4,
+.work-model-block h4 {
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+  color: var(--accent);
+}
+
+.quick-read-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.32rem;
+}
+
+.quick-read-list li {
+  position: relative;
+  padding-left: 0.88rem;
+}
+
+.quick-read-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent-2);
+}
+
+.work-model-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.work-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(76, 201, 240, 0.28);
+  border-radius: 999px;
+  padding: 0.28rem 0.64rem;
+  font-size: 0.76rem;
+  color: #eaf6ff;
+  background: linear-gradient(90deg, rgba(76, 201, 240, 0.14), rgba(247, 37, 133, 0.08));
+}
+
 .timeline-intro {
   font-size: 0.84rem;
   color: var(--accent-2);
@@ -975,6 +1028,85 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
 
 .timeline-content h4 {
   margin: 0 0 0.18rem;
+}
+
+.focus-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.focus-card {
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(247, 37, 133, 0.06));
+  padding: 0.8rem 0.9rem;
+}
+
+.focus-content h4 {
+  margin: 0 0 0.2rem;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+}
+
+.focus-content p {
+  font-size: 0.92rem;
+  color: #dbe5f3;
+}
+
+.focus-highlights {
+  margin-top: 0.4rem;
+  display: grid;
+  gap: 0.3rem;
+  list-style: none;
+  padding: 0;
+}
+
+.focus-highlights li {
+  position: relative;
+  padding-left: 0.92rem;
+  font-size: 0.88rem;
+}
+
+.focus-highlights li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent-2);
+}
+
+.focus-loom-wrapper {
+  margin-top: 0.6rem;
+  border-color: rgba(76, 201, 240, 0.25);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+.skills-loom-wrapper {
+  margin-top: 0.75rem;
+}
+
+.portfolio-loom-wrapper {
+  margin-top: 0.55rem;
+}
+
+.loom-open-link {
+  display: inline-flex;
+  margin-top: 0.45rem;
+  width: fit-content;
+  text-decoration: none;
+  color: #dff7ff;
+  border: 1px solid rgba(76, 201, 240, 0.3);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  background: linear-gradient(90deg, rgba(76, 201, 240, 0.16), rgba(247, 37, 133, 0.1));
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.loom-open-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(76, 201, 240, 0.55);
 }
 
 .timeline-company {
@@ -1046,8 +1178,18 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
   .detail-grid,
   .contact-links,
   .cv-downloads,
-  .skill-groups { grid-template-columns: 1fr; }
+  .skill-groups,
+  .focus-list { grid-template-columns: 1fr; }
   .timeline-entry { grid-template-columns: 1fr; gap: 0.25rem; }
+  .work-model-chips { gap: 0.35rem; }
+  .work-chip { width: 100%; justify-content: center; }
+  .focus-loom-wrapper {
+    margin-top: 0.5rem;
+  }
+  .loom-open-link {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .pulse-text {
