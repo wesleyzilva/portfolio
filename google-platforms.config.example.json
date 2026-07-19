@@ -1,0 +1,20 @@
+{
+  "siteName": "Wesley Silva Portfolio",
+  "siteUrl": "https://wesleyzilva.github.io/portfolio/",
+  "googleSearchConsole": {
+    "verificationToken": "YOUR_SEARCH_CONSOLE_TOKEN"
+  },
+  "googleAnalytics4": {
+    "measurementId": "G-RB1BTX32YL"
+  },
+  "microsoftClarity": {
+    "projectId": "x1avi1ev6u"
+  },
+  "trackingEvents": [
+    "cta_contact_click",
+    "cv_download_click",
+    "linkedin_click",
+    "whatsapp_click",
+    "project_link_click"
+  ]
+}
