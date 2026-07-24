@@ -12,21 +12,21 @@ const tabs = [
     id: 'last-two-years',
     label: '2. Last 2 years',
     title: 'Last 2 years',
-    summary: 'Two deep execution programs — technical decisions, not just PM oversight.',
-    points: ['Cybersecurity', 'Data Management'],
+    summary: 'A startup M&A journey: acquired by Serasa and integrated into a payments gateway platform serving utilities, with regulated flows for Pix, Nubank and other Bacen-compliant methods.',
+    points: ['M&A and post-acquisition integration', 'Payments infrastructure for utilities', 'Regulated flows for Pix, Nubank and Bacen-compliant rails'],
   },
   {
     id: 'portfolio',
     label: '3. Projects portfolio',
     title: 'Projects portfolio',
-    summary: 'From vulnerability remediation to AI-powered legal ops — context, role, actions and results on every card.',
-    points: ['Platform and product initiatives', 'Operational design', 'Growth-oriented experimentation'],
+    summary: 'From cloud migration and onboarding to DevSecOps and agile delivery governance, I have led more than 20 projects with context, role, actions and results on every card.',
+    points: ['Cloud migration and onboarding', 'DevSecOps and platform hardening', 'Agile delivery for scoped initiatives'],
   },
   {
     id: 'skills',
     label: '4. Skills',
     title: 'Skills & Tools',
-    summary: 'The full stack of a delivery leader — tools I’ve used to ship, not to list on a CV.',
+    summary: 'The full stack of a delivery leader, with tools I have used to ship, not just to list on a CV.',
     points: ['Product strategy', 'AI agents and automation', 'Agile delivery', 'Stakeholder orchestration'],
   },
   {
@@ -742,7 +742,7 @@ function App() {
               ) : tab.id === 'last-two-years' ? (
                 <div className="about-layout">
                   <div className="about-card">
-                    <p className="timeline-intro">Cybersecurity and Data Management — where I put the most reps in. See the execution below.</p>
+                    <p className="timeline-intro">Cybersecurity and Data Management, where I put the most reps in. See the execution below.</p>
                     <div className="focus-list">
                       {lastTwoYearsFocus.map((focus) => (
                         <article key={focus.title} className="focus-card">
@@ -782,7 +782,7 @@ function App() {
               ) : tab.id === 'contact' ? (
                 <div className="contact-block">
                   <div className="contact-card">
-                    <p className="contact-kicker">Skip the formalities — pick your preferred channel below. I respond within 24h.</p>
+                    <p className="contact-kicker">Skip the formalities and pick your preferred channel below. I respond within 24h.</p>
                     <div className="contact-links">
                       <a href="tel:+5516997212966" onClick={() => handleExternalLinkClick('Call Direct', 'tel:+5516997212966', 'contact')}>Call Direct</a>
                       <a href="https://wa.me/5516997212966?text=Hi%20Wesley%20%E2%80%94%20I%20found%20your%20portfolio" target="_blank" rel="noreferrer" onClick={() => handleExternalLinkClick('WhatsApp', 'https://wa.me/5516997212966', 'contact')}>WhatsApp</a>
