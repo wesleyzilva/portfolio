@@ -1137,7 +1137,7 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
 }
 
 @media (max-width: 768px) {
-  .app-shell { grid-template-rows: auto auto 36px; }
+  .app-shell { grid-template-rows: auto auto 36px; align-content: start; }
   .topbar {
     flex-direction: column;
     align-items: flex-start;
@@ -1159,7 +1159,7 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
   }
   .panel-stage { flex-direction: column; gap: 0.6rem; }
   .panel.collapsed { flex: 0 0 auto; min-height: 56px; }
-  .panel.expanded { min-height: 280px; }
+  .panel.expanded { flex: 0 0 auto; min-height: unset; }
   .panel-label {
     writing-mode: initial;
     transform: none;
@@ -1167,7 +1167,19 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
     padding: 0.65rem 0.75rem 0;
     font-size: 0.58rem;
   }
-  .panel-content { inset: 40px 0 0 0; padding: 0 0.85rem 0.9rem; }
+  .panel-content {
+    position: relative;
+    inset: unset;
+    overflow: visible;
+    opacity: 0;
+    transform: translateY(8px);
+    padding: 0 0.85rem 0.9rem;
+  }
+  .panel.expanded .panel-content {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
   .panel h2 {
     font-size: 1.1rem;
   }
