@@ -441,11 +441,19 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    const initialHash = window.location.hash.replace('#', '');
+    const navigationEntry = window.performance?.getEntriesByType('navigation')[0];
+    const isReload = navigationEntry?.type === 'reload';
+
+    if (isReload && window.location.hash) {
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+
+    const initialHash = isReload ? '' : window.location.hash.replace('#', '');
     const initialTab = tabs.findIndex((tab) => tab.id === initialHash);
     if (initialTab >= 0) {
       setActiveTab(initialTab);
-      setExpandedPanel(initialTab); // Also expand if hash is present
+      setExpandedPanel(initialTab);
+      setPortfolioOpen(tabs[initialTab].id === 'portfolio');
     }
 
     trackEvent('portfolio_page_view', {
@@ -459,7 +467,8 @@ function App() {
       const nextTab = tabs.findIndex((tab) => tab.id === hashValue);
       if (nextTab >= 0) {
         setActiveTab(nextTab);
-        setExpandedPanel(nextTab); // Expand panel when hash changes
+        setExpandedPanel(nextTab);
+        setPortfolioOpen(tabs[nextTab].id === 'portfolio');
       }
     };
 
@@ -604,7 +613,7 @@ function App() {
         </div>
       </header>
 
-      <main className="panel-stage" aria-label="Portfolio sections">
+      <main className={`panel-stage ${expandedPanel === null ? 'initial' : 'has-expanded'}`} aria-label="Portfolio sections">
         {tabs.map((tab, index) => (
           <section
             key={tab.id}
