@@ -345,7 +345,7 @@ const lastTwoYearsFocus = [
 ];
 
 const recruiterQuickRead = [
-  'Led programs in 6+ countries. English-first. Async-ready. Timezone-compatible with US and Europe.',
+  'Led 20+ projects across 6+ countries in 10 years. English-first. Async-ready. Timezone-compatible with US and Europe.',
   '1200 → 300 vulnerabilities. 80M+ transactions/day. 40% ETL reduction. Real numbers, not estimates.',
   'Bridges CTO-level strategy and squad-level execution without losing either end.',
   'Available for nearshore, offshore and international full-time roles — starting conversation now.',
@@ -578,7 +578,7 @@ function App() {
           />
         </div>
         <div className="identity">
-          <p className="eyebrow eyebrow-top">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents</p>
+          <p className="eyebrow eyebrow-top">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents & MCP connections for business context</p>
           <p className="eyebrow eyebrow-bottom">Know your next Project Manager in 5 steps below</p>
           <h1>Wesley Silva</h1>
           <p className="subtitle-line">Let’s connect and deliver</p>
