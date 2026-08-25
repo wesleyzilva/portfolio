@@ -578,11 +578,12 @@ function App() {
           />
         </div>
         <div className="identity">
-          <p className="eyebrow eyebrow-top">Global Agile Delivery Manager · Tech Product Owner · Nearshore · AI Agents & MCP connections for business context</p>
-          <p className="eyebrow eyebrow-bottom">Know your next Project Manager in 5 steps below</p>
+          <p className="eyebrow eyebrow-top">Global Agile Delivery Manager · Tech Product Owner · Nearshore from Brazil</p>
+          <p className="eyebrow eyebrow-bottom">AI Agents & MCP connections for business context</p>
           <h1>Wesley Silva</h1>
-          <p className="subtitle-line">Let’s connect and deliver</p>
-          <p className="subtitle-mark">LATAM.AIgile</p>
+          <p className="subtitle-line">
+            Let's connect and deliver with <span className="latam-highlight">LatAm</span>.<span className="aigile-highlight">AIgile</span>
+          </p>
         </div>
 
         <div className="topbar-actions">

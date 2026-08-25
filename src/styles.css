@@ -124,6 +124,20 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
   letter-spacing: 0.08em;
 }
 
+.latam-highlight {
+  background: linear-gradient(90deg, #009B3A 0%, #FFCC00 50%, #0051BA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.aigile-highlight {
+  color: #e8e8e8;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(232, 232, 232, 0.3);
+}
+
 .topbar-actions {
   display: flex;
   align-items: center;
