@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wesley Silva — Senior Technical Program Manager | Amazon Loop Briefing</title>
+  <style>
+    :root {
+      /* PALETA OFICIAL AMAZON */
+      --bg-page: #000000;            /* Preto */
+      --card-bg: #232F3E;            /* Cinza Escuro Amazon */
+      --card-surface: #37475A;       /* Cinza Interativo (Hover) */
+      --card-border: #4A5A6B;        /* Separadores sutis */
+      --aws-orange: #FF9900;         /* Laranja Amazon */
+      --aws-blue: #146EB4;           /* Azul Amazon */
+      --text-main: #FFFFFF;          /* Branco */
+      --text-muted: #CCCCCC;         /* Cinza Claro para contraste secundário */
+      --text-accent: #4AA8FF;        /* Azul um pouco mais claro p/ legibilidade de texto */
+      
+      --green-metric: #00A36C; 
+      --green-bg: rgba(0, 163, 108, 0.15);
+      --red-challenge: #f87171; 
+      --footer-h: 46px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-page); color: var(--text-main); line-height: 1.5; padding-bottom: var(--footer-h); min-height: 100vh; }
+    
+    header.main-header { position: sticky; top: 0; left: 0; right: 0; background: rgba(35, 47, 62, 0.95); backdrop-filter: blur(10px); border-bottom: 2px solid var(--aws-orange); z-index: 1000; padding: 16px 24px 10px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8); transition: all 0.3s ease; }
+    .brand-title-row { display: flex; align-items: center; gap: 8px; }
+    .candidate-name { font-size: 18px; font-weight: 800; color: #FFFFFF; }
+    .badge-l6 { background: var(--aws-orange); color: #000000; font-size: 10px; font-weight: 900; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; }
+    .candidate-summary-line { font-size: 12px; color: #F2F2F2; }
+    .candidate-summary-line strong { color: var(--text-accent); }
+
+    .header-schedule-strip { display: flex; align-items: center; gap: 8px; overflow-x: auto; width: 100%; padding-bottom: 6px; scrollbar-width: none; transition: all 0.3s ease; }
+    .header-schedule-strip::-webkit-scrollbar { display: none; }
+    button.schedule-pill { background: #000000; border: 1px solid var(--card-border); border-radius: 6px; padding: 6px 14px; display: flex; flex-direction: column; line-height: 1.25; white-space: nowrap; cursor: pointer; transition: all 0.2s ease; text-align: left; }
+    button.schedule-pill span:first-child { color: var(--aws-orange); font-size: 12.5px; font-weight: 800; }
+    button.schedule-pill span:last-child { color: #F2F2F2; font-size: 10px; margin-top: 2px; }
+    button.schedule-pill:hover { border-color: var(--aws-orange); background: var(--card-surface); }
+    button.schedule-pill.active { border-color: var(--aws-orange); background: rgba(255, 153, 0, 0.15); box-shadow: 0 0 12px rgba(255, 153, 0, 0.4); transform: translateY(-1px);}
+    button.schedule-pill.active span:first-child { color: #FFFFFF; }
+    
+    main.main-container { max-width: 1020px; margin: 0 auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 24px; }
+    
+    #roadmapSection { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: top; overflow: hidden; }
+    .collapsed { opacity: 0; max-height: 0 !important; padding: 0 !important; margin: 0 !important; border: none !important; }
+
+    .section-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px 24px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4); scroll-margin-top: 180px; }
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; margin-bottom: 14px; }
+    .section-title { font-size: 14.5px; font-weight: 800; color: #FFFFFF; text-transform: uppercase; }
+    .section-subtitle { font-size: 11.5px; color: var(--text-muted); }
+
+    .timeline-track { display: grid; grid-template-columns: 1.1fr 1.1fr 2.8fr; gap: 12px; }
+    .track-era-card { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+    .era-badge { font-size: 9.5px; font-weight: 800; color: var(--aws-orange); text-transform: uppercase; }
+    .era-title { font-size: 13px; font-weight: 800; color: #FFFFFF; }
+    .era-details { font-size: 11px; color: var(--text-muted); line-height: 1.45; }
+    
+    .era-bullets { padding-left: 14px; margin-top: 4px; display: flex; flex-direction: column; gap: 6px; }
+
+    .chain-flow-container { display: flex; flex-direction: column; gap: 10px; }
+    .chain-stream { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 4px 2px 8px; }
+    .chain-node { background: #000000; border: 1px solid var(--card-border); border-radius: 6px; padding: 6px 10px; min-width: 140px; flex-shrink: 0; display: flex; flex-direction: column; gap: 3px; transition: all 0.3s ease; }
+    .chain-node-header { display: flex; justify-content: space-between; align-items: center; }
+    .chain-node-id { font-size: 9px; font-weight: 900; color: var(--aws-orange); }
+    .chain-node-year { font-size: 9px; font-weight: 800; color: #CCCCCC; background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px; }
+    .chain-node-name { font-size: 11.5px; font-weight: 700; color: #FFFFFF; display: flex; flex-direction: column; line-height: 1.2; }
+    
+    /* MICRO TAGS NO FLUXOGRAMA */
+    .micro-tag { font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+    .mt-award { color: #fbbf24; }    /* Dourado p/ Prêmios */
+    .mt-stack { color: #86efac; }    /* Verde p/ Nova Tech */
+    .mt-ai { color: #E8B4FE; }       /* Roxo p/ AI */
+    .mt-challenge { color: #fca5a5; }/* Vermelho p/ Desafio */
+    .mt-idea { color: #FFD700; }     /* Ouro p/ Ideia Própria */
+
+    .chain-arrow { color: #5A6B7C; font-weight: 800; font-size: 14px; flex-shrink: 0; display: flex; align-items: center; }
+    .chain-node.highlight-node { border-color: var(--aws-orange) !important; background: rgba(255, 153, 0, 0.15) !important; box-shadow: 0 0 15px rgba(255, 153, 0, 0.4); transform: translateY(-4px); }
+    .chain-node.highlight-node .chain-node-year { color: #FFD280; background: rgba(255, 153, 0, 0.3); }
+    .chain-node.dimmed-node { opacity: 0.3; filter: grayscale(100%); transform: scale(0.95); }
+
+    .project-snippet { background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+    .snippet-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .snippet-tag { font-size: 11px; font-weight: 900; color: var(--aws-orange); }
+    .snippet-badges { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .snippet-title { font-size: 16px; font-weight: 800; color: #FFFFFF; margin-top: 2px;}
+    
+    .snippet-problem { font-size: 13px; color: #FF9999; margin-top: 2px; }
+    .snippet-problem strong { color: #FF6666; }
+    .snippet-budget { font-size: 13px; color: #86efac; }
+    .snippet-budget strong { color: #4ade80; }
+    
+    .snippet-desc { font-size: 13px; color: #F2F2F2; line-height: 1.5; margin-top: 6px; border-top: 1px solid var(--card-border); padding-top: 8px;}
+    
+    .snippet-metric { font-size: 10px; font-weight: 800; color: var(--green-metric); background: var(--green-bg); border: 1px solid rgba(0, 163, 108, 0.4); padding: 2px 6px; border-radius: 3px; }
+    .snippet-flag { font-size: 10px; font-weight: 800; color: #E8B4FE; background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.4); padding: 2px 6px; border-radius: 3px; text-transform: uppercase; }
+
+    @keyframes pulseGold {
+      0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.5); }
+      70% { box-shadow: 0 0 0 6px rgba(255, 215, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+    }
+    .snippet-gold-pulse {
+      font-size: 10px; font-weight: 900; color: #FFD700; background: rgba(255, 215, 0, 0.15);
+      border: 1px solid rgba(255, 215, 0, 0.6); padding: 2px 6px; border-radius: 3px; text-transform: uppercase;
+      animation: pulseGold 2s infinite;
+    }
+
+    .agenda-container { display: flex; flex-direction: column; gap: 16px; margin-top: 10px; }
+    .agenda-intent-box { background: rgba(20, 110, 180, 0.15); border-left: 4px solid var(--aws-blue); border-radius: 6px; padding: 16px 20px; }
+    
+    .agenda-intent-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .agenda-intent-title { font-size: 18px; font-weight: 800; color: #FFFFFF; }
+    .agenda-time-badge { font-size: 11.5px; font-weight: 800; color: var(--text-accent); background: rgba(20, 110, 180, 0.25); padding: 4px 10px; border-radius: 5px; border: 1px solid rgba(20, 110, 180, 0.5); white-space: nowrap; flex-shrink: 0; }
+    
+    .agenda-intent-desc { font-size: 13.5px; color: var(--text-accent); font-weight: 600; margin-top: 4px; display: block;}
+    .agenda-list { display: flex; flex-direction: column; gap: 20px; position: relative; padding-left: 20px; margin-top: 10px; }
+    .agenda-list::before { content: ""; position: absolute; left: 34px; top: 10px; bottom: 10px; width: 2px; background: var(--card-border); z-index: 0; }
+    .agenda-item { display: flex; gap: 20px; align-items: stretch; position: relative; z-index: 1; }
+    .agenda-num { width: 32px; height: 32px; background: var(--aws-orange); color: #000000; font-weight: 900; font-size: 14px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 12px; border: 3px solid var(--card-bg); }
+
+    /* FOOTER E EFEITO DE PISCAR SEQUENCIAL AZUL AMAZON */
+    footer.fixed-footer { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: rgba(35, 47, 62, 0.96); border-top: 1px solid var(--card-border); z-index: 1000; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-left { font-size: 11.5px; color: var(--text-muted); }
+    .footer-right { display: flex; gap: 18px; align-items: center; }
+    
+    @keyframes attentionBlink {
+      0%, 15%, 100% { color: var(--text-accent); text-shadow: none; transform: scale(1); }
+      7% { color: #FFFFFF; text-shadow: 0 0 10px rgba(74, 168, 255, 0.9); transform: scale(1.1); }
+    }
+
+    .footer-link { 
+      color: var(--text-accent); 
+      text-decoration: none; 
+      font-size: 11.5px; 
+      font-weight: 700; 
+      display: inline-block; 
+      transition: all 0.2s ease; 
+      animation: attentionBlink 4s infinite;
+    }
+    
+    .footer-link:nth-child(1) { animation-delay: 0s; }
+    .footer-link:nth-child(2) { animation-delay: 0.25s; }
+    .footer-link:nth-child(3) { animation-delay: 0.5s; }
+    
+    .footer-link:hover { color: #FFFFFF; text-decoration: underline; animation: none; transform: scale(1.05); }
+
+    @media (max-width: 900px) {
+      :root { --footer-h: 64px; }
+      .timeline-track { grid-template-columns: 1fr; }
+      .chain-arrow { display: none; }
+      .header-schedule-strip.strip-all { flex-direction: column; align-items: stretch; }
+      .header-schedule-strip.strip-filtered { flex-direction: row; overflow-x: auto; }
+      .agenda-intent-header { flex-direction: column; }
+      .agenda-time-badge { align-self: flex-start; margin-top: 4px; }
+      footer.fixed-footer { flex-direction: column; justify-content: center; gap: 6px; padding: 10px 20px; }
+      .footer-right { gap: 14px; }
+    }
+  </style>
+</head>
+<body onload="toggleSessionFilter('ALL')">
+
+  <header class="main-header">
+    <div class="brand-title-row">
+      <span class="candidate-name">Wesley Silva</span>
+      <span class="badge-l6">Senior TPM Candidate</span>
+    </div>
+    <div class="candidate-summary-line">
+      16-Year Arc: <strong>Shifted to Developer Support &gt; Enterprise Agile Master and PMO with full stack abilities</strong>
+    </div>
+    <div class="header-schedule-strip strip-all" id="scheduleStrip">
+      <button class="schedule-pill active" data-session="ALL" onclick="toggleSessionFilter('ALL')">
+        <span>All 11 Cases</span><span>Full Matrix Overview</span>
+      </button>
+      <button class="schedule-pill" data-session="NAKAGAWA" onclick="toggleSessionFilter('NAKAGAWA')">
+        <span>Leonardo Nakagawa</span><span>Solutions Architect</span>
+      </button>
+      <button class="schedule-pill" data-session="BICUDO" onclick="toggleSessionFilter('BICUDO')">
+        <span>Ronaldo Bicudo</span><span>DCO Ops Manager</span>
+      </button>
+      <button class="schedule-pill" data-session="CORDEIRO" onclick="toggleSessionFilter('CORDEIRO')">
+        <span>Raphael Cordeiro</span><span>Technical BD Manager</span>
+      </button>
+      <button class="schedule-pill" data-session="RICARTE" onclick="toggleSessionFilter('RICARTE')">
+        <span>Rose Ricarte</span><span>Head Partner Dev</span>
+      </button>
+      <button class="schedule-pill" data-session="SALLES" onclick="toggleSessionFilter('SALLES')">
+        <span>Leandro Salles</span><span>Head Seller Services</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- ROADMAP -->
+    <section class="section-card" id="roadmapSection" style="max-height: 800px; opacity: 1;">
+      <div class="section-head">
+        <div class="section-title">🧭 Executive Career Roadmap &amp; Foundation</div>
+        <span class="section-subtitle">Commercial Ownership &rarr; Production Support &rarr; 10 Years Enterprise Growth</span>
+      </div>
+      <div class="timeline-track">
+        <div class="track-era-card">
+          <span class="era-badge">Before Graduation (2010)</span>
+          <div class="era-title">Bernardin &amp; XBot</div>
+          <div class="era-details">
+            <div style="margin-bottom:6px;"><strong>Bernardin (2009):</strong> Sparked my professional English foundation prospecting Brazilian market for Europe.</div>
+            <div><strong>XBot (2010):</strong> Achieved financial freedom via sales commissions. Mapped public bidding from scratch, scaling reps across 26 states to generate <strong>BRL 4M+</strong> in sales and opening 10 positions in production.</div>
+          </div>
+        </div>
+        <div class="track-era-card">
+          <span class="era-badge">After Graduation (2011+)</span>
+          <div class="era-title">Amdocs &amp; Telecom</div>
+          <div class="era-details"><strong>Amdocs (2013):</strong> Developer Support for mission-critical CRM. Reverse-engineered distributed legacy stacks (<strong>Java, Linux, Middleware w/o docs, and KT to India night Shift</strong>).</div>
+        </div>
+        <div class="track-era-card" style="border-top: 3px solid var(--aws-orange);">
+          <span class="era-badge">10 Years at Serasa Experian (2016+)</span>
+          <div class="era-title">Platform Architecture &amp; Scale</div>
+          <div class="era-details">
+            <ul class="era-bullets">
+              <li>Evolved from 5y Full-Stack &amp; Architecture (5 BUs)</li>
+              <li>3y Agile Master (scaled 5 BUs +10 squads +50 devs)</li>
+              <li>2y IT Coord (M&A incorporation)</li>
+              <li>Agile Project Manager / Tech PO leading cloud migrations, edge gateways, and GenAI with PMO abilities.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEPPING STONES -->
+    <section class="section-card" id="steppingStonesSection">
+      <div class="section-head">
+        <div class="section-title">🔗 Cumulative Stepping Stones</div>
+        <span class="section-subtitle">A connected maturity chain where no project exists in a vacuum</span>
+      </div>
+      <div class="chain-flow-container">
+        
+        <div style="font-size:11px; font-weight:800; color:var(--text-accent); text-transform:uppercase;">Track A: Architecture, Governance &amp; AI Expansion</div>
+        <div class="chain-stream">
+          <div class="chain-node" data-project="STAR 01">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 01</span><span class="chain-node-year">2016</span></div>
+            <span class="chain-node-name">4-Stack Repatriation<span class="micro-tag mt-award">(Individual Award)</span></span>
+          </div><span class="chain-arrow">&rarr;</span>
+          <div class="chain-node" data-project="STAR 02">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 02</span><span class="chain-node-year">2021</span></div>
+            <span class="chain-node-name">Agile Master (QPS)<span class="micro-tag mt-award">(Squad Award)</span></span>
+          </div><span class="chain-arrow">&rarr;</span>
+          <div class="chain-node" data-project="STAR 03">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 03</span><span class="chain-node-year">2021</span></div>
+            <span class="chain-node-name">Low-Code Chapters<span class="micro-tag mt-stack">(New Stack)</span></span>
+          </div><span class="chain-arrow">&rarr;</span>
+          <div class="chain-node" data-project="STAR 04">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 04</span><span class="chain-node-year">2022</span></div>
+            <span class="chain-node-name">Customer Care Uniq Screen<span class="micro-tag mt-award">(Global Award)</span></span>
+          </div><span class="chain-arrow">&rarr;</span>
+          <div class="chain-node" data-project="STAR 05">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 05</span><span class="chain-node-year">2023</span></div>
+            <span class="chain-node-name">Legal Tech RAG<span class="micro-tag mt-stack">(New Stack)</span></span>
+          </div><span class="chain-arrow">&rarr;</span>
+          <div class="chain-node" data-project="STAR 06">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 06</span><span class="chain-node-year">2023</span></div>
+            <span class="chain-node-name">AI Tech Transfer</span>
+          </div>
+        </div>
+
+        <div style="font-size:11px; font-weight:800; color:#86efac; text-transform:uppercase; margin-top:8px;">Track B: DevSecOps, Data Lakehouse &amp; Telemetry</div>
+        <div class="chain-stream">
+          <div class="chain-node" data-project="STAR 07">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 07</span><span class="chain-node-year">2025</span></div>
+            <span class="chain-node-name">AppSec Scale</span>
+          </div><span class="chain-arrow">&rarr;</span>
+          <div class="chain-node" data-project="STAR 08">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 08</span><span class="chain-node-year">2025</span></div>
+            <span class="chain-node-name">Databricks Lakehouse<span class="micro-tag mt-stack">(New Stack)</span></span>
+          </div><span class="chain-arrow">&rarr;</span>
+          <div class="chain-node" data-project="STAR 09">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 09</span><span class="chain-node-year">2026</span></div>
+            <span class="chain-node-name">Payment Telemetry<span class="micro-tag mt-ai">(Canonical AI)</span></span>
+          </div>
+        </div>
+
+        <div style="font-size:11px; font-weight:800; color:#fca5a5; text-transform:uppercase; margin-top:8px;">Track C: Independent Projects (Audit &amp; Entrepreneurship)</div>
+        <div class="chain-stream">
+          <div class="chain-node" data-project="STAR 10">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 10</span><span class="chain-node-year">2024</span></div>
+            <span class="chain-node-name">Forensic State Machine<span class="micro-tag mt-challenge">(Challenge)</span></span>
+          </div>
+          <div class="chain-node" data-project="STAR 11">
+            <div class="chain-node-header"><span class="chain-node-id">STAR 11</span><span class="chain-node-year">2025</span></div>
+            <span class="chain-node-name">Startup DataSocial<span class="micro-tag mt-idea">(My Own Idea)</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MATRIX / AGENDA -->
+    <section class="section-card" style="border:none; padding:0; background:transparent; box-shadow:none;">
+      <div id="recruiterAgenda" class="agenda-container"></div>
+    </section>
+  </main>
+
+  <!-- RODAPÉ COM LINKS PISCANDO EM SEQUÊNCIA -->
+  <footer class="fixed-footer">
+    <div class="footer-left">Wesley Silva • Amazon Senior TPM Loop Briefing</div>
+    <div class="footer-right">
+      <a href="https://www.linkedin.com/in/wesleyzilva/" target="_blank" class="footer-link">LinkedIn</a>
+      <a href="https://wesleyzilva.github.io/portfolio/" target="_blank" class="footer-link">Portfolio</a>
+      <a href="https://github.com/wesleyzilva" target="_blank" class="footer-link">GitHub</a>
+    </div>
+  </footer>
+
+  <script>
+    const projectsData = {
+      'STAR 01': {
+        year: '2016',
+        title: 'Support Integration & 4-Stack Repatriation',
+        problem: 'A vendor held 4 legacy .NET and Mainframe stacks hostage with a disastrous 4-week Mean Time To Recovery and zero documentation.',
+        budget: '$1.5M Vendor Replacement',
+        badges: '<span class="snippet-flag">Individual Award</span> <span class="snippet-metric">MTTR -50%</span> <span class="snippet-metric">Routing +40%</span>',
+        desc: '<strong>Architecture Audit:</strong> Conducted low-level log inspection of >30 batch jobs and 20 APIs across 5 BUs. Reverse-engineered SQL execution plans to document undocumented systems into Confluence. Reconfigured network routing, Load Balancers, and WAF rules to ensure zero downtime during traffic cutover.'
+      },
+      'STAR 02': { 
+        year: '2021',
+        title: 'Enterprise Agile (QPS)', 
+        problem: '5 Business Units operating in complete delivery silos with under 60% roadmap predictability.',
+        budget: '$5M+ Project Portfolio Managed',
+        badges: '<span class="snippet-flag">Squad Award</span> <span class="snippet-flag">Yellow Belt</span> <span class="snippet-flag">Global Agile Coach</span> <span class="snippet-metric">Predictability >85%</span>', 
+        desc: 'Translated London\'s global mandate to local engineering teams. Replaced subjective story points with concrete code telemetry metrics (cycle time, deployment frequency) via Jira/Git APIs. Architected a centralized Tableau dashboard enforced by strict pipeline guardrails to govern capacity planning.' 
+      },
+      'STAR 03': { 
+        year: '2021',
+        title: 'Low-Code Chapters', 
+        problem: 'A centralized low-code team became an unmanageable 6-month delivery bottleneck.',
+        budget: '$1.2M Engineering Capacity',
+        badges: '<span class="snippet-flag">Chapters</span> <span class="snippet-flag">New Stack</span> <span class="snippet-metric">Cycle Time -66%</span>', 
+        desc: 'Decentralized application execution while centralizing API governance. Distributed certified technical champions into local squads, backed by strict OpenAPI/Swagger component libraries. Ensured speed without technical debt by establishing rigorous hands-on architectural training.' 
+      },
+      'STAR 04': {
+        year: '2022',
+        title: 'Customer Care Uniq Screen',
+        problem: 'Call center agents toggled between 30 tools, spiking AHT and overloading legacy Mainframe transaction capacity.',
+        budget: '$1M Project Budget',
+        badges: '<span class="snippet-flag">Global Award</span> <span class="snippet-metric">AHT -53%</span> <span class="snippet-metric">3 FTEs Saved</span>',
+        desc: '<strong>Architecture Setup:</strong> Engineered an OutSystems front-end, a robust Node.js Backend For Frontend (BFF), and a Mainframe API abstraction layer with Redis caching. <strong>Networking:</strong> Configured multi-region WAF/DNS Edge Gateways to securely bridge Salesforce (US) and ServiceNow (CR) with zero packet loss.'
+      },
+      'STAR 05': { 
+        year: '2023',
+        title: 'Legal Tech RAG', 
+        problem: 'High manual operational costs in Legal Tech jurisprudence with an unacceptable risk of AI hallucination.',
+        budget: '$800K Implementation Budget',
+        badges: '<span class="snippet-flag">Unlock Innovation</span> <span class="snippet-flag">New Stack</span> <span class="snippet-metric">0 Hallucinations</span>', 
+        desc: '<strong>AI Pipeline:</strong> Architected a localized, air-gapped Elasticsearch vector RAG pipeline for confidential data. Integrated semantic embeddings with a strict >0.85 cosine similarity cutoff and enforced mandatory cryptographic citation ID mapping in every response to guarantee absolute factual grounding.' 
+      },
+      'STAR 06': { 
+        year: '2023',
+        title: 'AI-First Tech Transfer', 
+        problem: 'Long PR review cycles and 4-month onboarding delays due to complex architectural knowledge trapped in silos.',
+        budget: '$500K R&D Optimization',
+        badges: '<span class="snippet-flag">Own Idea</span> <span class="snippet-metric">PR Churn -70%</span>', 
+        desc: 'Built automated data pipelines to index Confluence, code repositories, and Architecture Decision Records (ADRs) into a canonical vector knowledge base. Integrated an automated CI/CD webhook to execute pre-PR code reviews against historical architectural constraints.' 
+      },
+      'STAR 07': { 
+        year: '2025',
+        title: 'AppSec Scale & Education', 
+        problem: 'An overwhelming AppSec vulnerability backlog was blocking critical production deployments and causing developer friction.',
+        budget: '$10M+ Enterprise Risk Mitigated',
+        badges: '<span class="snippet-flag">SHIFT-LEFT</span> <span class="snippet-metric">Backlog -64%</span>', 
+        desc: 'Shifted security left by embedding SAST (Checkmarx), SCA (npm), and container scanning (AWS ECR) directly into CI/CD commit stages. Prioritized active threats using Exploit Prediction Scoring System (EPSS) over raw CVSS, and negotiated a mandatory 15% dedicated security capacity in sprint planning.' 
+      },
+      'STAR 08': {
+        year: '2025',
+        title: 'Databricks Lakehouse & MLOps',
+        problem: 'Failing Pentaho ETL monolith managed by retiring domain experts with zero fault tolerance or data validation.',
+        budget: '$2.5M Migration Budget',
+        badges: '<span class="snippet-flag">New Stack</span> <span class="snippet-metric">0 Min Downtime</span> <span class="snippet-metric">0.000% Drift</span>',
+        desc: 'Reverse-engineered complex XML ETL logic and architected a modern Medallion data pipeline (Bronze, Silver, Gold layers) on AWS Databricks utilizing Delta Lake. Managed all infrastructure via Terraform IaC, achieving 0.000% data variance via automated cell-level dual-run validation before decommissioning Pentaho.'
+      },
+      'STAR 09': { 
+        year: '2026',
+        title: 'Real-Time Payment Telemetry', 
+        problem: 'Silent tracking blind spots across distributed checkout microservices led to undetected payment failures and revenue leakage.',
+        budget: '$1M Business Unit',
+        badges: '<span class="snippet-flag">Canonical AI</span> <span class="snippet-flag">New Stack Unlocked</span> <span class="snippet-metric">Fixed in 30 Days</span>', 
+        desc: 'Acted as an AI Product Owner to map cross-system topologies. Engineered end-to-end distributed observability by injecting immutable Correlation IDs through non-blocking Kafka event streams. Triangulated Datadog APM, Amplitude, and Databricks ledger logs to isolate the exact root cause of financial leakage.' 
+      },
+      'STAR 10': {
+        year: '2024',
+        title: 'Forensic State Machine & Audit',
+        problem: 'Multi-million lawsuit regarding a dead/decommissioned enterprise system with zero active engineering support.',
+        budget: '$15M Legal Liability Eliminated',
+        badges: '<span class="snippet-flag">Challenge</span> <span class="snippet-metric">100% Legal Ruling</span>',
+        desc: '<strong>Architecture Rescue:</strong> As the sole custodian, orchestrated Linux/Network teams to restore cold Oracle Siebel database backups on standalone Unix servers. Painstakingly reconstructed the historical state machine and wrote custom parsers to correlate binary HTTP acceptance logs with immutable IBM Mainframe tape registers for cryptographic proof.'
+      },
+      'STAR 11': {
+        year: '2025',
+        title: 'Startup DataSocial (my business and tech idea)',
+        problem: 'Needed to launch a data-driven startup rapidly as a solo developer while aligning directly with business sales.',
+        budget: 'Solo Dev / Startup MVP',
+        badges: '<span class="snippet-gold-pulse">Inventor Calling</span> <span class="snippet-flag">Startup MVP</span> <span class="snippet-flag">Monolith</span> <span class="snippet-metric">Speed to Market</span>',
+        desc: '<strong>Architecture Strategy:</strong> Deliberately chose a structured Monolith over Microservices to eliminate operational overhead and accelerate Go-To-Market. <strong>Business Alignment:</strong> Enforced strict internal domain boundaries for future scaling, while prioritizing data foundation features that unlocked immediate sales conversations and revenue generation.'
+      }
+    };
+
+    const sessionMetadata = {
+      'NAKAGAWA': {
+        label: 'Welcome, Leonardo Nakagawa (Solutions Architect)',
+        intent: 'Suggested Interview Arc: Architecture Evolution, Legacy Decoupling, Data Integrity & Cloud Migration',
+        time: '14/09 • 10:00 - 11:00 BRT',
+        projects: ['STAR 01', 'STAR 04', 'STAR 10', 'STAR 08', 'STAR 11']
+      },
+      'BICUDO': {
+        label: 'Welcome, Ronaldo Bicudo (DCO Ops Manager)',
+        intent: 'Suggested Interview Arc: Operations, Telemetry, CI/CD Scaling & Agile Transformation',
+        time: '16/09 • 10:00 - 11:00 BRT',
+        projects: ['STAR 09', 'STAR 03', 'STAR 02', 'STAR 06', 'STAR 07', 'STAR 11']
+      },
+      'CORDEIRO': {
+        label: 'Welcome, Raphael Cordeiro (Technical BD)',
+        intent: 'Suggested Interview Arc: Cross-Functional Influence, Agile Governance & Security Standards',
+        time: '16/09 • 11:15 - 12:15 BRT',
+        projects: ['STAR 02', 'STAR 07', 'STAR 01', 'STAR 05']
+      },
+      'RICARTE': {
+        label: 'Welcome, Rose Ricarte (Head Partner Dev)',
+        intent: 'Suggested Interview Arc: Vendor PMO, Scale & Decentralized Governance',
+        time: '16/09 • 13:00 - 14:00 BRT',
+        projects: ['STAR 04', 'STAR 01', 'STAR 03', 'STAR 09']
+      },
+      'SALLES': {
+        label: 'Welcome, Leandro Salles (Head Seller Services)',
+        intent: 'Suggested Interview Arc: System Design, GenAI Guardrails & Forensic Data Integrity',
+        time: '16/09 • 14:15 - 15:15 BRT',
+        projects: ['STAR 05', 'STAR 09', 'STAR 10', 'STAR 08', 'STAR 06', 'STAR 11']
+      }
+    };
+
+    function toggleSessionFilter(sessionKey) {
+      const roadmapSection = document.getElementById('roadmapSection');
+      const strip = document.getElementById('scheduleStrip');
+      const pills = document.querySelectorAll('.schedule-pill');
+      
+      if (sessionKey === 'ALL') {
+        strip.classList.add('strip-all');
+        strip.classList.remove('strip-filtered');
+        pills.forEach(p => p.style.display = 'flex');
+      } else {
+        strip.classList.remove('strip-all');
+        strip.classList.add('strip-filtered');
+        pills.forEach(p => {
+          const key = p.getAttribute('data-session');
+          if (key === 'ALL' || key === sessionKey) {
+            p.style.display = 'flex';
+          } else {
+            p.style.display = 'none';
+          }
+        });
+      }
+
+      pills.forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`[data-session="${sessionKey}"]`).classList.add('active');
+
+      if (sessionKey === 'ALL') {
+        roadmapSection.classList.remove('collapsed');
+        document.querySelectorAll('.chain-node').forEach(node => { node.classList.remove('highlight-node', 'dimmed-node'); });
+        
+        const allProjects = ['STAR 01', 'STAR 02', 'STAR 03', 'STAR 04', 'STAR 05', 'STAR 06', 'STAR 07', 'STAR 08', 'STAR 09', 'STAR 10', 'STAR 11'];
+        renderAgenda('All 11 Canonical Cases', 'Full Numerical Overview (Chronological Stepping Stones)', allProjects, null);
+        return;
+      }
+
+      const meta = sessionMetadata[sessionKey];
+      if (!meta) return;
+
+      roadmapSection.classList.add('collapsed');
+      
+      setTimeout(() => {
+        document.getElementById('steppingStonesSection').scrollIntoView({behavior: 'smooth', block: 'start'});
+      }, 400);
+
+      document.querySelectorAll('.chain-node').forEach(node => {
+        const projId = node.getAttribute('data-project');
+        if (meta.projects.includes(projId)) {
+          node.classList.add('highlight-node'); node.classList.remove('dimmed-node');
+        } else {
+          node.classList.remove('highlight-node'); node.classList.add('dimmed-node');
+        }
+      });
+
+      renderAgenda(meta.label, meta.intent, meta.projects, meta.time);
+    }
+
+    function renderAgenda(title, intent, projectIds, timeStr) {
+      const agendaContainer = document.getElementById('recruiterAgenda');
+      
+      let timeBadgeHtml = timeStr ? `<div class="agenda-time-badge">🗓️ ${timeStr}</div>` : '';
+      
+      let agendaHTML = `
+        <div class="agenda-intent-box">
+          <div class="agenda-intent-header">
+            <span class="agenda-intent-title">🎯 ${title}</span>
+            ${timeBadgeHtml}
+          </div>
+          <span class="agenda-intent-desc">${intent}</span>
+        </div>
+        <div class="agenda-list">
+      `;
+      
+      projectIds.forEach((projId, index) => {
+         const p = projectsData[projId];
+         if(!p) return;
+         agendaHTML += `
+           <div class="agenda-item">
+             <div class="agenda-num">${String(index+1).padStart(2, '0')}</div>
+             <div class="project-snippet" style="flex:1;">
+               <div class="snippet-top"><span class="snippet-tag">${projId} • ${p.year}</span><div class="snippet-badges">${p.badges}</div></div>
+               <div class="snippet-title">${p.title}</div>
+               <div class="snippet-problem"><strong>🚨 Problem Solved:</strong> ${p.problem}</div>
+               <div class="snippet-budget"><strong>💰 Project Size:</strong> ${p.budget}</div>
+               <div class="snippet-desc">${p.desc}</div>
+             </div>
+           </div>
+         `;
+      });
+      
+      agendaHTML += `</div>`;
+      agendaContainer.innerHTML = agendaHTML;
+    }
+  </script>
+</body>
+</html>
