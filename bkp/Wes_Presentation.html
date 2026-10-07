@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wesley Silva — Senior TPM | Executive Presentation</title>
+  <style>
+    :root {
+      /* PALETA AMAZON / SLIDE DECK */
+      --bg-page: #0b0f14;
+      --card-bg: #1A222C;
+      --card-border: #37475A;
+      --aws-orange: #FF9900;
+      --aws-blue: #146EB4;
+      --aws-light-blue: #4AA8FF;
+      --text-main: #FFFFFF;
+      --text-muted: #CCCCCC;
+      --success: #00A36C;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-page); color: var(--text-main); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; overflow-y: scroll; }
+    
+    /* CABEÇALHO FIXO */
+    header { background: #232F3E; border-bottom: 2px solid var(--aws-orange); padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    .branding { display: flex; align-items: center; gap: 12px; }
+    .branding h1 { font-size: 20px; font-weight: 800; margin: 0; color: #FFF; }
+    .branding span { background: var(--aws-orange); color: #000; font-size: 11px; font-weight: 900; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
+    
+    .btn-back { display: none; background: transparent; border: 1px solid var(--aws-orange); color: var(--aws-orange); font-size: 14px; font-weight: 800; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .btn-back:hover { background: var(--aws-orange); color: #000; }
+
+    /* ÁREA PRINCIPAL */
+    main { flex: 1; display: flex; justify-content: center; padding: 40px 32px; align-items: flex-start; }
+    
+    /* VIEW 1: A MATRIZ (12 CARDS) */
+    #viewMatrix { width: 100%; max-width: 1200px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; animation: fadeIn 0.4s ease-out; }
+    
+    .matrix-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+    .matrix-card:hover { transform: translateY(-6px); border-color: var(--aws-orange); box-shadow: 0 10px 25px rgba(255, 153, 0, 0.15); }
+    .matrix-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--card-border); transition: background 0.3s; }
+    .matrix-card:hover::before { background: var(--aws-orange); }
+    
+    .mc-id { font-size: 12px; font-weight: 900; color: var(--aws-orange); text-transform: uppercase; letter-spacing: 0.05em; }
+    .mc-title { font-size: 18px; font-weight: 800; color: #FFF; line-height: 1.2; }
+    .mc-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; }
+    
+    /* Highlight especial para o Card "About Wes" e "Startup" */
+    .matrix-card.card-about::before { background: var(--aws-blue); }
+    .matrix-card.card-about:hover::before { background: var(--aws-light-blue); }
+    .matrix-card.card-about:hover { border-color: var(--aws-light-blue); box-shadow: 0 10px 25px rgba(74, 168, 255, 0.15); }
+    .matrix-card.card-about .mc-id { color: var(--aws-light-blue); }
+
+    .matrix-card.card-idea::before { background: #FFD700; }
+    .matrix-card.card-idea:hover { border-color: #FFD700; box-shadow: 0 10px 25px rgba(255, 215, 0, 0.15); }
+
+    /* VIEW 2: ONE-PAGER SLIDE */
+    #viewSlide { display: none; width: 100%; max-width: 1200px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); animation: fadeIn 0.4s ease-out; }
+    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ESTILOS DO SLIDE */
+    .slide-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--card-border); padding-bottom: 20px; margin-bottom: 24px; }
+    .slide-title-block { display: flex; flex-direction: column; gap: 8px; }
+    .slide-id { font-size: 15px; font-weight: 900; color: var(--aws-orange); letter-spacing: 0.05em; text-transform: uppercase; }
+    .slide-title { font-size: 36px; font-weight: 800; color: #FFF; line-height: 1.1; }
+    .tags-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .tag { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; border: 1px solid; }
+    .tag-award { color: #fbbf24; background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.4); }
+    .tag-stack { color: #86efac; background: rgba(134, 239, 172, 0.1); border-color: rgba(134, 239, 172, 0.4); }
+    .tag-ai { color: #E8B4FE; background: rgba(232, 180, 254, 0.1); border-color: rgba(232, 180, 254, 0.4); }
+    .tag-idea { color: #FFD700; background: rgba(255, 215, 0, 0.15); border-color: rgba(255, 215, 0, 0.6); box-shadow: 0 0 8px rgba(255, 215, 0, 0.3); }
+    .tag-blue { color: var(--aws-light-blue); background: rgba(74, 168, 255, 0.1); border-color: rgba(74, 168, 255, 0.4); }
+
+    .context-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+    .context-box { background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); padding: 20px; border-radius: 8px; }
+    .context-label { font-size: 13px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
+    .context-val { font-size: 17px; font-weight: 600; color: #FFF; line-height: 1.4; }
+    .val-prob { color: #fca5a5; }
+    .val-budg { color: #86efac; }
+
+    .execution-title { font-size: 18px; font-weight: 900; color: var(--aws-light-blue); text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid rgba(74, 168, 255, 0.2); padding-bottom: 8px; }
+    .bullets-list { display: flex; flex-direction: column; gap: 20px; list-style: none; }
+    .bullets-list li { font-size: 18px; color: var(--text-muted); position: relative; padding-left: 36px; line-height: 1.5; }
+    .bullets-list li::before { position: absolute; left: 0; top: 2px; font-size: 20px; }
+    .bullets-list li.b-sit::before { content: "📍"; } 
+    .bullets-list li.b-act::before { content: "⚡"; } 
+    .bullets-list li.b-les::before { content: "🧠"; } 
+    .bullets-list li.b-res::before { content: "🎯"; } 
+    .bullets-list li strong { color: #FFF; }
+
+    .hw-container { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; padding-left: 12px; border-left: 2px solid var(--card-border); }
+    .hw-tag { display: inline-block; font-size: 15px; line-height: 1.4; }
+    .hw-how { color: #a7f3d0; }
+    .hw-why { color: #fecaca; }
+    .hw-tag strong { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 6px; border-radius: 4px; margin-right: 6px; }
+    .hw-how strong { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+    .hw-why strong { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+
+    .design-specs { background: rgba(20, 110, 180, 0.1); border: 1px solid var(--aws-blue); border-radius: 8px; padding: 20px; margin-bottom: 32px; }
+    .design-title { font-size: 14px; font-weight: 900; color: var(--aws-light-blue); text-transform: uppercase; margin-bottom: 10px; display: block; }
+    .design-items { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 16px; color: #FFF; }
+
+    .impact-footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--card-border); display: flex; align-items: center; justify-content: space-between; }
+    .impact-label { font-size: 16px; font-weight: 900; color: var(--text-muted); text-transform: uppercase; }
+    .metrics-group { display: flex; gap: 12px; flex-wrap: wrap; }
+    .metric-chip { background: rgba(0, 163, 108, 0.15); border: 1px solid var(--success); color: #6ee7b7; font-size: 18px; font-weight: 800; padding: 10px 20px; border-radius: 6px; }
+
+    @media (max-width: 1100px) {
+      #viewMatrix { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 800px) {
+      #viewMatrix { grid-template-columns: repeat(2, 1fr); }
+      .context-grid { grid-template-columns: 1fr; }
+      .design-items { grid-template-columns: 1fr; }
+      .impact-footer { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="branding">
+      <h1>Wesley Silva</h1>
+      <span>Executive Portfolio Deck</span>
+    </div>
+    <button id="btnBack" class="btn-back" onclick="goHome()">🔙 Back to Matrix</button>
+  </header>
+
+  <main>
+    <!-- MATRIZ COM OS 12 CARDS -->
+    <div id="viewMatrix">
+      <!-- Gerado via JS -->
+    </div>
+
+    <!-- ONE-PAGER SLIDE -->
+    <div id="viewSlide">
+      <!-- Gerado via JS -->
+    </div>
+  </main>
+
+  <script>
+    const data = [
+      {
+        id: "00",
+        year: "Profile",
+        title: "About Wesley",
+        isAbout: true,
+        tags: [{label: "16 Years IT Arc", class: "tag-blue"}, {label: "Culture Fit", class: "tag-blue"}],
+        problem: "Bridging the gap between Commercial Ownership, Enterprise Architecture, and Scale.",
+        budget: "42 Years Old • São Carlos, SP • Married (15y) • 2 Kids",
+        desc: "Professional foundation transitioning from early startup sales to Enterprise Agile Master and Tech PO.",
+        bullets: [
+          "<li class='b-sit'><strong>Professional Foundation:</strong> Started in sales (Bernardin/XBot) mapping commercial opportunities, transitioning to deep IT architecture and support (Amdocs/Serasa).</li>",
+          "<li class='b-act'><strong>Enterprise Scale:</strong> 10-year arc at Experian evolving from Full-Stack Developer to Agile Master and Tech Product Owner, leading M&A and GenAI integrations.</li>",
+          "<li class='b-act'><strong>Personal Discipline (The 7 Habits):</strong> I operate a strict framework outside work: Cooking (Mindfulness/Chef Do), Writing my own book (Transformation Menu), TraderTech backtesting, and studying Chinese Culture.</li>",
+          "<li class='b-act'><strong>Continuous Builder:</strong> Developing my own AI-first software startup (DataSocial) and reading Stoic philosophy nightly to maintain structured reflection.</li>",
+          "<li class='b-les'><strong>Why Amazon?</strong> Ready to leverage 16 years of bridging business and tech to innovate at a scale larger than I’ve ever experienced before.</li>"
+        ],
+        metrics: ["Tech PO", "Builder Mindset"]
+      },
+      {
+        id: "01",
+        year: "2016",
+        title: "4-Stack Repatriation",
+        tags: [{label: "Individual Award", class: "tag-award"}],
+        problem: "Vendor held 4 legacy stacks hostage with a disastrous 4-week Mean Time To Recovery and zero documentation.",
+        budget: "$1.5M Vendor Replacement",
+        desc: "Reverse-engineered undocumented legacy systems to ensure safe architectural transition.",
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> A third-party vendor controlled our critical .NET and Mainframe stacks, resulting in a 3 to 4-week MTTR. My engineering mandate was to safely repatriate all 4 stacks across 5 BUs with zero docs.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> I started by auditing over 30 batch jobs and 20 APIs, tracing execution flows directly from live staging logs. <div class='hw-container'><span class='hw-tag hw-how'><strong>HOW</strong> Low-level inspection of the legacy SCM repository and raw server logs.</span> <span class='hw-tag hw-why'><strong>WHY</strong> The vendor held complete monopoly over incident triage.</span></div></li>",
+          "<li class='b-act'><strong>Action 2:</strong> I reverse-engineered the database communications, profiling SQL execution plans to draw the entire architecture into Confluence.</li>",
+          "<li class='b-act'><strong>Action 3:</strong> I configured our Load Balancers and WAF to route traffic safely and created clear decision trees for Tier-1 support.</li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> Documentation isn't just a deliverable; it's the ultimate safeguard against vendor lock-in.</li>",
+          "<li class='b-res'><strong>Result:</strong> After a 4-week shadow period, we fired the vendor. We slashed MTTR by 50% and improved Tier-1 routing accuracy by 40%.</li>"
+        ],
+        metrics: ["MTTR -50%", "Routing Accuracy +40%"]
+      },
+      {
+        id: "02",
+        year: "2021",
+        title: "Enterprise Agile (QPS)",
+        tags: [{label: "Squad Award", class: "tag-award"}, {label: "Global Agile Coach", class: "tag-stack"}],
+        problem: "5 Business Units operating in complete delivery silos with under 60% roadmap predictability.",
+        budget: "$5M+ Project Portfolio Managed",
+        desc: "Replaced subjective vanity metrics with hard data pipelines tracking Git commit cadence and PR throughput.",
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> 5 BUs operated in silos with predictability below 60%. London mandated a global agile framework, but local culture rejected it. I had to synchronize delivery.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> Adopted an 'English First' mindset to translate and localize London's strategy for our squads in Brazil.</li>",
+          "<li class='b-act'><strong>Action 2:</strong> Replaced subjective story points with concrete telemetry metrics measuring cycle time, deployment frequency, and code churn. <div class='hw-container'><span class='hw-tag hw-how'><strong>HOW</strong> Extracting raw data from Jira and Git APIs to build quantitative developer analytics.</span></div></li>",
+          "<li class='b-act'><strong>Action 3:</strong> Architected a centralized Tableau telemetry dashboard enforced by strict pipeline guardrails to govern quarterly planning and scope swaps.</li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> Frameworks don't fix silos; telemetry and transparent code metrics do.</li>",
+          "<li class='b-res'><strong>Result:</strong> Boosted release predictability to over 85%. The local telemetry model was exported globally.</li>"
+        ],
+        metrics: ["Predictability >85%", "Global Standard"]
+      },
+      {
+        id: "03",
+        year: "2021",
+        title: "Low-Code Chapters",
+        tags: [{label: "New Stack", class: "tag-stack"}],
+        problem: "A centralized low-code team became an unmanageable 6-month delivery bottleneck.",
+        budget: "$1.2M Engineering Capacity",
+        desc: "Decentralized application execution while centralizing API governance across 5 BUs.",
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> Our central low-code team delayed business delivery by 6 months. I needed to safely decentralize low-code execution without compromising database security.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> I took ownership of the low-code decentralization strategy and proposed a cross-functional Chapter system.</li>",
+          "<li class='b-act'><strong>Action 2:</strong> Led a structured enablement program focusing on modular design, state management, and secure database interaction.</li>",
+          "<li class='b-act'><strong>Action 3:</strong> Unlocked delivery by distributing certified technical champions into local squads, backed by strict API boundaries. <div class='hw-container'><span class='hw-tag hw-why'><strong>WHY</strong> Decentralization without embedded technical governance leads directly to system degradation.</span></div></li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> Speed without safety is technical debt in disguise. Scale requires federated execution coupled with centralized API contracts.</li>",
+          "<li class='b-res'><strong>Result:</strong> Successfully decentralized development and slashed our delivery cycle time from 3 months to 1 month.</li>"
+        ],
+        metrics: ["Cycle Time -66%", "5 BUs Decentralized"]
+      },
+      {
+        id: "04",
+        year: "2022",
+        title: "Customer Care Uniq Screen",
+        tags: [{label: "Global Award", class: "tag-award"}],
+        problem: "Agents toggled between 30 tools, spiking AHT and overloading legacy Mainframe capacity.",
+        budget: "$1M Project Budget",
+        desc: "Engineered a Backend For Frontend (BFF) and API abstraction layer to decouple the core.",
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> Call center agents manually toggled between 30 tools, overloading the Mainframe with unoptimized queries. I managed a $1M budget to architect a unified agent workspace.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> Managed a parallel vendor squad, controlling a 3-year budget, architectural milestones, and delivery scope.</li>",
+          "<li class='b-act'><strong>Action 2:</strong> Configured multi-region Edge Gateways, DNS routing, and WAF rules to securely bridge Salesforce (US) and ServiceNow (CR). <div class='hw-container'><span class='hw-tag hw-why'><strong>WHY</strong> Cross-border data transit demands rigorous compliance and low-latency encrypted tunnels.</span></div></li>",
+          "<li class='b-act'><strong>Action 3:</strong> Architected a Backend For Frontend (BFF) abstraction layer with Redis caching to aggregate disparate APIs.</li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> You can't modernize a frontend if the backend collapses under the load. API abstraction layers are the unsung heroes of enterprise scalability.</li>",
+          "<li class='b-res'><strong>Result:</strong> Delivered a reusable architecture that cut AHT by 53% and saved 3 FTEs, earning Global Recognition.</li>"
+        ],
+        metrics: ["AHT -53%", "3 FTEs Saved"]
+      },
+      {
+        id: "05",
+        year: "2023",
+        title: "Legal Tech RAG",
+        tags: [{label: "New Stack", class: "tag-stack"}, {label: "Canonical AI", class: "tag-ai"}],
+        problem: "Manual legal jurisprudence searches were costly, exposing the enterprise to severe LLM hallucination risks.",
+        budget: "$800K Implementation Budget",
+        desc: "Air-gapped the infrastructure and enforced strict vector similarity thresholds to guarantee absolute factual grounding.",
+        designSpecs: {
+          title: "AI Pipeline & Air-Gapped RAG",
+          items: [
+            "🔒 <strong>Air-Gapped:</strong> Zero external API telemetry leakage.",
+            "📐 <strong>Guardrails:</strong> Hard cosine similarity threshold >0.85.",
+            "📑 <strong>Citations:</strong> Cryptographic case ID mapping.",
+            "⚡ <strong>Chunking:</strong> Tuned for complex legal syntax."
+          ]
+        },
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> Legal wanted AI for jurisprudence searches, but hallucination risk was unacceptable. I needed to build a secure POC that lawyers could blindly trust.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> Architected a localized, air-gapped Elasticsearch vector database sandbox isolated from public cloud endpoints.</li>",
+          "<li class='b-act'><strong>Action 2:</strong> Integrated semantic vector embeddings within a RAG pipeline to fetch exact contextual clauses. <div class='hw-container'><span class='hw-tag hw-why'><strong>WHY</strong> Standard text search fails on legal synonyms; vector search solves conceptual matching.</span></div></li>",
+          "<li class='b-act'><strong>Action 3:</strong> Programmed a >0.85 similarity threshold and enforced mandatory source citation validation in the prompt layer.</li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> In high-stakes environments, accuracy beats capability. Trust in AI is built on strict mathematical boundaries.</li>",
+          "<li class='b-res'><strong>Result:</strong> Achieved zero hallucinations, radically cut retrieval time, and drove immediate adoption.</li>"
+        ],
+        metrics: ["0 Hallucinations", "Rapid Legal Adoption"]
+      },
+      {
+        id: "06",
+        year: "2023",
+        title: "AI-First Tech Transfer",
+        tags: [{label: "Canonical AI", class: "tag-ai"}],
+        problem: "Developer onboarding took 3-4 months due to tribal knowledge buried in fragmented PRs and Confluence.",
+        budget: "$500K R&D Optimization",
+        desc: "Codified Architecture Decision Records into an indexed vector knowledge base for CI/CD automation.",
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> Onboarding took months because architectural history was trapped in legacy PRs. I engineered an automated technical knowledge transfer system.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> Mapped and connected Confluence, repositories, transcripts, and approvals into one central hub.</li>",
+          "<li class='b-act'><strong>Action 2:</strong> Structured historical Architecture Decision Records (ADRs) into a canonical context index for an internal LLM. <div class='hw-container'><span class='hw-tag hw-how'><strong>HOW</strong> Standardizing markdown schemas and semantic indexing for LLM consumption.</span></div></li>",
+          "<li class='b-act'><strong>Action 3:</strong> Integrated an automated CI/CD webhook that executed pre-PR code reviews against our architectural constraints.</li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> Tribal knowledge is a liability. Embedding architectural context directly into CI/CD makes knowledge transfer continuous.</li>",
+          "<li class='b-res'><strong>Result:</strong> Slashed onboarding from months down to weeks, reducing PR churn by 70%.</li>"
+        ],
+        metrics: ["PR Churn -70%", "Onboarding: Months to Weeks"]
+      },
+      {
+        id: "07",
+        year: "2025",
+        title: "AppSec Scale",
+        tags: [{label: "New Stack", class: "tag-stack"}],
+        problem: "Massive vulnerability backlogs blocked deployments and frustrated engineering teams with false positives.",
+        budget: "$10M+ Enterprise Risk Mitigated",
+        desc: "Embraced a Shift-Left mindset using exploit prediction weaponization data instead of raw CVSS scores.",
+        designSpecs: {
+          title: "Shift-Left Pipeline Gates",
+          items: [
+            "🛡️ <strong>SAST:</strong> Static code analysis in NestJS builds.",
+            "📦 <strong>SCA:</strong> Automated dependency auditing (npm).",
+            "🐳 <strong>Container:</strong> Docker image validation in ECR.",
+            "🔐 <strong>Secrets:</strong> Pre-commit IaC validation."
+          ]
+        },
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> InfoSec blocked deployments due to thousands of unaddressed vulnerabilities. I engineered a risk-based Shift-Left triage framework across 5 BUs.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> Switched our metric from standard CVSS to the Exploit Prediction Scoring System (EPSS). <div class='hw-container'><span class='hw-tag hw-why'><strong>WHY</strong> Standard severity metrics create alert fatigue; we must focus on real weaponization.</span></div></li>",
+          "<li class='b-act'><strong>Action 2:</strong> Embedded SAST, SCA, and container scanners directly into the CI/CD commit stage.</li>",
+          "<li class='b-act'><strong>Action 3:</strong> Negotiated a mandatory 15% technical capacity allocation in every sprint for security debt reduction.</li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> Effective cybersecurity isn't about blocking code; it's about embedding automated checks into the developer workflow.</li>",
+          "<li class='b-res'><strong>Result:</strong> Reduced the critical vulnerability backlog by 64% across 5 Business Units.</li>"
+        ],
+        metrics: ["Critical Backlog -64%", "Shift-Left Culture"]
+      },
+      {
+        id: "08",
+        year: "2025",
+        title: "Databricks Lakehouse & MLOps",
+        tags: [{label: "New Stack", class: "tag-stack"}],
+        problem: "Failing Pentaho ETL monolith managed by retiring experts with zero fault tolerance.",
+        budget: "$2.5M Migration Budget",
+        desc: "Translated decades of retiring legacy knowledge into modern Infrastructure as Code and Delta Lake schemas.",
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> Legacy data pipelines were failing, and experts were retiring. I learned modern Data Engineering on the fly to lead a zero-downtime AWS Databricks migration.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> Reverse-engineered the complex XML logic of the legacy pipeline, translating for junior developers.</li>",
+          "<li class='b-act'><strong>Action 2:</strong> Architected a Medallion data pipeline (Bronze, Silver, Gold layers) on AWS Databricks utilizing Delta Lake.</li>",
+          "<li class='b-act'><strong>Action 3:</strong> Managed all new data infrastructure via Terraform Infrastructure as Code (IaC). <div class='hw-container'><span class='hw-tag hw-why'><strong>WHY</strong> Data pipelines require identical version control and reproducibility as backend software.</span></div></li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> Data engineering requires exact software engineering rigor. IaC is mandatory to prevent data drift.</li>",
+          "<li class='b-res'><strong>Result:</strong> Decommissioned Pentaho with zero downtime, proving 0.000% data variance via automated dual-run validation.</li>"
+        ],
+        metrics: ["0 Min Downtime", "0.000% Data Drift"]
+      },
+      {
+        id: "09",
+        year: "2026",
+        title: "Real-Time Payment Telemetry",
+        tags: [{label: "Canonical AI", class: "tag-ai"}],
+        problem: "Silent tracking blind spots across checkout microservices led to undetected payment failures.",
+        budget: "$1M Business Unit",
+        desc: "Triangulated Data, Backend, and User Experience tracing logs to map the exact financial leakage.",
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> Distributed checkout microservices had blind spots causing un-instrumented payment drop-offs. I led the cross-functional effort to engineer cross-system tracing.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> Mapped the end-to-end journey acting as an AI Product Owner without a direct squad. <div class='hw-container'><span class='hw-tag hw-how'><strong>HOW</strong> Organizing war rooms and stitching fragmented flows using AI workflow mapping tools.</span></div></li>",
+          "<li class='b-act'><strong>Action 2:</strong> Architected immutable Correlation IDs propagated through non-blocking Kafka events.</li>",
+          "<li class='b-act'><strong>Action 3:</strong> Triangulated Datadog APM traces, Amplitude user funnels, and Databricks financial logs.</li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> Systems don't fail in silos; they fail in the gaps between teams. End-to-end observability is a product feature.</li>",
+          "<li class='b-res'><strong>Result:</strong> Pinpointed root cause of financial leakage and permanently resolved the telemetry blind spot in 30 days.</li>"
+        ],
+        metrics: ["Root Cause Isolated in 30 Days", "Zero-Latency Tracing"]
+      },
+      {
+        id: "10",
+        year: "2024",
+        title: "Forensic State Machine",
+        tags: [{label: "Challenge", class: "tag-challenge"}],
+        problem: "Multi-million dollar lawsuit targeted a dead, decommissioned enterprise system with zero active engineering support.",
+        budget: "$15M Legal Liability Eliminated",
+        desc: "Reconstructed a decommissioned state machine and correlated network logs to prove the past.",
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> Hit with a multi-million dollar lawsuit over a dead system. As sole custodian, I had to forensically reconstruct historical transaction states from scratch.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> Orchestrated Linux/Network teams to spin up cold Oracle Siebel backups onto standalone Unix servers.</li>",
+          "<li class='b-act'><strong>Action 2:</strong> Recreated the exact historical sales journey mapping communication with the Mainframe. <div class='hw-container'><span class='hw-tag hw-why'><strong>WHY</strong> To prove beyond reasonable doubt how the system behaved under specific vendor inputs.</span></div></li>",
+          "<li class='b-act'><strong>Action 3:</strong> Extracted HTTP IPs from old logs and cross-referenced them against immutable IBM tape registers.</li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> Architecture isn't just about building for the future; it's about proving the past. Immutable logs are the ultimate defense.</li>",
+          "<li class='b-res'><strong>Result:</strong> Authored the definitive forensic report providing cryptographic proof of vendor fraud, eliminating $15M in liability.</li>"
+        ],
+        metrics: ["100% Legal Victory", "$15M Liability Eliminated"]
+      },
+      {
+        id: "11",
+        year: "2025",
+        title: "Startup DataSocial",
+        tags: [{label: "My Own Idea", class: "tag-idea"}, {label: "Monolith", class: "tag-idea"}],
+        problem: "Needed to launch a data-driven startup rapidly as a solo developer while aligning directly with business sales.",
+        budget: "Solo Dev / Startup MVP",
+        desc: "Actively chose a monolith over microservices because speed to market and business alignment matter more than over-engineering an MVP.",
+        bullets: [
+          "<li class='b-sit'><strong>Situation & Task:</strong> At DataSocial, my business partner was actively selling a new solution. As the sole developer and Tech PO, I needed to build and launch the platform from scratch.</li>",
+          "<li class='b-act'><strong>Action 1:</strong> Deliberately chose to build a Monolith architecture rather than deploying Microservices. <div class='hw-container'><span class='hw-tag hw-why'><strong>WHY</strong> As a solo developer, the operational overhead of microservices would kill our speed to market.</span></div></li>",
+          "<li class='b-act'><strong>Action 2:</strong> Aligned the technical roadmap directly with my business partner's sales cycle, prioritizing features that unlocked immediate sales.</li>",
+          "<li class='b-act'><strong>Action 3:</strong> Established a scalable data foundation that can be easily decoupled later if the startup scales.</li>",
+          "<li class='b-les'><strong>Lesson Learned:</strong> The best architecture is the one that perfectly fits the current business context and team size. Over-engineering an MVP is a fatal mistake.</li>",
+          "<li class='b-res'><strong>Result:</strong> Successfully launched the platform and enabled direct sales, proving the monolith was the perfect fit for Go-To-Market speed.</li>"
+        ],
+        metrics: ["Speed to Market Optimized", "Revenue Generation Enabled"]
+      }
+    ];
+
+    function renderMatrix() {
+      const container = document.getElementById('viewMatrix');
+      container.innerHTML = '';
+      
+      projects.forEach(p => {
+        const card = document.createElement('div');
+        card.className = `matrix-card ${p.isAbout ? 'card-about' : ''} ${p.id === '11' ? 'card-idea' : ''}`;
+        card.onclick = () => openSlide(p.id);
+        
+        let titleLabel = p.isAbout ? p.title : p.title;
+        let idLabel = p.isAbout ? 'Profile' : `STAR ${p.id}`;
+
+        card.innerHTML = `
+          <span class="mc-id">${idLabel} • ${p.year}</span>
+          <div class="mc-title">${titleLabel}</div>
+          <div class="mc-desc">${p.desc}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openSlide(id) {
+      document.getElementById('viewMatrix').style.display = 'none';
+      document.getElementById('viewSlide').style.display = 'block';
+      document.getElementById('btnBack').style.display = 'block';
+      window.scrollTo(0,0);
+
+      const p = projects.find(x => x.id === id);
+      if (!p) return;
+
+      const tagsHtml = p.tags.map(t => `<span class="tag ${t.class}">${t.label}</span>`).join('');
+      
+      let specsHtml = '';
+      if(p.designSpecs) {
+        specsHtml = `
+          <div class="design-specs">
+            <span class="design-title">${p.designSpecs.title}</span>
+            <div class="design-items">${p.designSpecs.items.map(i => `<span>${i}</span>`).join('')}</div>
+          </div>
+        `;
+      }
+
+      const bulletsHtml = p.bullets.join('');
+      const metricsHtml = p.metrics.map(m => `<span class="metric-chip">${m}</span>`).join('');
+
+      // Labels mudam um pouco para o "About Wes"
+      const lblProb = p.isAbout ? '🎯 Core Objective' : '🚨 Problem to Solve';
+      const lblBudg = p.isAbout ? '👤 Personal Matrix' : '💰 Scale / Budget';
+      const idPrefix = p.isAbout ? '' : 'STAR ';
+
+      const html = `
+        <div class="slide-header">
+          <div class="slide-title-block">
+            <span class="slide-id">${idPrefix}${p.id} • ${p.year}</span>
+            <h2 class="slide-title">${p.title}</h2>
+            <div class="tags-container">${tagsHtml}</div>
+          </div>
+        </div>
+        
+        <div class="context-grid">
+          <div class="context-box">
+            <span class="context-label">${lblProb}</span>
+            <span class="context-val val-prob">${p.problem}</span>
+          </div>
+          <div class="context-box">
+            <span class="context-label">${lblBudg}</span>
+            <span class="context-val val-budg">${p.budget}</span>
+          </div>
+        </div>
+
+        ${specsHtml}
+
+        <div class="execution-title">${p.isAbout ? 'Background & Discipline' : 'Execution (S.T.A.R Framework)'}</div>
+        <ul class="bullets-list">
+          ${bulletsHtml}
+        </ul>
+
+        <div class="impact-footer">
+          <span class="impact-label">${p.isAbout ? 'Core Strengths' : 'Business Impact'}</span>
+          <div class="metrics-group">
+            ${metricsHtml}
+          </div>
+        </div>
+      `;
+
+      const container = document.getElementById('viewSlide');
+      container.style.animation = 'none';
+      container.offsetHeight; 
+      container.style.animation = null; 
+      container.innerHTML = html;
+    }
+
+    function goHome() {
+      document.getElementById('viewSlide').style.display = 'none';
+      document.getElementById('btnBack').style.display = 'none';
+      
+      const matrix = document.getElementById('viewMatrix');
+      matrix.style.display = 'grid';
+      matrix.style.animation = 'none';
+      matrix.offsetHeight; 
+      matrix.style.animation = null; 
+      window.scrollTo(0,0);
+    }
+
+    // Inicializa a matriz
+    renderMatrix();
+  </script>
+</body>
+</html>
