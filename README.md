@@ -51,3 +51,17 @@ npm run preview
 
 - The site is configured for GitHub Pages through the Vite base path.
 - The production bundle is built from the dist folder and published to the Pages branch.
+
+## ATS-friendly CVs (PDF)
+
+Two English CVs designed to import cleanly into any ATS or job platform:
+
+- `public/CV_ATS_AgenticTPM_WesleySilva.pdf` (Agentic Technical Program Manager)
+- `public/CV_ATS_ITCoordinator_WesleySilva.pdf` (IT Coordinator)
+
+They are generated from `scripts/cv/generate_ats_cvs.py`: single column, no tables or images, standard Helvetica font, standard section names, real bullets and plain `Mon YYYY - Mon YYYY` dates, 2 pages. To change content, edit the `CVS` data in the script and regenerate:
+
+```bash
+pip install -r scripts/cv/requirements.txt
+python scripts/cv/generate_ats_cvs.py --check   # --check validates the text layer an ATS would parse
+```
