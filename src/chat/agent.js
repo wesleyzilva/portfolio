@@ -387,8 +387,10 @@ export const composeAnswer = (question, results, { asked = [] } = {}) => {
 
   const matchedNames = joinLabels(labels(matched));
   let lead = primary.chunk.lead;
-  if (primary.chunk.type === 'skills' && matched.length > 0) {
-    lead = `${isYesNo ? 'Yes, ' : ''}${matchedNames} ${matched.length > 1 ? 'are' : 'is'} part of Wesley's toolkit, listed under ${primary.chunk.title}.`;
+  const inPrimary = matched.filter((term) => primary.vocabulary.has(term));
+  const toolkitNames = joinLabels(labels(inPrimary));
+  if (primary.chunk.type === 'skills' && inPrimary.length > 0) {
+    lead = `${isYesNo ? 'Yes, ' : ''}${toolkitNames} ${inPrimary.length > 1 ? 'are' : 'is'} part of Wesley's toolkit, listed under ${primary.chunk.title}.`;
   }
 
   const synthesizedLead = lead !== primary.chunk.lead;

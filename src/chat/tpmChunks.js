@@ -148,23 +148,6 @@ export const tpmChunks = [
     keywords: 'tpm technical program manager programme project manager product owner scrum master delivery manager difference compare fit why hire role roles suitable seniority senior leader senior-level strengths strength weakness weaknesses',
   },
   {
-    id: 'tpm-star-story',
-    type: 'profile',
-    plainLead: true,
-    showMatch: false,
-    title: 'Example story: a hard deadline, a big risk, a measurable result',
-    section: 'portfolio',
-    lead: 'The story Wesley tells most often: a fixed-deadline security remediation across a large application estate with no dedicated Scrum Master.',
-    bullets: [
-      'Situation: a third-party squad had to remediate vulnerabilities by a fixed deadline without losing business continuity.',
-      'Task: Wesley owned the DevSecOps delivery stream as technical lead.',
-      'Action: ordered the backlog by risk, severity and dependency, put Veracode, Rapid7 and CI/CD gates in the flow, and ran agile rituals and executive reporting himself.',
-      'Result: 1200 to 300 vulnerabilities in 9 months, 47 to 3 critical/high findings, and a continuous compliance baseline.',
-    ],
-    maxBullets: 4,
-    keywords: 'star behavioral behavioural situation example story time challenge challenging challenges difficult hardest toughest proud failure failed mistake lesson lessons learned tell me about a time pressure deadline stress',
-  },
-  {
     id: 'tpm-agentic-governance',
     type: 'profile',
     plainLead: true,
