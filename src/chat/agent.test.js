@@ -237,7 +237,7 @@ const tpmExpectations = {
   'What are his key career milestones?': 'tpm-milestones-career',
   'How does he plan and track project milestones?': 'tpm-planning-milestones',
   'How does he manage stakeholders?': 'tpm-stakeholders',
-  'How does he handle conflict with stakeholders?': 'tpm-stakeholders',
+  'How does he handle conflict with stakeholders?': 'story-conflicting-priorities',
   'How does he handle risks and dependencies?': 'tpm-risk-dependencies',
   'What happens when a project slips behind schedule?': 'tpm-risk-dependencies',
   'Which delivery metrics does he report?': 'tpm-metrics',
@@ -281,4 +281,51 @@ test('TPM follow-ups chain into each other so a screening call can keep going', 
 test('the opening chips lead with the questions a TPM hiring manager asks first', () => {
   assert.deepEqual(suggestedQuestions.slice(0, 2), ['What are his key career milestones?', 'How does he manage stakeholders?']);
   assert.ok(suggestedQuestions.includes('Is he a good fit for a Technical Program Manager role?'));
+});
+
+const storyExpectations = {
+  'Which leadership principles do his stories show?': 'story-leadership-principles',
+  'Tell me about a time he balanced conflicting priorities': 'story-conflicting-priorities',
+  'Tell me about a complex program he ran end to end': 'story-end-to-end-program',
+  'How did he define milestones, dependencies and communicate progress to leadership?': 'story-end-to-end-program',
+  'Tell me about an AI project that increased adoption': 'story-ai-adoption',
+  'Tell me about solving a complex problem with a simple solution': 'story-simple-solution-rag',
+  'Tell me about a decision he made without clear data': 'story-decision-without-data',
+  'Tell me about a deep root-cause investigation': 'story-root-cause',
+  'How did he keep high standards under pressure?': 'story-highest-standards',
+  'Tell me about improving a product that already worked': 'story-improve-working-product',
+  'How technical is he?': 'story-technical-depth',
+  'What new skill did he learn to improve performance?': 'story-learn-new-skill',
+};
+
+test('behavioral interview prompts return the matching STAR story', async () => {
+  for (const [question, expectedId] of Object.entries(storyExpectations)) {
+    const answer = await ask(question);
+    assert.equal(answer.sources[0].id, expectedId, question);
+    assert.equal(answer.matchPercent, null, question);
+    assert.ok(answer.suggestions.length >= 2, question);
+  }
+});
+
+test('stories carry the concrete numbers from Wesley\'s own examples', async () => {
+  const checks = [
+    ['Tell me about solving a complex problem with a simple solution', /150\+/],
+    ['Tell me about a deep root-cause investigation', /30% of accounts/],
+    ['How did he keep high standards under pressure?', /0 to 1000/],
+    ['Tell me about improving a product that already worked', /50%/],
+    ['Tell me about a decision he made without clear data', /250/],
+    ['Tell me about a complex program he ran end to end', /1\.5 years/],
+  ];
+  for (const [question, pattern] of checks) {
+    const answer = await ask(question);
+    assert.ok([answer.text, ...answer.bullets].some((line) => pattern.test(line)), question);
+  }
+});
+
+test('public stories never expose interview feedback, interviewer names or weak answers', () => {
+  const stories = knowledgeBase.filter((chunk) => chunk.id.startsWith('story-'));
+  const text = stories.flatMap((chunk) => [chunk.title, chunk.lead, ...chunk.bullets]).join(' ');
+  for (const forbidden of [/command and control/i, /eliminat/i, /rejected/i, /failed/i, /risco/i, /Bicudo|Ronaldo|Nakagawa|Leandro|Cordeiro|Rose|Rafa/, /did not pass/i, /not an? architect/i]) {
+    assert.doesNotMatch(text, forbidden);
+  }
 });

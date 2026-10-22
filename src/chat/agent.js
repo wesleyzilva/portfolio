@@ -27,6 +27,8 @@ const ALIASES = {
   'trade-offs': ['tradeoff'],
   'trade-off': ['tradeoff'],
   'trade offs': ['tradeoff'],
+  'how technical': ['technicaldepth'],
+  'technical depth': ['technicaldepth'],
   'about yourself': ['summary', 'overview'],
   'introduce yourself': ['summary', 'overview'],
   'who is wesley': ['summary', 'overview'],

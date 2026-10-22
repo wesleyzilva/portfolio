@@ -215,7 +215,7 @@ function ChatPopup({ onTrack }) {
 
         {showSuggestions ? (
           <div className="chat-suggestions" aria-label="Suggested questions">
-            {suggestedQuestions.slice(0, 8).map((question) => (
+            {suggestedQuestions.slice(0, 10).map((question) => (
               <button key={question} type="button" className="chat-chip" onClick={() => submit(question)}>
                 {question}
               </button>
