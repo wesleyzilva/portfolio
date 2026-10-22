@@ -1,4 +1,4 @@
-import { canonicalNames, cvDownloadOptions, knowledgeBase, suggestedQuestions } from './knowledge.js';
+import { canonicalNames, cvDownloadOptions, followUpsFor, knowledgeBase, suggestedQuestions } from './knowledge.js';
 
 export const AGENT_NAME = '#askToTPM_agentic';
 
@@ -19,6 +19,8 @@ const GENERIC_TERMS = new Set((
 const TECH_TERMS = new Set(['aws', 'azure', 'gcp', 'kubernetes', 'k8s', 'qa', 'test', 'testing', 'llm', 'rag', 'genai', 'ml', 'scrum', 'agile', 'fintech', 'payments', 'cloud', 'data', 'security']);
 
 const ALIASES = {
+  'latam.aigile': ['latamaigile'],
+  'latam aigile': ['latamaigile'],
   qaws: ['qa', 'aws'],
   'service now': ['servicenow'],
   'service-now': ['servicenow'],
@@ -223,11 +225,39 @@ const joinLabels = (labels) => {
   return `${labels.slice(0, -1).join(', ')} and ${labels[labels.length - 1]}`;
 };
 
-const guided = (text, confidence, extraBullets = []) => ({
+const normalizeQuestion = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+// Contextual follow-ups come first (closest topic first), then generic ones fill the remaining slots.
+export const buildFollowUps = (question, chunks = [], asked = [], { max = 3, contextual = 2 } = {}) => {
+  const seen = new Set([question, ...asked].map(normalizeQuestion));
+  const picked = [];
+  const add = (candidate) => {
+    const key = normalizeQuestion(candidate);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    picked.push(candidate);
+    return true;
+  };
+
+  chunks.flatMap((chunk) => followUpsFor(chunk)).some((candidate) => {
+    add(candidate);
+    return picked.length >= contextual;
+  });
+  suggestedQuestions.some((candidate) => {
+    add(candidate);
+    return picked.length >= max;
+  });
+
+  return picked;
+};
+
+const chunkById = (id) => knowledgeBase.find((chunk) => chunk.id === id);
+
+const guided = (text, confidence, extraBullets = [], suggestions = suggestedQuestions.slice(0, 4)) => ({
   text,
   bullets: [...SUMMARY.bullets.slice(0, 3), ...extraBullets, CONTACT_LINE],
   sources: [{ id: SUMMARY.id, title: SUMMARY.title, section: SUMMARY.section, type: SUMMARY.type }],
-  suggestions: suggestedQuestions.slice(0, 4),
+  suggestions,
   matchPercent: null,
   confidence,
 });
@@ -251,7 +281,7 @@ const findAdjacent = (term, excludedIds) => {
   return best?.chunk ?? null;
 };
 
-const cvAnswer = (question) => {
+const cvAnswer = (question, asked) => {
   const wantsIt = IT_ROLE.test(question);
   const ordered = wantsIt ? [...cvDownloadOptions].reverse() : cvDownloadOptions;
   const profile = knowledgeBase.find((chunk) => chunk.id === 'profile-cv');
@@ -266,7 +296,7 @@ const cvAnswer = (question) => {
     ],
     downloads: ordered.map(({ id, label, fileName }) => ({ id, label, fileName })),
     sources: [{ id: profile.id, title: profile.title, section: profile.section, type: profile.type }],
-    suggestions: [],
+    suggestions: buildFollowUps(question, [profile], asked),
     matchPercent: null,
     confidence: 'high',
   };
@@ -274,7 +304,7 @@ const cvAnswer = (question) => {
 
 const toSource = (chunk) => ({ id: chunk.id, title: chunk.title, section: chunk.section, type: chunk.type });
 
-export const composeAnswer = (question, results) => {
+export const composeAnswer = (question, results, { asked = [] } = {}) => {
   const trimmed = question.trim();
 
   if (GREETING.test(trimmed)) {
@@ -282,7 +312,7 @@ export const composeAnswer = (question, results) => {
       text: `Hi! I'm ${AGENT_NAME}. I can answer your screening questions about Wesley's projects, skills, career and availability. Tap a question or type your own.`,
       bullets: [],
       sources: [],
-      suggestions: suggestedQuestions.slice(0, 4),
+      suggestions: buildFollowUps(trimmed, [], asked, { max: 4, contextual: 0 }),
       matchPercent: null,
       confidence: 'smalltalk',
     };
@@ -293,13 +323,13 @@ export const composeAnswer = (question, results) => {
       text: 'My pleasure! If you would like to talk to Wesley directly, he replies within 24h at wesley.zilva@gmail.com.',
       bullets: [],
       sources: [],
-      suggestions: [],
+      suggestions: buildFollowUps(trimmed, [chunkById('profile-contact')], asked),
       matchPercent: null,
       confidence: 'smalltalk',
     };
   }
 
-  if (CV_REQUEST.test(trimmed)) return cvAnswer(trimmed);
+  if (CV_REQUEST.test(trimmed)) return cvAnswer(trimmed, asked);
 
   const terms = specificTerms(trimmed);
   const covered = (term) => results.some((entry) => entry.vocabulary.has(term));
@@ -313,13 +343,18 @@ export const composeAnswer = (question, results) => {
       "Happy to help with your screening! Here is a quick snapshot of Wesley. Tap a question below, or ask about his projects, skills, career or availability.",
       'none',
       asksAboutTool ? [`For ${joinLabels(labels(terms))}, Wesley will gladly walk you through the details.`] : [],
+      buildFollowUps(trimmed, [SUMMARY], asked, { max: 4, contextual: 2 }),
     );
   }
 
   const [primary, ...candidates] = results;
-  const related = terms.length > 0
-    ? candidates.filter((entry) => terms.some((term) => entry.vocabulary.has(term)))
-    : candidates;
+  const isInterest = primary.chunk.type === 'interest';
+  const relatable = candidates.filter((entry) => isInterest || entry.chunk.type !== 'interest');
+  const related = primary.chunk.standalone
+    ? []
+    : terms.length > 0
+      ? relatable.filter((entry) => terms.some((term) => entry.vocabulary.has(term)))
+      : relatable;
   const queryTokens = [...buildQuery(trimmed).weights.keys()];
   const isYesNo = YES_NO_START.test(trimmed) || /\b(know|knows|experience with)\b/i.test(trimmed);
   const showFit = terms.length > 0 && (isYesNo || TOOL_QUESTION.test(trimmed) || buildQuery(trimmed).base.length <= 3);
@@ -335,7 +370,7 @@ export const composeAnswer = (question, results) => {
   });
   const unmatched = missing.filter((term) => !adjacent.has(term));
 
-  const matchPercent = showFit
+  const matchPercent = showFit && primary.chunk.showMatch !== false
     ? Math.round(((matched.length + 0.5 * adjacent.size) / terms.length) * 100)
     : null;
 
@@ -347,7 +382,7 @@ export const composeAnswer = (question, results) => {
 
   const synthesizedLead = lead !== primary.chunk.lead;
   let opening = '';
-  if (!synthesizedLead && showFit && matched.length > 0 && (isYesNo || TOOL_QUESTION.test(trimmed))) {
+  if (!synthesizedLead && !isInterest && !primary.chunk.plainLead && showFit && matched.length > 0 && (isYesNo || TOOL_QUESTION.test(trimmed))) {
     opening = missing.length === 0 ? (isYesNo ? 'Yes. ' : '') : `Yes for ${matchedNames}. `;
   }
 
@@ -373,7 +408,7 @@ export const composeAnswer = (question, results) => {
     text: `${opening}${lead}`,
     bullets,
     sources: sourceChunks.map(toSource),
-    suggestions: [],
+    suggestions: buildFollowUps(trimmed, sourceChunks, asked),
     matchPercent,
     confidence: matchPercent === null || matchPercent >= 100 ? 'high' : 'partial',
   };
@@ -382,7 +417,7 @@ export const composeAnswer = (question, results) => {
 const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
 
 // Single integration point: swap the body for a real retrieval + LLM call later.
-export const askAgent = async (question, { onStatus, latency = 1 } = {}) => {
+export const askAgent = async (question, { onStatus, latency = 1, history = [] } = {}) => {
   onStatus?.('Searching Wesley\'s CV…');
   await wait(450 * latency);
 
@@ -393,5 +428,5 @@ export const askAgent = async (question, { onStatus, latency = 1 } = {}) => {
   onStatus?.('Drafting answer…');
   await wait(350 * latency);
 
-  return composeAnswer(question, results);
+  return composeAnswer(question, results, { asked: history });
 };
