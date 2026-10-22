@@ -1,4 +1,4 @@
-import { canonicalNames, knowledgeBase, suggestedQuestions } from './knowledge.js';
+import { canonicalNames, cvDownloadOptions, knowledgeBase, suggestedQuestions } from './knowledge.js';
 
 export const AGENT_NAME = '#askToTPM_agentic';
 
@@ -74,6 +74,9 @@ const SYNONYMS = {
 
 const GREETING = /^\s*(hi|hello|hey|hola|oi|good (morning|afternoon|evening))\b[\s!.,?]*$/i;
 const THANKS = /^\s*(thanks|thank you|thx|cheers|great,? thanks)\b[\s!.,?]*$/i;
+const CV_REQUEST = /\b(cv|resume|résumé|curriculum|curriculo|currículo|ats)\b/i;
+const IT_ROLE = /\bit (coordinator|manager|coordination)\b|coordinator|itil|itsm|operations|service desk/i;
+
 const YES_NO_START = /^\s*(does|do|did|has|have|had|is|are|was|can|could|will|would)\b/i;
 
 const stem = (word) => {
@@ -248,6 +251,27 @@ const findAdjacent = (term, excludedIds) => {
   return best?.chunk ?? null;
 };
 
+const cvAnswer = (question) => {
+  const wantsIt = IT_ROLE.test(question);
+  const ordered = wantsIt ? [...cvDownloadOptions].reverse() : cvDownloadOptions;
+  const profile = knowledgeBase.find((chunk) => chunk.id === 'profile-cv');
+
+  return {
+    text: "Absolutely! Here is Wesley's latest CV in an ATS-friendly format: single column, plain text and standard sections, so it imports cleanly into any recruiting platform. Pick the version closest to the role you are hiring for.",
+    bullets: [
+      ...ordered.map((cv) => `${cv.label}: ${cv.description}`),
+      'Both are 2-page PDFs in English, built from his current profile.',
+      'Need another language? The classic CV comes in 6 languages in the Contact section.',
+      CONTACT_LINE,
+    ],
+    downloads: ordered.map(({ id, label, fileName }) => ({ id, label, fileName })),
+    sources: [{ id: profile.id, title: profile.title, section: profile.section, type: profile.type }],
+    suggestions: [],
+    matchPercent: null,
+    confidence: 'high',
+  };
+};
+
 const toSource = (chunk) => ({ id: chunk.id, title: chunk.title, section: chunk.section, type: chunk.type });
 
 export const composeAnswer = (question, results) => {
@@ -274,6 +298,8 @@ export const composeAnswer = (question, results) => {
       confidence: 'smalltalk',
     };
   }
+
+  if (CV_REQUEST.test(trimmed)) return cvAnswer(trimmed);
 
   const terms = specificTerms(trimmed);
   const covered = (term) => results.some((entry) => entry.vocabulary.has(term));
@@ -321,7 +347,7 @@ export const composeAnswer = (question, results) => {
 
   const synthesizedLead = lead !== primary.chunk.lead;
   let opening = '';
-  if (!synthesizedLead && showFit && matched.length > 0) {
+  if (!synthesizedLead && showFit && matched.length > 0 && (isYesNo || TOOL_QUESTION.test(trimmed))) {
     opening = missing.length === 0 ? (isYesNo ? 'Yes. ' : '') : `Yes for ${matchedNames}. `;
   }
 

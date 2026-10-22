@@ -1349,6 +1349,21 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
 }
 
 .chat-suggestions-inline { margin-top: 0.5rem; }
+
+.chat-downloads { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.55rem; }
+
+.chat-download {
+  display: block;
+  padding: 0.5rem 0.8rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-4));
+  color: #0d1b2a;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+.chat-download:hover { filter: brightness(1.08); }
 .chat-chip:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .chat-sources { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; margin-top: 0.5rem; }

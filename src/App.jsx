@@ -9,6 +9,7 @@ import {
   lastTwoYearsFocus,
   recruiterQuickRead,
   workModel,
+  atsCvDownloads,
 } from './data/cvData';
 
 const contactLoomUrl = 'https://www.loom.com/embed/3d9412b9affd42d4b438aa9bb0d58c21';
@@ -34,6 +35,7 @@ const trackEvent = (eventName, params = {}) => {
 };
 
 const cvDownloads = [
+  ...atsCvDownloads.map((item) => ({ label: item.label, flag: '📄', fileName: item.fileName })),
   { label: 'Português', flag: '🇧🇷', fileName: 'CV_PT_ WesleySilva_GlobalAgileDeliveryManager.pdf' },
   { label: 'English', flag: '🇺🇸', fileName: 'CV_EN_ WesleySilva_GlobalAgileDeliveryManager.pdf' },
   { label: 'Français', flag: '🇫🇷', fileName: 'CV_FR_ WesleySilva_GlobalAgileDeliveryManager.pdf' },

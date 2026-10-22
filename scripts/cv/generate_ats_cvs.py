@@ -22,13 +22,13 @@ from reportlab.lib.pagesizes import LETTER
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.lib.colors import black, HexColor
-from reportlab.platypus import HRFlowable, KeepTogether, Paragraph, SimpleDocTemplate, Spacer
+from reportlab.platypus import CondPageBreak, HRFlowable, Paragraph, SimpleDocTemplate, Spacer
 
 OUTPUT_DIR = Path(__file__).resolve().parents[2] / "public"
 
 CONTACT = {
     "name": "Wesley Gomes da Silva",
-    "location": "São Carlos, SP or Pato Branco, PR, Brazil | Remote",
+    "location": "Pato Branco, PR or São Carlos, SP, Brazil | Remote",
     "phone": "+55 16 99721-2966",
     "email": "wesley.zilva@gmail.com",
     "linkedin": "https://www.linkedin.com/in/wesleyzilva/",
@@ -38,8 +38,8 @@ CONTACT = {
 
 EDUCATION = [
     {
-        "school": "Federal University of São Carlos (UFSCar)",
-        "detail": "Postgraduate (Specialization) in Software Engineering, Web Development, Java and Databases",
+        "school": "Federal University of São Carlos",
+        "detail": "Postgraduate in Software Engineering, Web, Java and Databases",
         "dates": "2018 - 2019",
     },
     {
@@ -49,206 +49,218 @@ EDUCATION = [
     },
 ]
 
-LANGUAGES = "English (Fluent), Spanish (Elementary), Chinese (Elementary), Portuguese (Native)"
+CERTIFICATIONS = [
+    "Professional Scrum Master III (PSM III)",
+    "Lean Six Sigma Yellow Belt",
+    "Certified Angular Developer",
+    "Certified JavaScript Developer",
+    "Datadog - Tagging Best Practices",
+    "Datadog - Dashboards",
+]
+
+HONORS = [
+    "Knowledge transfer and modernization",
+    "Recognition for agile work to support IT systems",
+    "Agile Coach",
+]
+
+PUBLICATIONS = [
+    "A block programming interface for educational mobile robots",
+    "Retrofit of reclosers in electric power grids",
+]
+
+LANGUAGES = "English (Full Professional), Spanish (Elementary), Chinese (Elementary)"
+
+XBOT = {
+    "title": "Product Owner | EdTech Startup",
+    "company": "XBot",
+    "place": "São Carlos, SP",
+    "dates": "Nov 2010 - Jul 2013",
+    "bullets": [
+        "Defined requirements and roadmaps for educational robotics and industrial safety simulators, and aligned go-to-market across 12 distributed sales teams in Brazil, generating R$4 million in sales over 3 years.",
+    ],
+}
+
+BERNARDIN = {
+    "title": "International Consultant (French Contractor)",
+    "company": "Bernardin Consultants",
+    "place": "Cotia, SP",
+    "dates": "Jan 2010 - Dec 2010",
+    "bullets": [
+        "Conducted B2B market prospecting, financial feasibility and competitive analysis for European corporations entering Latin America, as liaison to Brazilian entities in defense, precision industry and military aviation.",
+    ],
+}
+
+AMDOCS = {
+    "title": "Technical Support Specialist",
+    "company": "Amdocs",
+    "place": "São Carlos, SP",
+    "dates": "Jul 2013 - Mar 2016",
+    "bullets": [
+        "Delivered global Tier 2/3 production support and database tuning for telecom BSS/OSS platforms, managing L2/L3 incidents with engineering hubs in India and the US (Remedy, Clarify CRM) and keeping strict SLA compliance through root cause analysis.",
+        "Automated Unix Shell Script and PL/SQL routines to optimize Oracle DB batch processing, and tuned Tuxedo and WebLogic middleware for high availability.",
+    ],
+}
 
 CVS = [
     {
         "file": "CV_ATS_AgenticTPM_WesleySilva.pdf",
-        "title": "Wesley Gomes da Silva - Agentic Technical Program Manager - CV",
-        "keywords": "Agentic TPM, Technical Program Manager, AI agents, MCP, GitHub Copilot, DevSecOps, Agile, Databricks",
-        "headline": "Agentic Technical Program Manager | AI-Enabled Global Delivery",
+        "title": "Wesley Gomes da Silva - Agentic Project Manager - CV",
+        "keywords": "Agentic Project Manager, Technical Program Manager, Agentic Product Owner, AI agents, MCP, GitHub Copilot, DevSecOps, Databricks, SAFe, PSM III",
+        "headline": "Agentic Project Manager | Technical Program Manager | PSM III",
         "summary": (
-            "Technical Program Manager with 10+ years delivering mission-critical systems in Fintech, Big Data and Cloud. "
-            "Leads globally distributed squads (Brazil, India, USA, London, South Africa) and builds AI-enabled delivery models: "
-            "GitHub Copilot and AI workspaces that accelerated the SDLC by 45%, an AI-powered squad framework with AI agents and MCP "
-            "connections that bring business context into delivery work, and an AI smart-search and triage workflow that cut legal "
-            "operation SLA by 12%. Combines a hands-on Java, Angular and .NET background with DevSecOps governance, OKR-driven roadmaps "
-            "and executive communication. Open to nearshore, offshore and international roles."
+            "Senior Project Manager and Product Delivery Lead with 14+ years managing global engineering squads and delivering 20+ "
+            "mission-critical initiatives across LATAM, US, UK, South Africa and India. Leads Agile delivery, PI Planning and "
+            "cross-functional technical alignment across enterprise cloud migrations, Databricks/Spark data lakehouses, DevSecOps "
+            "governance and AI-driven SDLC acceleration. Builds agentic delivery workflows with MCP, Databricks, Amplitude, Datadog and "
+            "GenAI tools (Claude, ChatGPT, Cursor, GitHub Copilot). Industries: Payments, HR Tech, Legal Tech, Billing, Low-Code, "
+            "Cybersecurity, 24/7 Support, Customer Success and data, cloud, legacy and mainframe migrations. Open to nearshore, offshore "
+            "and international roles."
         ),
         "highlights": [
-            "45% faster SDLC through GitHub Copilot and AI workspaces.",
-            "93% reduction in critical vulnerabilities with DevSecOps (PCI-DSS and LGPD context).",
-            "80M+ transactions per day and R$500M+ monthly reconciliation under structured monitoring and governance.",
-            "35% sprint velocity increase and 50% fewer cross-squad blockers across multiple international squads.",
+            "Boosted SDLC delivery speed by up to 45% by scaling GitHub Copilot and GenAI workspaces across engineering teams.",
+            "Eliminated 1,200+ vulnerabilities and cut active security risk by 90% in 6 months across 100+ applications (Veracode, Rapid7, Wiz) while maintaining PCI-DSS and LGPD compliance.",
+            "Delivered 100% transactional accuracy for R$500M+ per month in payment flows through a Databricks/Spark lakehouse migration with MLOps under BACEN and FEBRABAN rules.",
+            "Managed 5 distributed international squads (35+ members), synchronizing PI Planning and aligning C-level OKRs.",
         ],
         "competencies": [
-            ("Program Management", "Technical Program Management, Roadmap and OKR Alignment, Cross-Functional Delivery, Risk and Dependency Management, Stakeholder and Executive Communication, Vendor and Third-Party Squad Management, Distributed and Async-First Teams"),
-            ("AI and Agentic Delivery", "AI Agents, Agentic Workflows, MCP (Model Context Protocol) Connections, Generative AI, GitHub Copilot, AI-Assisted SDLC, Smart Search and Triage, Elasticsearch, Low-Code Workflows"),
-            ("Agile and Delivery Tools", "Scrum, SAFe, Kanban, Scrum-of-Scrums, OKRs, KPIs, DORA Metrics, Jira, Azure DevOps, Monday.com, Confluence, Notion, Figma"),
-            ("Engineering and Data", "Java, Spring Boot, Angular, .NET, Databricks, Spark, Pentaho ETL, Power BI, Tableau, Datadog, Dynatrace, Shell Script, PL/SQL, Oracle"),
-            ("Cloud, Security and Compliance", "AWS, Azure, GCP, Docker, Kubernetes (PM level), CI/CD, GitHub Actions, DevSecOps, Veracode, Checkmarx, Rapid7, PCI-DSS, BACEN, LGPD, FEBRABAN"),
+            ("Program and Project Management", "Technical Program Management, Agile Delivery, PI Planning, SAFe, OKRs, Roadmaps, Fixed-Scope Delivery Governance, Vendor Management, Insourcing, Remote Team Management, Executive Alignment, Digital Transformation, SDLC"),
+            ("AI and Agentic Delivery", "Agentic Workflows, MCP (Model Context Protocol), Generative AI, Claude, ChatGPT, Cursor, GitHub Copilot, AI-Accelerated SDLC, Amplitude"),
+            ("Agile, Delivery and Operations", "Scrum (PSM III), SAFe, Kanban, DORA Metrics, Jira, Azure DevOps, Monday.com, Confluence, Notion, Figma, Lean Six Sigma Yellow Belt, ITIL, 24/7 L3 Incident Management, MTTR, ServiceNow"),
+            ("Data and Engineering", "Databricks, Apache Spark, MLOps, Data Lakehouse, Java, Spring Boot, Angular, JavaScript, .NET, OutSystems (Low-Code), Salesforce, Shell Script, PL/SQL, Oracle"),
+            ("Cloud, Security and Observability", "AWS (migration), Azure, GCP, Docker, Kubernetes, CI/CD, DevSecOps, Veracode, Rapid7, Wiz, Checkmarx, PCI-DSS, LGPD, BACEN, FEBRABAN, Datadog, Dynatrace"),
         ],
         "experience": [
             {
-                "title": "LATAM Agile Project Delivery | AI Agents",
-                "company": "Independent Contractor (Part-Time)",
-                "place": "Global, Remote",
-                "dates": "Present",
+                "title": "Agentic Product Owner | Data Centric",
+                "company": "Serasa Experian",
+                "place": "Pato Branco, PR",
+                "dates": "Aug 2026 - Present",
                 "bullets": [
-                    "Run distributed teams with an AI-powered squad framework, supporting global stakeholders from LATAM with async-first delivery.",
-                    "Use AI agents and MCP connections to bring business context into delivery work and speed up decisions.",
+                    "Orchestrate technical product discovery and execution for B2B payment flows, using agentic workflows with MCP, Databricks, Amplitude and Datadog to map real user friction points.",
+                    "Accelerate engineering and product definition cycles with GenAI tools (Claude, ChatGPT, Cursor, GitHub Copilot).",
+                    "Optimize usability and payment recurrence with an essentialist approach, focusing strictly on data-backed features that resolve real usability problems.",
                 ],
             },
             {
-                "title": "IT Coordinator (Fintech M&A, Payments and Data)",
-                "company": "Serasa Experian",
-                "place": "Brazil",
-                "dates": "Nov 2024 - Present",
+                "title": "IT Coordinator | Agentic Tech Project Manager",
+                "company": "Serasa Experian (Flexpag)",
+                "place": "Recife, PE",
+                "dates": "Nov 2024 - Aug 2026",
                 "bullets": [
-                    "Lead data squads in the modernization of the legacy analytics architecture to Databricks/Spark (via Pentaho and APIs), cutting ETL processing time by 40% and reducing time-to-market for data products.",
-                    "Redesigned ownership after the acquisition into three accountable streams (data engineering, processing and analysis) with clear SLAs and an MLOps-ready foundation, sustaining 80M+ transactions per day.",
-                    "Run dual-track cybersecurity execution (SRE infrastructure migration and developer framework hardening) with automated security gates, risk dashboards and EPSS-scored prioritization.",
-                    "Led DevSecOps remediation across 110 Java/Angular applications with Veracode, Rapid7 and CI/CD, reducing total vulnerabilities from 1,200 to 300 in 9 months and critical/high findings from 47 to 3.",
-                    "Support the integration into a payments gateway platform for utilities, covering regulated Pix, Nubank and other Bacen-compliant payment flows.",
+                    "Led key engineering projects for a digital payments and billing fintech, managing technical backlogs in lean environments without a formal Product Owner, including a Hub integration with a White Label frontend and API integrations with clients.",
+                    "Built and ran a DevSecOps guardrail framework across 100+ applications with Veracode, Rapid7 and Wiz as part of a cybersecurity remediation and AWS cloud migration program, eliminating 1,200+ vulnerabilities and reducing security risk by 90% in 6 months.",
+                    "Orchestrated end-to-end migration of legacy analytics to Databricks and Apache Spark with MLOps (data lakehouse), delivering 100% transactional accuracy for R$500M+ per month under BACEN and FEBRABAN regulation.",
                 ],
             },
             {
-                "title": "Agile Delivery Manager (HR, Legal, CS, Sales, Billing)",
-                "company": "Serasa Experian",
-                "place": "London, UK",
+                "title": "Agile Delivery Manager",
+                "company": "Serasa Experian (Shared Services)",
+                "place": "São Carlos, SP",
                 "dates": "Apr 2021 - Nov 2024",
                 "bullets": [
-                    "Led five cross-functional squads and seven engineers across London and the USA, aligning roadmaps with corporate OKRs and controlling Agile KPIs (velocity and throughput).",
-                    "Increased sprint velocity by 35% and reduced cross-squad blockers by 50% with Scrum-of-Scrums, SAFe practices, a gamified agile-maturity framework and Jira/ServiceNow dashboards.",
-                    "Designed and coordinated an AI smart-search and triage workflow for LegalTech (Elasticsearch and low-code), reducing legal operation SLA by 12%.",
-                    "Optimized the design-to-development handoff with Figma, removing communication bottlenecks and improving predictability.",
+                    "Coordinated PI Planning and SAFe governance across 5 international squads (35+ members) in LATAM, US, UK and South Africa, synchronizing C-level OKRs and optimizing flow metrics (velocity, throughput, lead time, dependencies).",
+                    "Led rollout, training and enablement of GitHub Copilot and GenAI workspaces across engineering units, accelerating SDLC delivery speed by up to 45%.",
+                    "Managed backlog, scope baseline and execution of AI-driven Legal Tech applications under fixed-scope contracts, automating legal document reviews and cutting processing time.",
+                    "Led squads and vendor hiring under fixed-scope contracts for enterprise HR platforms (HCM, total compensation, OutSystems low-code), eliminating third-party dependencies.",
+                    "Oversaw high-volume billing platforms and 24/7 Level 3 ITIL incident management with 100% transactional accuracy and reduced MTTR; directed Customer Success portals and a design system with Figma.",
                 ],
             },
             {
-                "title": "Full Stack Developer (Billing, ITIL, Observability)",
+                "title": "Full Stack Engineer",
                 "company": "Serasa Experian",
-                "place": "Brazil",
+                "place": "São Carlos, SP",
                 "dates": "Mar 2016 - Apr 2021",
                 "bullets": [
-                    "Built critical transactional billing platforms with Java, Spring Boot and Angular, adding proactive monitoring with Dynatrace and Datadog to reduce incident resolution time (MTTR).",
-                    "Integrated modern cloud architectures with legacy ecosystems based on .NET, Salesforce and OutSystems, ensuring transactional integrity and high availability.",
-                    "Coordinated modernization waves from a legacy .NET portfolio to Angular/Java, migrating or decommissioning 20 critical applications.",
+                    "Delivered full-stack Java, Spring and cloud engineering and mainframe migration for enterprise billing and CRM platforms in the Core Financial Operations unit.",
+                    "Led modernization of legacy mainframe components into cloud-native microservices (Java, Spring Boot, .NET) with CI/CD pipelines and automated security checks in release flows.",
+                    "Provided 24/7 L3 support with Dynatrace and Datadog observability, keeping 100% transactional billing accuracy and reducing MTTR.",
+                    "Built self-service portals integrated with Salesforce and OutSystems, and executed a vendor-to-internal insourcing transition for core operations, eliminating vendor lock-in.",
                 ],
             },
-            {
-                "title": "Support Specialist",
-                "company": "Amdocs",
-                "place": "Brazil",
-                "dates": "Jul 2013 - Mar 2016",
-                "bullets": [
-                    "Built automation and batch routines in Unix Shell Script and Oracle PL/SQL for telecom, optimizing large-scale database performance.",
-                    "Resolved critical L3 production incidents in global environments under strict SLAs, reducing daily incidents from 300 to 100 with 99.9% uptime in critical billing systems.",
-                ],
-            },
-            {
-                "title": "Product Owner",
-                "company": "XBot",
-                "place": "Brazil",
-                "dates": "Nov 2010 - Jul 2013",
-                "bullets": [
-                    "Led the lifecycle and requirements of robotics and EdTech products, generating R$4 million in revenue across 12 distributed sales and partner teams.",
-                ],
-            },
-            {
-                "title": "International Consultant",
-                "company": "Bernardin Consultants",
-                "place": "France / Brazil",
-                "dates": "Jan 2010 - Dec 2010",
-                "bullets": [
-                    "Coordinated market prospecting and financial feasibility for high-tech industries (defense and military aviation), enabling deals between European investors and the Brazilian market.",
-                ],
-            },
+            AMDOCS,
+            XBOT,
+            BERNARDIN,
         ],
         "projects": [
-            "Portfolio with AI chat assistant (#askToTPM_agentic): prototype that answers recruiter questions about this CV using CV-grounded retrieval, built with React and Vite and deployed on GitHub Pages (wesleyzilva.github.io/portfolio).",
+            "AI portfolio chat (#askToTPM_agentic): CV-grounded Q&A prototype that offers this CV for download (React, Vite, GitHub Pages).",
         ],
     },
     {
         "file": "CV_ATS_ITCoordinator_WesleySilva.pdf",
         "title": "Wesley Gomes da Silva - IT Coordinator - CV",
-        "keywords": "IT Coordinator, IT Manager, ITSM, ITIL, ServiceNow, DevSecOps, Databricks, Agile, Incident Management",
-        "headline": "IT Coordinator | Delivery, Data and DevSecOps | Fintech, Payments and Telecom",
+        "keywords": "IT Coordinator, Agentic Tech Project Manager, ITIL, ITSM, DevSecOps, Databricks, Incident Management, Vendor Management, SAFe, PSM III",
+        "headline": "IT Coordinator | Delivery, Data and DevSecOps | PSM III",
         "summary": (
-            "IT Coordinator at Serasa Experian with 10+ years in mission-critical systems across Fintech, Big Data, Cloud and Telecom. "
-            "Coordinates data, payments and security squads end to end: planning, squad and vendor management, incident, change and "
-            "problem governance, compliance and executive reporting. Combines a hands-on Java, Angular, .NET and Oracle background with "
-            "ITSM discipline (ServiceNow, ITIL), DevSecOps and Agile delivery. Results include vulnerabilities reduced from 1,200 to 300, "
-            "40% faster ETL processing and 99.9% uptime in critical billing systems. Based in Brazil and ready for remote work."
+            "IT Coordinator and Senior Project Manager with 14+ years in mission-critical systems for payments, billing, HR Tech, Legal "
+            "Tech and telecom. Coordinates engineering squads and vendors end to end across LATAM, US, UK, South Africa and India: "
+            "planning, fixed-scope delivery governance, 24/7 ITIL incident management, DevSecOps compliance and executive reporting. "
+            "Combines a hands-on Java, Spring Boot, Angular and .NET background with ITSM discipline, Databricks/Spark data platforms and "
+            "Agile delivery (SAFe, PI Planning). Based in Brazil and ready for remote work."
         ),
         "highlights": [
-            "1,200 to 300 total vulnerabilities in 9 months across 110 Java/Angular applications; 47 to 3 critical/high findings.",
-            "80M+ transactions per day and R$500M+ monthly reconciliation under structured monitoring.",
-            "40% reduction in ETL processing time after the Pentaho to Databricks and Tableau to Power BI migration.",
-            "99.9% uptime in critical billing systems; daily incidents reduced from 300 to 100.",
+            "Eliminated 1,200+ vulnerabilities and reduced active security risk by 90% in 6 months across 100+ applications while maintaining PCI-DSS and LGPD compliance.",
+            "100% transactional accuracy for R$500M+ per month in payment flows through a Databricks/Spark migration under BACEN and FEBRABAN regulation.",
+            "100% transactional billing accuracy and drastically reduced MTTR with 24/7 Level 3 ITIL operations and Dynatrace/Datadog observability.",
+            "Eliminated vendor lock-in with vendor-to-internal insourcing programs across HR Tech, Legal Tech AI, EdTech and core billing operations.",
         ],
         "competencies": [
-            ("IT Coordination and Operations", "IT Team Coordination, Squad and Vendor Management, Incident, Change and Problem Management, ITSM, ITIL, ServiceNow, Zendesk, Freshdesk, SLA and KPI Management, Knowledge Management, Lean Six Sigma (Yellow Belt), Continuous Improvement, Executive Reporting"),
-            ("Data and Platforms", "Databricks, Spark, Pentaho ETL, Power BI, Tableau, Datadog, Dynatrace, Billing Systems, SAP, Oracle ERP, TOTVS Protheus (delivery support)"),
-            ("Security and Compliance", "DevSecOps, Veracode, Checkmarx, Rapid7, PCI-DSS, BACEN, LGPD, FEBRABAN"),
-            ("Engineering and Cloud", "Java, Spring Boot, Angular, .NET, Salesforce, OutSystems, Unix/Linux, Shell Script, PL/SQL, Oracle, CI/CD, GitHub Actions, Docker, Kubernetes, AWS, Azure, GCP (PM level)"),
-            ("Agile and Tools", "Scrum, SAFe, Kanban, OKRs, DORA Metrics, Jira, Azure DevOps, Confluence, Slack, MS Teams, Power Automate, GitHub Copilot, Generative AI"),
+            ("IT Coordination and Operations", "IT Team Coordination, Squad and Vendor Management, Fixed-Scope Delivery Governance, Insourcing, 24/7 L2/L3 Incident Management, ITIL, ITSM, ServiceNow, Remedy, Clarify CRM, SLA Governance, MTTR, Root Cause Analysis, Knowledge Transfer, Lean Six Sigma Yellow Belt, Executive Reporting"),
+            ("Data and Platforms", "Databricks, Apache Spark, MLOps, Data Lakehouse, Datadog, Dynatrace, Billing Systems, Oracle, PL/SQL, Pentaho ETL, Power BI, Tableau"),
+            ("Security and Compliance", "DevSecOps, Veracode, Rapid7, Wiz, Checkmarx, PCI-DSS, LGPD, BACEN, FEBRABAN"),
+            ("Engineering and Cloud", "Java, Spring Boot, Angular, JavaScript, .NET, OutSystems (Low-Code), Salesforce, Unix/Linux, Shell Script, CI/CD, GitHub Actions, AWS (migration), Azure, GCP, Docker, Kubernetes, Tuxedo, WebLogic"),
+            ("Agile and Tools", "Scrum (PSM III), SAFe, PI Planning, Kanban, OKRs, DORA Metrics, Jira, Azure DevOps, Confluence, Figma, GitHub Copilot, Generative AI"),
         ],
         "experience": [
             {
-                "title": "IT Coordinator (Fintech M&A, Payments and Data)",
+                "title": "Agentic Product Owner | Data Centric",
                 "company": "Serasa Experian",
-                "place": "Brazil",
-                "dates": "Nov 2024 - Present",
+                "place": "Pato Branco, PR",
+                "dates": "Aug 2026 - Present",
                 "bullets": [
-                    "Coordinate data, payments and cybersecurity squads, owning planning, delivery governance, SLAs and executive reporting after the acquisition by Serasa.",
-                    "Led DevSecOps remediation across 110 Java/Angular applications with Veracode, Rapid7 and CI/CD, reducing total vulnerabilities from 1,200 to 300 in 9 months and critical/high findings from 47 to 3 (about 93%).",
-                    "Defined ownership by value stream (data engineering, processing and analysis) and implemented monitoring with Datadog and Teams/Power Automate alerts, sustaining 80M+ transactions per day and R$500M+ monthly reconciliation.",
-                    "Lead the migration of legacy analytics from Pentaho to Databricks/Spark and from Tableau to Power BI, cutting ETL processing time by 40% while keeping operations stable through high team turnover.",
-                    "Support the integration into a payments gateway platform for utilities with regulated Pix, Nubank and other Bacen-compliant payment flows and PCI-DSS compliance.",
+                    "Own technical product discovery and execution for B2B payment flows, using Databricks, Amplitude and Datadog data to map real user friction points and prioritize data-backed features.",
+                    "Speed up engineering and product definition cycles with GenAI tools (Claude, ChatGPT, Cursor, GitHub Copilot).",
                 ],
             },
             {
-                "title": "Agile Delivery Manager (HR, Legal, CS, Sales, Billing)",
-                "company": "Serasa Experian",
-                "place": "London, UK",
+                "title": "IT Coordinator | Agentic Tech Project Manager",
+                "company": "Serasa Experian (Flexpag)",
+                "place": "Recife, PE",
+                "dates": "Nov 2024 - Aug 2026",
+                "bullets": [
+                    "Led key engineering projects for a digital payments and billing fintech, managing technical backlogs in lean environments without a formal Product Owner, including a Hub integration with a White Label frontend and API integrations with clients.",
+                    "Built and ran a DevSecOps guardrail framework across 100+ applications with Veracode, Rapid7 and Wiz within a cybersecurity remediation and AWS cloud migration program, eliminating 1,200+ vulnerabilities and reducing security risk by 90% in 6 months while maintaining PCI-DSS and LGPD compliance.",
+                    "Orchestrated end-to-end migration of legacy analytics to Databricks and Apache Spark with MLOps, delivering 100% transactional accuracy for R$500M+ per month under strict BACEN and FEBRABAN constraints.",
+                ],
+            },
+            {
+                "title": "Agile Delivery Manager",
+                "company": "Serasa Experian (Shared Services)",
+                "place": "São Carlos, SP",
                 "dates": "Apr 2021 - Nov 2024",
                 "bullets": [
-                    "Led five cross-functional squads and seven engineers across London and the USA, aligning roadmaps with corporate OKRs and controlling Agile KPIs (velocity and throughput).",
-                    "Increased sprint velocity by 35% and reduced cross-squad blockers by 50% with Scrum-of-Scrums, SAFe practices and Jira/ServiceNow dashboards for executive visibility.",
-                    "Coordinated an AI smart-search and triage workflow for LegalTech that reduced legal operation SLA by 12%.",
-                    "Synchronized the customer care backlog with operations and support, improving prioritization and handoffs across product, support and engineering.",
+                    "Managed global delivery across UK, US and LATAM, coordinating PI Planning and Agile governance for 5 international squads (35+ members) and optimizing flow metrics (velocity, throughput, lead time, dependencies).",
+                    "Oversaw high-volume transactional billing platforms and 24/7 Level 3 ITIL incident management, guaranteeing 100% transactional accuracy and drastically reducing MTTR.",
+                    "Led squads and vendor hiring under fixed-scope contracts for enterprise HR platforms (HCM, total compensation, OutSystems low-code), eliminating third-party dependencies and improving executive visibility.",
+                    "Managed backlog, scope baseline and execution of AI-driven Legal Tech applications under fixed-scope contracts, cutting legal document review time.",
+                    "Led rollout and training of GitHub Copilot and GenAI workspaces across engineering units, accelerating SDLC delivery speed by up to 45%.",
                 ],
             },
             {
-                "title": "Full Stack Developer (Billing, ITIL, Observability)",
+                "title": "Full Stack Engineer",
                 "company": "Serasa Experian",
-                "place": "Brazil",
+                "place": "São Carlos, SP",
                 "dates": "Mar 2016 - Apr 2021",
                 "bullets": [
-                    "Built critical transactional billing platforms with Java, Spring Boot and Angular, adding proactive monitoring with Dynatrace and Datadog to reduce incident resolution time (MTTR).",
-                    "Coordinated modernization waves from a legacy .NET portfolio to Angular/Java, migrating or decommissioning 20 critical applications and lowering technical debt.",
-                    "Applied Lean Six Sigma Yellow Belt practices to ServiceNow incident, change and problem flows, reducing daily L1 incident volume and speeding resolution through knowledge standardization.",
-                    "Led knowledge transfer into the São Carlos operation with documentation and onboarding for internal support teams, reducing dependence on external consultancies.",
+                    "Executed a vendor-to-internal insourcing transition for core system operations, eliminating vendor lock-in, reducing third-party operational costs and retaining critical domain knowledge in-house.",
+                    "Delivered billing engineering and 24/7 L3 support with Dynatrace and Datadog observability, maintaining 100% transactional billing accuracy and reducing MTTR.",
+                    "Led modernization of legacy mainframe components into cloud-native microservices (Java, Spring Boot, .NET) with CI/CD pipelines and automated security checks in release flows.",
+                    "Built self-service administrative portals and integrated Salesforce and OutSystems, reducing manual support requests and ensuring interoperability.",
                 ],
             },
-            {
-                "title": "Support Specialist",
-                "company": "Amdocs",
-                "place": "Brazil",
-                "dates": "Jul 2013 - Mar 2016",
-                "bullets": [
-                    "Led a 24x7 support squad for a legacy CRM and billing environment in telecom, organizing handovers across India and Brazil, and reduced daily incidents from 300 to 100 with 99.9% uptime.",
-                    "Built automation and batch routines in Unix Shell Script and Oracle PL/SQL, and resolved critical L3 production incidents under strict SLAs.",
-                ],
-            },
-            {
-                "title": "Product Owner",
-                "company": "XBot",
-                "place": "Brazil",
-                "dates": "Nov 2010 - Jul 2013",
-                "bullets": [
-                    "Led the lifecycle and requirements of robotics and EdTech products, generating R$4 million in revenue across 12 distributed sales and partner teams.",
-                ],
-            },
-            {
-                "title": "International Consultant",
-                "company": "Bernardin Consultants",
-                "place": "France / Brazil",
-                "dates": "Jan 2010 - Dec 2010",
-                "bullets": [
-                    "Coordinated market prospecting and financial feasibility for high-tech industries (defense and military aviation), enabling deals between European investors and the Brazilian market.",
-                ],
-            },
+            AMDOCS,
+            XBOT,
+            BERNARDIN,
         ],
         "projects": [],
     },
@@ -260,10 +272,10 @@ def build_styles():
         "name": ParagraphStyle("name", fontName="Helvetica-Bold", fontSize=19, leading=22, textColor=black),
         "headline": ParagraphStyle("headline", fontName="Helvetica-Bold", fontSize=11, leading=14, textColor=HexColor("#1f3a5f")),
         "contact": ParagraphStyle("contact", fontName="Helvetica", fontSize=9, leading=12),
-        "section": ParagraphStyle("section", fontName="Helvetica-Bold", fontSize=10.5, leading=13, spaceBefore=9, spaceAfter=1, textColor=HexColor("#1f3a5f")),
-        "body": ParagraphStyle("body", fontName="Helvetica", fontSize=9.6, leading=12.4),
-        "role": ParagraphStyle("role", fontName="Helvetica-Bold", fontSize=9.8, leading=12.6, spaceBefore=5),
-        "bullet": ParagraphStyle("bullet", fontName="Helvetica", fontSize=9.4, leading=12, leftIndent=12, bulletIndent=2, spaceBefore=1.2),
+        "section": ParagraphStyle("section", fontName="Helvetica-Bold", fontSize=10.5, leading=13, spaceBefore=6, spaceAfter=1, textColor=HexColor("#1f3a5f")),
+        "body": ParagraphStyle("body", fontName="Helvetica", fontSize=9.4, leading=11.8),
+        "role": ParagraphStyle("role", fontName="Helvetica-Bold", fontSize=9.6, leading=12, spaceBefore=4),
+        "bullet": ParagraphStyle("bullet", fontName="Helvetica", fontSize=9.3, leading=11.5, leftIndent=12, bulletIndent=2, spaceBefore=1),
     }
 
 
@@ -272,7 +284,8 @@ def esc(text):
 
 
 def link(url):
-    return f'<link href="{url}">{esc(url)}</link>'
+    shown = url.replace("https://", "").rstrip("/")
+    return f'<link href="{url}">{esc(shown)}</link>'
 
 
 def section(title, styles):
@@ -282,11 +295,16 @@ def section(title, styles):
     ]
 
 
+def titled(title, first, styles, room=0.9):
+    return [CondPageBreak(room * inch)] + section(title, styles) + [first]
+
+
 def bullet(text, styles):
     return Paragraph(esc(text), styles["bullet"], bulletText="•")
 
 
 def build_story(cv, styles):
+    comp_style = ParagraphStyle("comp", parent=styles["body"], spaceBefore=1.5)
     story = [
         Paragraph(esc(CONTACT["name"]), styles["name"]),
         Paragraph(esc(cv["headline"]), styles["headline"]),
@@ -297,35 +315,46 @@ def build_story(cv, styles):
             styles["contact"],
         ),
     ]
+    story += titled("PROFESSIONAL SUMMARY", Paragraph(esc(cv["summary"]), styles["body"]), styles)
 
-    story += section("PROFESSIONAL SUMMARY", styles)
-    story.append(Paragraph(esc(cv["summary"]), styles["body"]))
+    story += titled("KEY ACHIEVEMENTS", bullet(cv["highlights"][0], styles), styles)
+    story += [bullet(item, styles) for item in cv["highlights"][1:]]
 
-    story += section("KEY ACHIEVEMENTS", styles)
-    story += [bullet(item, styles) for item in cv["highlights"]]
+    first_label, first_items = cv["competencies"][0]
+    story += titled("CORE COMPETENCIES", Paragraph(f"<b>{esc(first_label)}:</b> {esc(first_items)}", comp_style), styles)
+    for label, items in cv["competencies"][1:]:
+        story.append(Paragraph(f"<b>{esc(label)}:</b> {esc(items)}", comp_style))
 
-    story += section("CORE COMPETENCIES", styles)
-    for label, items in cv["competencies"]:
-        story.append(Paragraph(f"<b>{esc(label)}:</b> {esc(items)}", ParagraphStyle("comp", parent=styles["body"], spaceBefore=1.5)))
-
-    story += section("PROFESSIONAL EXPERIENCE", styles)
+    story += [CondPageBreak(1.1 * inch)] + section("PROFESSIONAL EXPERIENCE", styles)
     for job in cv["experience"]:
         header = f"{esc(job['title'])} | {esc(job['company'])} | {esc(job['place'])} | {esc(job['dates'])}"
-        block = [Paragraph(header, styles["role"])]
-        block += [bullet(item, styles) for item in job["bullets"]]
-        story.append(KeepTogether(block))
+        story.append(CondPageBreak(0.7 * inch))
+        story.append(Paragraph(header, styles["role"]))
+        story += [bullet(item, styles) for item in job["bullets"]]
 
     if cv["projects"]:
-        story += section("SELECTED PROJECTS", styles)
-        story += [bullet(item, styles) for item in cv["projects"]]
+        story += titled("SELECTED PROJECTS", bullet(cv["projects"][0], styles), styles)
+        story += [bullet(item, styles) for item in cv["projects"][1:]]
 
-    story += section("EDUCATION", styles)
-    for entry in EDUCATION:
-        story.append(Paragraph(f"<b>{esc(entry['school'])}</b> | {esc(entry['dates'])}", ParagraphStyle("edu", parent=styles["body"], spaceBefore=2)))
-        story.append(Paragraph(esc(entry["detail"]), styles["body"]))
+    story += titled("CERTIFICATIONS", Paragraph(esc(" | ".join(CERTIFICATIONS)), styles["body"]), styles)
 
-    story += section("LANGUAGES", styles)
-    story.append(Paragraph(esc(LANGUAGES), styles["body"]))
+    story += titled(
+        "HONORS AND PUBLICATIONS",
+        Paragraph(f"<b>Honors and Awards:</b> {esc(' | '.join(HONORS))}", styles["body"]),
+        styles,
+    )
+    story.append(Paragraph(f"<b>Publications:</b> {esc(' | '.join(PUBLICATIONS))}", comp_style))
+
+    education = [
+        Paragraph(
+            f"<b>{esc(entry['school'])}</b> | {esc(entry['detail'])} | {esc(entry['dates'])}",
+            ParagraphStyle("edu", parent=styles["body"], spaceBefore=2),
+        )
+        for entry in EDUCATION
+    ]
+    story += [CondPageBreak(1.0 * inch)] + section("EDUCATION", styles) + education
+
+    story += titled("LANGUAGES", Paragraph(esc(LANGUAGES), styles["body"]), styles, room=0.6)
     return story
 
 
@@ -334,10 +363,10 @@ def render(cv, output_dir):
     doc = SimpleDocTemplate(
         str(path),
         pagesize=LETTER,
-        leftMargin=0.7 * inch,
-        rightMargin=0.7 * inch,
-        topMargin=0.6 * inch,
-        bottomMargin=0.6 * inch,
+        leftMargin=0.65 * inch,
+        rightMargin=0.65 * inch,
+        topMargin=0.5 * inch,
+        bottomMargin=0.5 * inch,
         title=cv["title"],
         author=CONTACT["name"],
         subject="Curriculum Vitae",
@@ -358,11 +387,11 @@ def check(path):
     if len(reader.pages) > 2:
         problems.append(f"{len(reader.pages)} pages (max 2)")
 
-    for heading in ("PROFESSIONAL SUMMARY", "CORE COMPETENCIES", "PROFESSIONAL EXPERIENCE", "EDUCATION", "LANGUAGES"):
+    for heading in ("PROFESSIONAL SUMMARY", "CORE COMPETENCIES", "PROFESSIONAL EXPERIENCE", "CERTIFICATIONS", "EDUCATION", "LANGUAGES"):
         if heading not in text:
             problems.append(f"missing heading {heading}")
 
-    for needle in (CONTACT["email"], CONTACT["phone"], CONTACT["linkedin"], "Serasa Experian"):
+    for needle in (CONTACT["email"], CONTACT["phone"], "linkedin.com/in/wesleyzilva", "Serasa Experian"):
         if needle not in text:
             problems.append(f"contact/field not intact in text layer: {needle}")
 

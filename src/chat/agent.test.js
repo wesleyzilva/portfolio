@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import { askAgent, retrieve, tokenize } from './agent.js';
 import { knowledgeBase } from './knowledge.js';
 
@@ -73,4 +75,27 @@ test('greetings do not trigger retrieval', async () => {
 
 test('retrieve ranks the Databricks project first', () => {
   assert.equal(retrieve('databricks migration')[0].chunk.id, 'project-data-modernization');
+});
+
+test('CV requests return ATS downloads that exist in public/', async () => {
+  const answer = await ask('Can I get an updated CV in ATS format?');
+  assert.equal(answer.downloads.length, 2);
+  answer.downloads.forEach((cv) => {
+    assert.ok(fs.existsSync(path.join('public', cv.fileName)), `${cv.fileName} is missing from public/`);
+  });
+  assert.doesNotMatch([answer.text, ...answer.bullets].join(' '), /not found|couldn't find/i);
+});
+
+test('CV requests for an IT role list the IT Coordinator CV first', async () => {
+  const answer = await ask('I need his resume for an IT Coordinator role');
+  assert.equal(answer.downloads[0].id, 'it-coordinator');
+  const agentic = await ask('send me his resume');
+  assert.equal(agentic.downloads[0].id, 'agentic-tpm');
+});
+
+test('certification and current role questions use the updated profile', async () => {
+  const certs = await ask('Is he PSM certified?');
+  assert.equal(certs.sources[0].id, 'profile-certifications');
+  const current = await ask('What does he do currently?');
+  assert.equal(current.sources[0].id, 'profile-current-role');
 });
