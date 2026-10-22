@@ -99,3 +99,40 @@ test('certification and current role questions use the updated profile', async (
   const current = await ask('What does he do currently?');
   assert.equal(current.sources[0].id, 'profile-current-role');
 });
+
+test('LatAm.AIgile brand question explains the brand without a match badge', async () => {
+  const answer = await ask('What is LatAm.AIgile?');
+  assert.equal(answer.sources[0].id, 'brand-latam-aigile');
+  assert.equal(answer.matchPercent, null);
+  assert.match(answer.text, /people/);
+});
+
+test('personal interests are presented as interests, never as CV skills', async () => {
+  const cases = [
+    ['Does he know n8n?', 'interest-automation'],
+    ['Is he interested in healthcare or dentists?', 'interest-healthcare'],
+    ['does he do trade?', 'interest-trading'],
+    ['What is Wesley curious about outside work?', 'interests-overview'],
+  ];
+  for (const [question, expectedId] of cases) {
+    const answer = await ask(question);
+    assert.equal(answer.sources[0].id, expectedId, question);
+    assert.equal(answer.matchPercent, null, question);
+    assert.doesNotMatch(answer.text, /^Yes/, question);
+  }
+});
+
+test('language questions keep levels honest and mention learning goals', async () => {
+  const answer = await ask('Does he speak Chinese?');
+  assert.equal(answer.sources[0].id, 'profile-languages');
+  assert.match(answer.text, /Elementary/);
+  assert.doesNotMatch(answer.text, /^Yes/);
+  assert.ok(answer.bullets.some((line) => /C2/.test(line)));
+});
+
+test('professional questions never surface personal interests as related', async () => {
+  const ai = await ask('What AI projects has he delivered?');
+  assert.ok(ai.sources.every((source) => source.type !== 'interest'));
+  const latam = await ask('Has he worked in LATAM?');
+  assert.notEqual(latam.sources[0].id, 'brand-latam-aigile');
+});
