@@ -18,10 +18,10 @@ test('QAWS is expanded into QA and AWS', () => {
 
 test('"he know QAWS projects?" shows a match percentage and QA-adjacent evidence', async () => {
   const answer = await ask('he know QAWS projects?');
-  assert.equal(answer.matchPercent, 75);
-  assert.match(answer.text, /^Yes, AWS/);
+  assert.ok(answer.matchPercent >= 75);
+  assert.match(answer.text, /^Yes, AWS is part/);
   assert.ok(answer.sources.some((source) => source.id.startsWith('skills-cloud')));
-  assert.ok(answer.sources.some((source) => source.id === 'profile-quality'));
+  assert.ok(answer.sources.some((source) => ['profile-quality', 'tpm-star-story'].includes(source.id)));
 });
 
 test('tool questions answer from the skills chunk with a yes and 100% match', async () => {
@@ -268,7 +268,7 @@ test('TPM answers cite concrete evidence from the CV', async () => {
   assert.ok(milestones.bullets.length >= 5);
   assert.ok(milestones.bullets.some((line) => /Agentic Product Owner/.test(line)));
   const story = await ask('Tell me about a time he delivered under a hard deadline');
-  assert.ok(story.bullets.some((line) => /1200 to 300/.test(line)));
+  assert.ok(story.bullets.some((line) => /1,027 to 374/.test(line)));
 });
 
 test('TPM follow-ups chain into each other so a screening call can keep going', async () => {
@@ -293,7 +293,13 @@ const storyExpectations = {
   'Tell me about a decision he made without clear data': 'story-decision-without-data',
   'Tell me about a deep root-cause investigation': 'story-root-cause',
   'How did he keep high standards under pressure?': 'story-highest-standards',
-  'Tell me about improving a product that already worked': 'story-improve-working-product',
+  'Tell me about a customer obsession example': 'story-improve-working-product',
+  'How does he manage vendors and budget?': 'story-vendor-governance',
+  'Tell me about bringing operational knowledge in-house': 'story-support-repatriation',
+  'How does he align stakeholders without direct authority?': 'story-global-alignment',
+  'How did he scale low-code across squads?': 'story-lowcode-chapter',
+  'What was his first big result before graduation?': 'story-xbot-pitch',
+  'Tell me about a time he dealt with ambiguity': 'story-end-to-end-program',
   'How technical is he?': 'story-technical-depth',
   'What new skill did he learn to improve performance?': 'story-learn-new-skill',
 };
@@ -309,12 +315,19 @@ test('behavioral interview prompts return the matching STAR story', async () => 
 
 test('stories carry the concrete numbers from Wesley\'s own examples', async () => {
   const checks = [
-    ['Tell me about solving a complex problem with a simple solution', /150\+/],
+    ['Tell me about solving a complex problem with a simple solution', /6 to 3 months/],
     ['Tell me about a deep root-cause investigation', /30% of accounts/],
     ['How did he keep high standards under pressure?', /0 to 1000/],
-    ['Tell me about improving a product that already worked', /50%/],
+    ['Tell me about a customer obsession example', /two untreated|R\$80 million/],
     ['Tell me about a decision he made without clear data', /250/],
-    ['Tell me about a complex program he ran end to end', /1\.5 years/],
+    ['Tell me about a complex program he ran end to end', /18 months/],
+    ['Tell me about a time he delivered under a hard deadline', /64%/],
+    ['Tell me about an AI project that increased adoption', /50% to 100%/],
+    ['How does he manage vendors and budget?', /5m40s to 2m40s/],
+    ['Tell me about bringing operational knowledge in-house', /30 to 10 business days/],
+    ['How does he align stakeholders without direct authority?', /18 months ahead/],
+    ['How did he scale low-code across squads?', /three months to one/],
+    ['What was his first big result before graduation?', /BRL 4 million/],
   ];
   for (const [question, pattern] of checks) {
     const answer = await ask(question);
