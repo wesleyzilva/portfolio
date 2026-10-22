@@ -5,7 +5,7 @@ import { suggestedQuestions } from './knowledge';
 const WELCOME = {
   id: 'welcome',
   role: 'agent',
-  text: `Hi, I'm ${AGENT_NAME}. Ask me anything about Wesley's experience, projects, skills, agentic and AI work, education, scheduling an interview, or what he is curious about, in English.`,
+  text: `Hi, I'm ${AGENT_NAME}. Ask me anything about Wesley's experience, projects, career milestones, stakeholder management, agentic and AI work, education, scheduling an interview, or what he is curious about, in English.`,
   bullets: [],
   sources: [],
 };

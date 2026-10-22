@@ -232,3 +232,53 @@ test('agentic questions summarize what Wesley knows and the related projects', a
     }
   }
 });
+
+const tpmExpectations = {
+  'What are his key career milestones?': 'tpm-milestones-career',
+  'How does he plan and track project milestones?': 'tpm-planning-milestones',
+  'How does he manage stakeholders?': 'tpm-stakeholders',
+  'How does he handle conflict with stakeholders?': 'tpm-stakeholders',
+  'How does he handle risks and dependencies?': 'tpm-risk-dependencies',
+  'What happens when a project slips behind schedule?': 'tpm-risk-dependencies',
+  'Which delivery metrics does he report?': 'tpm-metrics',
+  'How does he measure success?': 'tpm-metrics',
+  'How does he prioritize and handle trade-offs?': 'tpm-prioritization',
+  'How does he lead teams and vendors?': 'tpm-team-leadership',
+  'Is he a good fit for a Technical Program Manager role?': 'tpm-role-fit',
+  'Tell me about a time he delivered under a hard deadline': 'tpm-star-story',
+  'What is his biggest challenge?': 'tpm-star-story',
+  'How does he keep agentic delivery safe and governed?': 'tpm-agentic-governance',
+  'How does he handle hallucinations and guardrails for AI agents?': 'tpm-agentic-governance',
+  'Tell me about yourself': 'profile-summary',
+};
+
+test('typical TPM interview questions land on the right answer', async () => {
+  for (const [question, expectedId] of Object.entries(tpmExpectations)) {
+    const answer = await ask(question);
+    assert.equal(answer.sources[0].id, expectedId, question);
+    assert.notEqual(answer.confidence, 'none', question);
+    assert.equal(answer.matchPercent, null, `${question} should not show a fit badge`);
+  }
+});
+
+test('TPM answers cite concrete evidence from the CV', async () => {
+  const stakeholders = await ask('How does he manage stakeholders?');
+  assert.ok(stakeholders.bullets.some((line) => /C-level OKRs/.test(line)));
+  const milestones = await ask('What are his key career milestones?');
+  assert.ok(milestones.bullets.length >= 5);
+  assert.ok(milestones.bullets.some((line) => /Agentic Product Owner/.test(line)));
+  const story = await ask('Tell me about a time he delivered under a hard deadline');
+  assert.ok(story.bullets.some((line) => /1200 to 300/.test(line)));
+});
+
+test('TPM follow-ups chain into each other so a screening call can keep going', async () => {
+  const stakeholders = await ask('How does he manage stakeholders?');
+  assert.ok(stakeholders.suggestions.some((item) => /metrics|risks|lead teams/.test(item)), stakeholders.suggestions.join(' | '));
+  const planning = await ask('How does he plan and track project milestones?');
+  assert.ok(planning.suggestions.some((item) => /risks|stakeholders|metrics/.test(item)), planning.suggestions.join(' | '));
+});
+
+test('the opening chips lead with the questions a TPM hiring manager asks first', () => {
+  assert.deepEqual(suggestedQuestions.slice(0, 2), ['What are his key career milestones?', 'How does he manage stakeholders?']);
+  assert.ok(suggestedQuestions.includes('Is he a good fit for a Technical Program Manager role?'));
+});
