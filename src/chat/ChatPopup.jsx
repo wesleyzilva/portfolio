@@ -5,7 +5,7 @@ import { suggestedQuestions } from './knowledge';
 const WELCOME = {
   id: 'welcome',
   role: 'agent',
-  text: `Hi, I'm ${AGENT_NAME}. Ask me anything about Wesley's experience, projects, skills, availability or what he is curious about, in English.`,
+  text: `Hi, I'm ${AGENT_NAME}. Ask me anything about Wesley's experience, projects, skills, agentic and AI work, education, scheduling an interview, or what he is curious about, in English.`,
   bullets: [],
   sources: [],
 };
@@ -215,7 +215,7 @@ function ChatPopup({ onTrack }) {
 
         {showSuggestions ? (
           <div className="chat-suggestions" aria-label="Suggested questions">
-            {suggestedQuestions.map((question) => (
+            {suggestedQuestions.slice(0, 8).map((question) => (
               <button key={question} type="button" className="chat-chip" onClick={() => submit(question)}>
                 {question}
               </button>

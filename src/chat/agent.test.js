@@ -182,3 +182,53 @@ test('every suggested follow-up question is answerable from the CV', async () =>
     assert.ok(answer.sources.length > 0, question);
   }
 });
+
+test('education answers lead with the electrical engineering degree', async () => {
+  for (const question of ['What is his education?', 'Does he have an electrical engineering degree?']) {
+    const answer = await ask(question);
+    assert.equal(answer.sources[0].id, 'profile-education', question);
+    assert.match(answer.text, /Electrical Engineering/);
+  }
+  const interest = await ask('Is he interested in electrical engineering and AI?');
+  assert.equal(interest.sources[0].id, 'interest-engineering-ai');
+  assert.equal(interest.matchPercent, null);
+});
+
+test('EdTech, teaching programming and gamification are grounded in real evidence', async () => {
+  for (const question of ['Does he have EdTech experience?', 'Does he teach programming?', 'gamification']) {
+    const answer = await ask(question);
+    assert.equal(answer.sources[0].id, 'profile-edtech', question);
+    assert.doesNotMatch(answer.text, /^Yes/, question);
+    assert.ok(answer.bullets.some((line) => /XBot/.test(line)), question);
+    assert.ok(answer.bullets.some((line) => /gamified/i.test(line)), question);
+  }
+});
+
+test('calendar and scheduling questions explain how to book time without inventing links', async () => {
+  for (const question of ['calendar', 'How can I schedule an interview with Wesley?', 'Is he available for a call next week?']) {
+    const answer = await ask(question);
+    assert.equal(answer.sources[0].id, 'profile-calendar', question);
+    assert.ok(answer.bullets.some((line) => /wesley\.zilva@gmail\.com/.test(line)), question);
+    assert.ok(answer.bullets.every((line) => !/calendly|zoom\.us|meet\.google/i.test(line)), question);
+  }
+  const plain = await ask('Is he available?');
+  assert.equal(plain.sources[0].id, 'profile-availability');
+});
+
+test('compensation and start date questions point to a direct conversation', async () => {
+  for (const question of ['What are his salary expectations?', 'What is his notice period?', 'When can he start?']) {
+    const answer = await ask(question);
+    assert.equal(answer.sources[0].id, 'profile-compensation', question);
+    assert.doesNotMatch(answer.text, /\$|R\$|\d{2,}k/i, question);
+  }
+});
+
+test('agentic questions summarize what Wesley knows and the related projects', async () => {
+  for (const question of ['What does he know about agentic delivery?', 'agentic projects']) {
+    const answer = await ask(question);
+    assert.equal(answer.sources[0].id, 'profile-agentic', question);
+    for (const needle of [/MCP/, /Claude/, /LegalTech/, /askToTPM_agentic/, /LatAm\.AIgile/]) {
+      assert.ok(answer.bullets.some((line) => needle.test(line)), `${question}: ${needle}`);
+    }
+  }
+});
