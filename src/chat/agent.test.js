@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { askAgent, retrieve, tokenize } from './agent.js';
-import { knowledgeBase } from './knowledge.js';
+import { allFollowUpQuestions, knowledgeBase, suggestedQuestions } from './knowledge.js';
 
 const ask = (question) => askAgent(question, { latency: 0 });
 
@@ -135,4 +135,50 @@ test('professional questions never surface personal interests as related', async
   assert.ok(ai.sources.every((source) => source.type !== 'interest'));
   const latam = await ask('Has he worked in LATAM?');
   assert.notEqual(latam.sources[0].id, 'brand-latam-aigile');
+});
+
+const sampleQuestions = [
+  'hi', 'thanks', 'teste', 'voltar', 'what is the weather today',
+  'Does he know AWS?', 'he know QAWS projects?', 'service now', 'Can I get a resume?',
+  'Is he available for nearshore roles?', 'How can I contact Wesley?', 'What is LatAm.AIgile?',
+  'What is Wesley curious about outside work?', 'Does he speak Chinese?', 'What certifications does he hold?',
+  'Does he know Databricks?', 'Tell me about the Six Sigma Empower program', 'Does he know Rust?',
+];
+
+test('every answer offers follow-up questions that differ from the one asked', async () => {
+  for (const question of sampleQuestions) {
+    const answer = await ask(question);
+    assert.ok(answer.suggestions.length >= 2, `${question}: ${answer.suggestions.length} suggestions`);
+    assert.equal(new Set(answer.suggestions).size, answer.suggestions.length, question);
+    assert.ok(!answer.suggestions.includes(question), question);
+  }
+});
+
+test('at least one follow-up stays in the context of the question', async () => {
+  const aws = await ask('Does he know AWS?');
+  assert.ok(aws.suggestions.some((item) => /vulnerability|Databricks|legacy/.test(item)), aws.suggestions.join(' | '));
+
+  const brand = await ask('What is LatAm.AIgile?');
+  assert.ok(brand.suggestions.some((item) => /AI projects|curious/.test(item)));
+
+  const healthcare = await ask('Is Wesley interested in healthcare?');
+  assert.ok(healthcare.suggestions.some((item) => /automation|curious|LatAm/.test(item)));
+
+  const cv = await ask('Can I get an updated CV in ATS format?');
+  assert.ok(cv.suggestions.some((item) => /current role|nearshore|certifications/.test(item)));
+});
+
+test('follow-ups skip questions already asked in the conversation', async () => {
+  const history = ['What is his current role?', 'Is he available for nearshore roles?'];
+  const answer = await askAgent('How can I contact Wesley?', { latency: 0, history });
+  assert.ok(answer.suggestions.length >= 2);
+  history.forEach((item) => assert.ok(!answer.suggestions.includes(item), item));
+});
+
+test('every suggested follow-up question is answerable from the CV', async () => {
+  for (const question of [...allFollowUpQuestions, ...suggestedQuestions]) {
+    const answer = await ask(question);
+    assert.notEqual(answer.confidence, 'none', question);
+    assert.ok(answer.sources.length > 0, question);
+  }
 });

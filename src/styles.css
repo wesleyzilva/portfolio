@@ -1351,6 +1351,7 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
 }
 
 .chat-suggestions-inline { margin-top: 0.5rem; }
+.chat-suggestions-label { font-size: 0.7rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.7; }
 
 .chat-downloads { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.55rem; }
 

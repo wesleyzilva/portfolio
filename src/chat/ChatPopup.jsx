@@ -50,6 +50,7 @@ function AgentMessage({ message, onOpenSource, onAsk, onDownload, canAsk }) {
       ) : null}
       {message.suggestions?.length > 0 ? (
         <div className="chat-suggestions chat-suggestions-inline" aria-label="Suggested questions">
+          <span className="chat-suggestions-label">You might also ask</span>
           {message.suggestions.map((question) => (
             <button key={question} type="button" className="chat-chip" disabled={!canAsk} onClick={() => onAsk(question)}>
               {question}
@@ -127,7 +128,8 @@ function ChatPopup({ onTrack }) {
     setStatus('Thinking…');
 
     try {
-      const answer = await askAgent(question, { onStatus: setStatus });
+      const history = messages.filter((message) => message.role === 'user').map((message) => message.text);
+      const answer = await askAgent(question, { onStatus: setStatus, history });
       setMessages((current) => [...current, { id: `a-${Date.now()}`, role: 'agent', ...answer }]);
       onTrack?.('chat_question', {
         question_length: question.length,

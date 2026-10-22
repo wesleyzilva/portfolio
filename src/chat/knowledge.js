@@ -296,3 +296,93 @@ export const suggestedQuestions = [
 ];
 
 export const cvDownloadOptions = atsCvDownloads;
+
+const Q = {
+  impact: 'What was his biggest measurable impact?',
+  distributed: 'Has he led distributed or global teams?',
+  cv: 'Can I get an updated CV in ATS format?',
+  current: 'What is his current role?',
+  availability: 'Is he available for nearshore roles?',
+  ai: 'What AI projects has he delivered?',
+  brand: 'What is LatAm.AIgile?',
+  interests: 'What is Wesley curious about outside work?',
+  qaAws: 'Does he know QA and AWS projects?',
+  security: 'Tell me about the vulnerability reduction project',
+  databricks: 'Tell me about the Databricks migration',
+  agile: 'Tell me about the agile transformation project',
+  sixSigma: 'Tell me about the Six Sigma Empower program',
+  journey: 'Tell me about the digital journey analytics project',
+  certifications: 'What certifications does he hold?',
+  languages: 'Which languages does he speak?',
+  serviceNow: 'Does he know ServiceNow?',
+  mna: 'What did he do in M&A and payments?',
+  contact: 'How can I contact Wesley?',
+  legacy: 'Tell me about the .NET legacy migration',
+  support: 'Tell me about the critical support for legacy CRM and billing',
+  mentoring: 'Tell me about his international mentoring',
+  dataManagement: 'Tell me about the data management implementation',
+  quality: 'How does he build quality into releases?',
+  career: 'Tell me about his IT Coordinator role',
+  healthcare: 'Is Wesley interested in healthcare?',
+  automation: 'Is he interested in automation with n8n?',
+  learning: 'How is he learning Chinese and English with AI?',
+};
+
+// Each chunk lists the questions a recruiter is most likely to ask next, closest topic first.
+const followUpsById = {
+  'profile-summary': [Q.impact, Q.current, Q.certifications],
+  'profile-contact': [Q.availability, Q.cv, Q.current],
+  'profile-availability': [Q.contact, Q.distributed, Q.cv],
+  'profile-cv': [Q.current, Q.availability, Q.certifications],
+  'profile-current-role': [Q.mna, Q.ai, Q.career],
+  'profile-certifications': [Q.current, Q.agile, Q.languages],
+  'brand-latam-aigile': [Q.ai, Q.interests, Q.current],
+  'profile-languages': [Q.learning, Q.distributed, Q.availability],
+  'interests-overview': [Q.healthcare, Q.automation, Q.learning],
+  'interest-healthcare': [Q.interests, Q.automation, Q.brand],
+  'interest-automation': [Q.ai, Q.interests, Q.brand],
+  'interest-trading': [Q.interests, Q.learning, Q.brand],
+  'interest-learning': [Q.languages, Q.interests, Q.certifications],
+  'profile-ai': [Q.brand, Q.impact, Q.current],
+  'profile-impact': [Q.security, Q.databricks, Q.sixSigma],
+  'profile-quality': [Q.security, Q.qaAws, Q.sixSigma],
+  'recent-journey': [Q.current, Q.dataManagement, Q.impact],
+  'focus-cybersecurity': [Q.security, Q.quality, Q.qaAws],
+  'focus-data-management': [Q.dataManagement, Q.databricks, Q.mna],
+  'project-security-compliance': [Q.quality, Q.qaAws, Q.impact],
+  'project-data-engineering': [Q.databricks, Q.mna, Q.current],
+  'project-data-modernization': [Q.dataManagement, Q.impact, Q.qaAws],
+  'project-agile-transformation': [Q.sixSigma, Q.distributed, Q.certifications],
+  'project-applied-ai': [Q.ai, Q.brand, Q.impact],
+  'project-operations-product': [Q.journey, Q.support, Q.impact],
+  'project-customer-experience': [Q.agile, Q.databricks, Q.impact],
+  'project-application-modernization': [Q.qaAws, Q.security, Q.support],
+  'project-operational-excellence': [Q.agile, Q.certifications, Q.impact],
+  'project-global-leadership': [Q.distributed, Q.agile, Q.languages],
+  'project-critical-support': [Q.legacy, Q.serviceNow, Q.career],
+  'project-knowledge-transfer': [Q.mentoring, Q.support, Q.career],
+  'skills-delivery-collaboration': [Q.distributed, Q.agile, Q.impact],
+  'skills-agile-frameworks': [Q.agile, Q.sixSigma, Q.certifications],
+  'skills-itsm-incident-management': [Q.support, Q.quality, Q.career],
+  'skills-reporting-analytics': [Q.journey, Q.databricks, Q.impact],
+  'skills-crm-stakeholder-alignment': [Q.support, Q.journey, Q.distributed],
+  'skills-cloud-infrastructure-pm-level-': [Q.security, Q.databricks, Q.legacy],
+  'skills-security-compliance-governance': [Q.security, Q.quality, Q.qaAws],
+  'skills-finance-erp': [Q.mna, Q.current, Q.impact],
+};
+
+const followUpsByType = {
+  career: [Q.career, Q.current, Q.impact],
+  focus: [Q.current, Q.impact, Q.mna],
+  project: [Q.impact, Q.current, Q.cv],
+  skills: [Q.impact, Q.current, Q.qaAws],
+  interest: [Q.interests, Q.brand, Q.current],
+  profile: [Q.impact, Q.current, Q.cv],
+};
+
+export const followUpsFor = (chunk) => followUpsById[chunk.id] ?? followUpsByType[chunk.type] ?? followUpsByType.profile;
+
+export const allFollowUpQuestions = [...new Set([
+  ...Object.values(followUpsById).flat(),
+  ...Object.values(followUpsByType).flat(),
+])];
