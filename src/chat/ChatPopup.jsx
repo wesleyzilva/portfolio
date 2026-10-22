@@ -12,9 +12,19 @@ const WELCOME = {
 
 const MOBILE_QUERY = '(max-width: 720px)';
 
-function AgentMessage({ message, onOpenSource }) {
+function AgentMessage({ message, onOpenSource, onAsk, canAsk }) {
+  const hasMatch = typeof message.matchPercent === 'number';
+
   return (
     <div className="chat-msg chat-msg-agent">
+      {hasMatch ? (
+        <span
+          className="chat-match"
+          title="Share of the topics in your question covered by Wesley's CV. Adjacent experience counts as half."
+        >
+          {message.matchPercent}% match
+        </span>
+      ) : null}
       <p>{message.text}</p>
       {message.bullets.length > 0 ? (
         <ul>
@@ -22,6 +32,15 @@ function AgentMessage({ message, onOpenSource }) {
             <li key={item}>{item}</li>
           ))}
         </ul>
+      ) : null}
+      {message.suggestions?.length > 0 ? (
+        <div className="chat-suggestions chat-suggestions-inline" aria-label="Suggested questions">
+          {message.suggestions.map((question) => (
+            <button key={question} type="button" className="chat-chip" disabled={!canAsk} onClick={() => onAsk(question)}>
+              {question}
+            </button>
+          ))}
+        </div>
       ) : null}
       {message.sources.length > 0 ? (
         <div className="chat-sources" aria-label="Sources from the CV">
@@ -63,7 +82,17 @@ function ChatPopup({ onTrack }) {
 
   React.useEffect(() => {
     const log = logRef.current;
-    if (log) log.scrollTop = log.scrollHeight;
+    if (!log) return;
+
+    const lastMessage = messages[messages.length - 1];
+    const answers = log.querySelectorAll('.chat-msg-agent:not(.chat-status)');
+    const newestAnswer = answers[answers.length - 1];
+
+    if (status === null && lastMessage?.role === 'agent' && lastMessage.id !== 'welcome' && newestAnswer) {
+      log.scrollTop += newestAnswer.getBoundingClientRect().top - log.getBoundingClientRect().top - 8;
+    } else {
+      log.scrollTop = log.scrollHeight;
+    }
   }, [messages, status]);
 
   const close = React.useCallback(() => {
@@ -86,6 +115,7 @@ function ChatPopup({ onTrack }) {
       onTrack?.('chat_question', {
         question_length: question.length,
         confidence: answer.confidence,
+        match_percent: answer.matchPercent ?? -1,
         top_source: answer.sources[0]?.id ?? 'none',
       });
     } catch {
@@ -156,7 +186,7 @@ function ChatPopup({ onTrack }) {
           message.role === 'user' ? (
             <div key={message.id} className="chat-msg chat-msg-user">{message.text}</div>
           ) : (
-            <AgentMessage key={message.id} message={message} onOpenSource={openSource} />
+            <AgentMessage key={message.id} message={message} onOpenSource={openSource} onAsk={submit} canAsk={!busy} />
           )
         ))}
 

@@ -1,4 +1,4 @@
-import { knowledgeBase } from './knowledge.js';
+import { canonicalNames, knowledgeBase, suggestedQuestions } from './knowledge.js';
 
 export const AGENT_NAME = '#askToTPM_agentic';
 
@@ -20,6 +20,8 @@ const TECH_TERMS = new Set(['aws', 'azure', 'gcp', 'kubernetes', 'k8s', 'qa', 't
 
 const ALIASES = {
   qaws: ['qa', 'aws'],
+  'service now': ['servicenow'],
+  'service-now': ['servicenow'],
   'q.a.': ['qa'],
   'ci/cd': ['ci', 'cd', 'pipeline'],
   'm&a': ['manda'],
@@ -84,6 +86,11 @@ const stem = (word) => {
   return word;
 };
 
+const STEMMED_SYNONYMS = Object.fromEntries(
+  Object.entries(SYNONYMS).map(([key, values]) => [stem(key), values.map(stem)]),
+);
+const STEMMED_TECH_TERMS = new Set([...TECH_TERMS].map(stem));
+
 const expandAliases = (text) => {
   let output = text.toLowerCase();
   Object.entries(ALIASES).forEach(([alias, replacement]) => {
@@ -137,7 +144,7 @@ const buildQuery = (question) => {
   base.forEach((token) => weights.set(token, 1));
 
   base.forEach((token) => {
-    (SYNONYMS[token] ?? []).map(stem).forEach((synonym) => {
+    (STEMMED_SYNONYMS[token] ?? []).forEach((synonym) => {
       if (!weights.has(synonym)) weights.set(synonym, 0.45);
     });
   });
@@ -148,9 +155,9 @@ const buildQuery = (question) => {
 const TOOL_QUESTION = /\b(know|knows|experience|familiar|skill|skills|tool|tools|stack|use|used|proficient)\b/i;
 
 export const retrieve = (question, { limit = 3 } = {}) => {
-  const { weights } = buildQuery(question);
+  const { base, weights } = buildQuery(question);
   if (weights.size === 0) return [];
-  const skillsBoost = TOOL_QUESTION.test(question) ? 1.35 : 1;
+  const skillsBoost = TOOL_QUESTION.test(question) || base.length <= 2 ? 1.35 : 1;
 
   const scored = index.docs
     .map((doc) => {
@@ -175,7 +182,7 @@ const specificTerms = (question) => {
   const seen = new Set();
   return tokenize(question).filter((token) => {
     if (isGeneric(token) || seen.has(token)) return false;
-    if (SYNONYMS[token] && !TECH_TERMS.has(token)) return false;
+    if (STEMMED_SYNONYMS[token] && !STEMMED_TECH_TERMS.has(token)) return false;
     seen.add(token);
     return true;
   });
@@ -196,44 +203,92 @@ const pickBullets = (chunk, queryTokens, max) => {
     .map((entry) => entry.text);
 };
 
-const formatTerm = (term) => (term.length <= 3 ? term.toUpperCase() : term);
+const SUMMARY = knowledgeBase.find((chunk) => chunk.id === 'profile-summary');
+const CONTACT_LINE = 'Want to go deeper? Wesley replies within 24h at wesley.zilva@gmail.com.';
 
-const FALLBACK = {
-  text: "I couldn't find that in Wesley's CV, and I'd rather not guess. Try asking about his projects, skills, career timeline, AI work or availability, or reach him directly for anything else.",
-  bullets: ['Email: wesley.zilva@gmail.com', 'LinkedIn: linkedin.com/in/wesleyzilva'],
-  sources: [],
-  confidence: 'none',
+const CANONICAL = Object.fromEntries(Object.entries(canonicalNames).map(([key, value]) => [stem(key), value]));
+
+const labelFor = (term, question) => {
+  if (CANONICAL[term]) return CANONICAL[term];
+  const raw = question.toLowerCase().match(/[a-z0-9+#.]+/g)?.find((word) => stem(word) === term);
+  const label = raw ?? term;
+  return label.length <= 3 ? label.toUpperCase() : `${label[0].toUpperCase()}${label.slice(1)}`;
 };
+
+const joinLabels = (labels) => {
+  if (labels.length <= 1) return labels.join('');
+  return `${labels.slice(0, -1).join(', ')} and ${labels[labels.length - 1]}`;
+};
+
+const guided = (text, confidence, extraBullets = []) => ({
+  text,
+  bullets: [...SUMMARY.bullets.slice(0, 3), ...extraBullets, CONTACT_LINE],
+  sources: [{ id: SUMMARY.id, title: SUMMARY.title, section: SUMMARY.section, type: SUMMARY.type }],
+  suggestions: suggestedQuestions.slice(0, 4),
+  matchPercent: null,
+  confidence,
+});
+
+const findAdjacent = (term, excludedIds) => {
+  const synonyms = STEMMED_SYNONYMS[term] ?? [];
+  if (synonyms.length === 0) return null;
+
+  const best = index.docs
+    .filter((doc) => !excludedIds.has(doc.chunk.id))
+    .map((doc) => ({
+      chunk: doc.chunk,
+      score: synonyms.reduce((sum, token) => {
+        const frequency = doc.weighted.get(token);
+        return frequency ? sum + index.idf(token) * (1 + Math.log(frequency)) : sum;
+      }, 0),
+    }))
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score)[0];
+
+  return best?.chunk ?? null;
+};
+
+const toSource = (chunk) => ({ id: chunk.id, title: chunk.title, section: chunk.section, type: chunk.type });
 
 export const composeAnswer = (question, results) => {
   const trimmed = question.trim();
 
   if (GREETING.test(trimmed)) {
     return {
-      text: `Hi! I'm ${AGENT_NAME}, an assistant that answers questions about Wesley's CV. Ask me about his projects, skills, career or availability.`,
+      text: `Hi! I'm ${AGENT_NAME}. I can answer your screening questions about Wesley's projects, skills, career and availability. Tap a question or type your own.`,
       bullets: [],
       sources: [],
+      suggestions: suggestedQuestions.slice(0, 4),
+      matchPercent: null,
       confidence: 'smalltalk',
     };
   }
 
   if (THANKS.test(trimmed)) {
     return {
-      text: 'Happy to help. If you would like to talk to Wesley directly, he replies within 24h at wesley.zilva@gmail.com.',
+      text: 'My pleasure! If you would like to talk to Wesley directly, he replies within 24h at wesley.zilva@gmail.com.',
       bullets: [],
       sources: [],
+      suggestions: [],
+      matchPercent: null,
       confidence: 'smalltalk',
     };
   }
-
-  if (results.length === 0) return { ...FALLBACK };
 
   const terms = specificTerms(trimmed);
   const covered = (term) => results.some((entry) => entry.vocabulary.has(term));
   const matched = terms.filter(covered);
   const missing = terms.filter((term) => !covered(term));
+  const labels = (list) => list.map((term) => labelFor(term, trimmed));
 
-  if (terms.length > 0 && matched.length === 0) return { ...FALLBACK };
+  if (results.length === 0 || (terms.length > 0 && matched.length === 0 && !missing.some((term) => findAdjacent(term, new Set())))) {
+    const asksAboutTool = terms.length > 0 && (YES_NO_START.test(trimmed) || TOOL_QUESTION.test(trimmed));
+    return guided(
+      "Happy to help with your screening! Here is a quick snapshot of Wesley. Tap a question below, or ask about his projects, skills, career or availability.",
+      'none',
+      asksAboutTool ? [`For ${joinLabels(labels(terms))}, Wesley will gladly walk you through the details.`] : [],
+    );
+  }
 
   const [primary, ...candidates] = results;
   const related = terms.length > 0
@@ -241,35 +296,60 @@ export const composeAnswer = (question, results) => {
     : candidates;
   const queryTokens = [...buildQuery(trimmed).weights.keys()];
   const isYesNo = YES_NO_START.test(trimmed) || /\b(know|knows|experience with)\b/i.test(trimmed);
+  const showFit = terms.length > 0 && (isYesNo || TOOL_QUESTION.test(trimmed) || buildQuery(trimmed).base.length <= 3);
 
-  let opening;
-  if (isYesNo && missing.length === 0) opening = 'Yes. ';
-  else if (isYesNo && matched.length > 0) opening = 'Partially. ';
-  else opening = '';
+  const shownIds = new Set([primary, ...related].map((entry) => entry.chunk.id));
+  const adjacent = new Map();
+  missing.forEach((term) => {
+    const chunk = findAdjacent(term, shownIds);
+    if (chunk) {
+      adjacent.set(term, chunk);
+      shownIds.add(chunk.id);
+    }
+  });
+  const unmatched = missing.filter((term) => !adjacent.has(term));
 
-  const text = `${opening}${primary.chunk.lead}`;
-  const bullets = pickBullets(primary.chunk, queryTokens, primary.chunk.maxBullets ?? 4);
+  const matchPercent = showFit
+    ? Math.round(((matched.length + 0.5 * adjacent.size) / terms.length) * 100)
+    : null;
 
-  if (primary.chunk.facts) bullets.unshift(`Scope: ${primary.chunk.facts}`);
-
-  if (missing.length > 0) {
-    bullets.push(`Not found in the CV: explicit mention of ${missing.map(formatTerm).join(', ')}.`);
+  const matchedNames = joinLabels(labels(matched));
+  let lead = primary.chunk.lead;
+  if (primary.chunk.type === 'skills' && matched.length > 0) {
+    lead = `${isYesNo ? 'Yes, ' : ''}${matchedNames} ${matched.length > 1 ? 'are' : 'is'} part of Wesley's toolkit, listed under ${primary.chunk.title}.`;
   }
+
+  const synthesizedLead = lead !== primary.chunk.lead;
+  let opening = '';
+  if (!synthesizedLead && showFit && matched.length > 0) {
+    opening = missing.length === 0 ? (isYesNo ? 'Yes. ' : '') : `Yes for ${matchedNames}. `;
+  }
+
+  const bullets = pickBullets(primary.chunk, queryTokens, primary.chunk.maxBullets ?? 4);
+  if (primary.chunk.facts) bullets.unshift(`Scope: ${primary.chunk.facts}`);
+  if (primary.chunk.type === 'skills' && matched.length > 0) bullets.push(`Context: ${primary.chunk.lead}`);
 
   related.forEach((entry) => {
     bullets.push(`Related, ${entry.chunk.title}: ${truncate(entry.chunk.lead)}`);
   });
 
+  adjacent.forEach((chunk, term) => {
+    bullets.push(`Closest to ${labelFor(term, trimmed)}, ${chunk.title}: ${truncate(chunk.lead)}`);
+  });
+
+  if (unmatched.length > 0) {
+    bullets.push(`For ${joinLabels(labels(unmatched))}, Wesley will gladly walk you through the details. ${CONTACT_LINE}`);
+  }
+
+  const sourceChunks = [primary, ...related].map((entry) => entry.chunk).concat([...adjacent.values()]);
+
   return {
-    text,
+    text: `${opening}${lead}`,
     bullets,
-    sources: results.map((entry) => ({
-      id: entry.chunk.id,
-      title: entry.chunk.title,
-      section: entry.chunk.section,
-      type: entry.chunk.type,
-    })),
-    confidence: missing.length > 0 ? 'partial' : 'high',
+    sources: sourceChunks.map(toSource),
+    suggestions: [],
+    matchPercent,
+    confidence: matchPercent === null || matchPercent >= 100 ? 'high' : 'partial',
   };
 };
 
