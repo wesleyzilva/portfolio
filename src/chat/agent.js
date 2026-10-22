@@ -12,7 +12,7 @@ const GENERIC_TERMS = new Set((
   'he him his wesley candidate know knows knew experience experienced work worked working project projects tell about any much many ' +
   'tool tools stack skill skills good great strong ever yet also really well proficient familiar familiarity hands-on handson ' +
   'let say give show share example examples detail details more lot big biggest best top main key recruiter team teams ' +
-  'deliver delivered delivery handle handled use used using'
+  'deliver delivered delivery handle handled use used using led'
 ).split(' '));
 
 // Tech names stay checkable even though they also act as synonym keys.
@@ -24,6 +24,14 @@ const ALIASES = {
   qaws: ['qa', 'aws'],
   'service now': ['servicenow'],
   'service-now': ['servicenow'],
+  'trade-offs': ['tradeoff'],
+  'trade-off': ['tradeoff'],
+  'trade offs': ['tradeoff'],
+  'how technical': ['technicaldepth'],
+  'technical depth': ['technicaldepth'],
+  'about yourself': ['summary', 'overview'],
+  'introduce yourself': ['summary', 'overview'],
+  'who is wesley': ['summary', 'overview'],
   'available for a call': ['schedule', 'call'],
   'available for a meeting': ['schedule', 'meeting'],
   'available for an interview': ['schedule', 'interview'],
