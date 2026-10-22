@@ -77,6 +77,21 @@ const impactChunk = {
   keywords: 'impact result results measurable metrics numbers achievement achievements highlight highlights kpi outcome outcomes biggest proud best',
 };
 
+const qualityChunk = {
+  id: 'profile-quality',
+  type: 'profile',
+  title: 'Quality and release guardrails',
+  section: 'last-two-years',
+  lead: 'Wesley builds quality into delivery through automated gates, policy checks and continuous improvement.',
+  bullets: [
+    'Automated security gates and policy checks embedded in every release (Veracode, Rapid7, Checkmarx, CI/CD).',
+    'Risk-based prioritization with EPSS-scored dashboards, so effort goes where quality risk is highest.',
+    'Continuous improvement cycles with Lean Six Sigma (DMAIC) and knowledge standardization.',
+    'Observability and alerting with Datadog and Dynatrace to catch issues before users do.',
+  ],
+  keywords: 'quality guardrails gates release assurance compliance continuous improvement reliability',
+};
+
 const projectChunks = projectCards.map((project) => ({
   id: `project-${project.id}`,
   type: 'project',
@@ -136,12 +151,22 @@ const recentChunk = {
 export const knowledgeBase = [
   ...profileChunks,
   impactChunk,
+  qualityChunk,
   recentChunk,
   ...focusChunks,
   ...careerChunks,
   ...projectChunks,
   ...skillChunks,
 ];
+
+export const canonicalNames = Object.fromEntries(
+  skillGroups
+    .flatMap((group) => group.items)
+    .flatMap((item) => item.split('/'))
+    .map((item) => item.trim())
+    .filter((item) => item && !item.includes(' '))
+    .map((item) => [item.toLowerCase(), item]),
+);
 
 export const suggestedQuestions = [
   'Does he know QA and AWS projects?',
