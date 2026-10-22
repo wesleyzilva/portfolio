@@ -31,6 +31,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: scripts/cv/requirements.txt
+
+      - name: Generate ATS CVs
+        run: |
+          pip install -r scripts/cv/requirements.txt
+          python scripts/cv/generate_ats_cvs.py --check
+
       - name: Test chat agent
         run: npm test
 

@@ -12,7 +12,7 @@ const WELCOME = {
 
 const MOBILE_QUERY = '(max-width: 720px)';
 
-function AgentMessage({ message, onOpenSource, onAsk, canAsk }) {
+function AgentMessage({ message, onOpenSource, onAsk, onDownload, canAsk }) {
   const hasMatch = typeof message.matchPercent === 'number';
 
   return (
@@ -26,6 +26,21 @@ function AgentMessage({ message, onOpenSource, onAsk, canAsk }) {
         </span>
       ) : null}
       <p>{message.text}</p>
+      {message.downloads?.length > 0 ? (
+        <div className="chat-downloads" aria-label="CV downloads">
+          {message.downloads.map((cv) => (
+            <a
+              key={cv.id}
+              className="chat-download"
+              href={`${import.meta.env.BASE_URL}${encodeURIComponent(cv.fileName)}`}
+              download
+              onClick={() => onDownload(cv)}
+            >
+              <span aria-hidden="true">📄</span> {cv.label} (PDF)
+            </a>
+          ))}
+        </div>
+      ) : null}
       {message.bullets.length > 0 ? (
         <ul>
           {message.bullets.map((item) => (
@@ -135,6 +150,10 @@ function ChatPopup({ onTrack }) {
     }
   };
 
+  const downloadCv = (cv) => {
+    onTrack?.('cv_download_click', { cv_language: cv.label, cv_file: cv.fileName, section: 'chat' });
+  };
+
   const openSource = (source) => {
     onTrack?.('chat_source_click', { source_id: source.id, section: source.section });
     window.location.hash = `#${source.section}`;
@@ -186,7 +205,7 @@ function ChatPopup({ onTrack }) {
           message.role === 'user' ? (
             <div key={message.id} className="chat-msg chat-msg-user">{message.text}</div>
           ) : (
-            <AgentMessage key={message.id} message={message} onOpenSource={openSource} onAsk={submit} canAsk={!busy} />
+            <AgentMessage key={message.id} message={message} onOpenSource={openSource} onAsk={submit} onDownload={downloadCv} canAsk={!busy} />
           )
         ))}
 

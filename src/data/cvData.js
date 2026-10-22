@@ -282,10 +282,16 @@ export const chronologyEntries = [
     text: 'Running distributed teams with an AI-powered squad framework and supporting global stakeholders from LATAM with async-first delivery.',
   },
   {
-    year: '2024 – present',
-    title: 'IT Coordinator | Fintech M&A | Payments & Data',
+    year: 'Aug 2026 – present',
+    title: 'Agentic Product Owner | Data Centric',
     company: 'Serasa Experian · Brazil',
-    text: 'Led data squads on modernization and ETL programs with strong governance across Databricks, Pentaho, DevSecOps and compliance requirements.',
+    text: 'Orchestrates technical product discovery and execution for B2B payment flows, using agentic workflows with MCP, Databricks, Amplitude and Datadog to map real user friction, and accelerating delivery with GenAI tools such as Claude, ChatGPT, Cursor and GitHub Copilot.',
+  },
+  {
+    year: 'Nov 2024 – Aug 2026',
+    title: 'IT Coordinator | Agentic Tech Project Manager',
+    company: 'Serasa Experian (Flexpag) · Recife, Brazil',
+    text: 'Led engineering projects for a digital payments and billing fintech: a DevSecOps guardrail framework across 100+ applications with Veracode, Rapid7 and Wiz, and a legacy-to-Databricks/Spark migration with MLOps under BACEN and FEBRABAN rules.',
   },
   {
     year: '2021 – 2024',
@@ -354,4 +360,28 @@ export const workModel = [
   'Timezone overlap with US and Europe',
   'Nearshore and offshore readiness',
   '24h response for interview and project discussions',
+];
+
+export const certifications = [
+  'Professional Scrum Master III (PSM III)',
+  'Lean Six Sigma Yellow Belt',
+  'Certified Angular Developer',
+  'Certified JavaScript Developer',
+  'Datadog - Tagging Best Practices',
+  'Datadog - Dashboards',
+];
+
+export const atsCvDownloads = [
+  {
+    id: 'agentic-tpm',
+    label: 'ATS CV · Agentic TPM',
+    fileName: 'CV_ATS_AgenticTPM_WesleySilva.pdf',
+    description: 'Agentic Project Manager / Technical Program Manager: AI-enabled delivery, MCP, GenAI, DevSecOps, Databricks, SAFe.',
+  },
+  {
+    id: 'it-coordinator',
+    label: 'ATS CV · IT Coordinator',
+    fileName: 'CV_ATS_ITCoordinator_WesleySilva.pdf',
+    description: 'IT Coordinator: squad and vendor coordination, ITIL/ITSM operations, DevSecOps compliance, data platforms.',
+  },
 ];
