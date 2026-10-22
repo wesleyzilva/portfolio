@@ -19,6 +19,8 @@ const GENERIC_TERMS = new Set((
 const TECH_TERMS = new Set(['aws', 'azure', 'gcp', 'kubernetes', 'k8s', 'qa', 'test', 'testing', 'llm', 'rag', 'genai', 'ml', 'scrum', 'agile', 'fintech', 'payments', 'cloud', 'data', 'security']);
 
 const ALIASES = {
+  'latam.aigile': ['latamaigile'],
+  'latam aigile': ['latamaigile'],
   qaws: ['qa', 'aws'],
   'service now': ['servicenow'],
   'service-now': ['servicenow'],
@@ -317,9 +319,13 @@ export const composeAnswer = (question, results) => {
   }
 
   const [primary, ...candidates] = results;
-  const related = terms.length > 0
-    ? candidates.filter((entry) => terms.some((term) => entry.vocabulary.has(term)))
-    : candidates;
+  const isInterest = primary.chunk.type === 'interest';
+  const relatable = candidates.filter((entry) => isInterest || entry.chunk.type !== 'interest');
+  const related = primary.chunk.standalone
+    ? []
+    : terms.length > 0
+      ? relatable.filter((entry) => terms.some((term) => entry.vocabulary.has(term)))
+      : relatable;
   const queryTokens = [...buildQuery(trimmed).weights.keys()];
   const isYesNo = YES_NO_START.test(trimmed) || /\b(know|knows|experience with)\b/i.test(trimmed);
   const showFit = terms.length > 0 && (isYesNo || TOOL_QUESTION.test(trimmed) || buildQuery(trimmed).base.length <= 3);
@@ -335,7 +341,7 @@ export const composeAnswer = (question, results) => {
   });
   const unmatched = missing.filter((term) => !adjacent.has(term));
 
-  const matchPercent = showFit
+  const matchPercent = showFit && primary.chunk.showMatch !== false
     ? Math.round(((matched.length + 0.5 * adjacent.size) / terms.length) * 100)
     : null;
 
@@ -347,7 +353,7 @@ export const composeAnswer = (question, results) => {
 
   const synthesizedLead = lead !== primary.chunk.lead;
   let opening = '';
-  if (!synthesizedLead && showFit && matched.length > 0 && (isYesNo || TOOL_QUESTION.test(trimmed))) {
+  if (!synthesizedLead && !isInterest && !primary.chunk.plainLead && showFit && matched.length > 0 && (isYesNo || TOOL_QUESTION.test(trimmed))) {
     opening = missing.length === 0 ? (isYesNo ? 'Yes. ' : '') : `Yes for ${matchedNames}. `;
   }
 

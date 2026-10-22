@@ -76,7 +76,7 @@ A popup that opens on page load (and stays reachable from a floating launcher) w
 It runs 100% in the browser, so it works on GitHub Pages with no backend. For now the RAG is simulated:
 
 - `src/data/cvData.js` is the single source of CV content, shared by the page and the chat.
-- `src/chat/knowledge.js` turns that content into retrievable chunks (projects, skills, career, availability, contact, impact highlights).
+- `src/chat/knowledge.js` turns that content into retrievable chunks (projects, skills, career, availability, contact, impact highlights, the LatAm.AIgile brand and Wesley's personal curiosities). Chunks of type `interest` are presented as interests, never as CV skills: no match badge and no "Yes" opening.
 - `src/chat/agent.js` retrieves the best chunks (TF-IDF style scoring with field weights, aliases like `QAWS` = QA + AWS, and synonyms) and composes an answer with source links. The tone is always positive but never invents experience: every answer shows a match percentage (terms found in the CV count fully, adjacent experience counts half), terms without evidence are covered with the closest real experience or a direct invitation to talk to Wesley, and unrecognized input gets a snapshot, suggested questions and the contact line.
 - `src/chat/ChatPopup.jsx` is the UI.
 

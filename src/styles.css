@@ -1311,6 +1311,8 @@ button:focus-visible, a:focus-visible, .panel:focus-visible, .project-card:focus
   overflow-y: auto;
 }
 
+.chat-log > * { flex-shrink: 0; }
+
 .chat-msg {
   max-width: 92%;
   padding: 0.55rem 0.75rem;
