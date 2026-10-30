@@ -1,10 +1,13 @@
+// src/chat/agent.js
 import { canonicalNames, cvDownloadOptions, followUpsFor, knowledgeBase, suggestedQuestions } from './knowledge.js';
 
 export const AGENT_NAME = '#askToTPM_agentic';
 
 const STOPWORDS = new Set((
   'a an and are as at be been but by can could did do does for from had has have how i if in into is it its of on or ' +
-  'me my our please so than that the their them then there these they this to us was we were what when where which who whom why will with would you your'
+  'me my our please so than that the their them then there these they this to us was we were what when where which who whom why will with would you your ' +
+  'o os um uma uns umas de do da dos das em no na nos nas por para com sem como que qual quais когда onde quem porque ' +
+  'ele ela dele dela voce seu sua seus suas sobre tem teve pode fazer faz foi sao esta mais muito'
 ).split(' '));
 
 // Words that are conversational glue, not evidence the CV must contain.
@@ -12,7 +15,9 @@ const GENERIC_TERMS = new Set((
   'he him his wesley candidate know knows knew experience experienced work worked working project projects tell about any much many ' +
   'tool tools stack skill skills good great strong ever yet also really well proficient familiar familiarity hands-on handson ' +
   'let say give show share example examples detail details more lot big biggest best top main key recruiter team teams ' +
-  'deliver delivered delivery handle handled use used using led'
+  'deliver delivered delivery handle handled use used using led ' +
+  'conhece sabe experiencia trabalhou trabalha projeto projetos fale conte diga exemplo exemplos detalhe detalhes ' +
+  'ferramenta ferramentas habilidade habilidades time times equipe equipes liderou entrega entregas'
 ).split(' '));
 
 // Tech names stay checkable even though they also act as synonym keys.
@@ -29,15 +34,61 @@ const ALIASES = {
   'trade offs': ['tradeoff'],
   'how technical': ['technicaldepth'],
   'technical depth': ['technicaldepth'],
+  'quao tecnico': ['technicaldepth'],
+  'nivel tecnico': ['technicaldepth'],
   'about yourself': ['summary', 'overview'],
   'introduce yourself': ['summary', 'overview'],
   'who is wesley': ['summary', 'overview'],
+  'quem e wesley': ['summary', 'overview'],
+  'fale sobre voce': ['summary', 'overview'],
   'available for a call': ['schedule', 'call'],
   'available for a meeting': ['schedule', 'meeting'],
   'available for an interview': ['schedule', 'interview'],
+  'agendar entrevista': ['schedule', 'interview'],
+  'marcar entrevista': ['schedule', 'interview'],
   'q.a.': ['qa'],
   'ci/cd': ['ci', 'cd', 'pipeline'],
   'm&a': ['manda'],
+  // Ponte semântica PT -> EN para o Retriever encontrar os chunks em inglês
+  'dados': ['data'],
+  'seguranca': ['security', 'vulnerability'],
+  'vulnerabilidade': ['vulnerability', 'security'],
+  'vulnerabilidades': ['vulnerability', 'security'],
+  'nuvem': ['cloud'],
+  'migracao': ['migration'],
+  'pagamentos': ['payments'],
+  'pagamento': ['payments'],
+  'carreira': ['career', 'milestone'],
+  'marcos': ['milestone'],
+  'riscos': ['risk'],
+  'risco': ['risk'],
+  'dependencias': ['dependencies'],
+  'metricas': ['metrics'],
+  'prioridades': ['priorities', 'prioritization'],
+  'conflito': ['conflict', 'conflicting'],
+  'conflitos': ['conflict', 'conflicting'],
+  'formacao': ['education', 'degree'],
+  'faculdade': ['education', 'degree'],
+  'engenharia eletrica': ['electrical', 'engineering'],
+  'idioma': ['language'],
+  'idiomas': ['languages'],
+  'ingles': ['english'],
+  'chines': ['chinese'],
+  'salario': ['salary', 'compensation'],
+  'pretensao': ['salary', 'compensation'],
+  'disponivel': ['available', 'availability'],
+  'disponibilidade': ['availability'],
+  'contato': ['contact'],
+  'certificacao': ['certification'],
+  'certificacoes': ['certifications'],
+  'curiosidades': ['curious', 'interests'],
+  'interesses': ['interests'],
+  'dentista': ['dentist', 'healthcare'],
+  'odonto': ['dentistry', 'healthcare'],
+  'odontologia': ['dentistry', 'healthcare'],
+  'saude': ['healthcare'],
+  'automacao': ['automation'],
+  'cargo atual': ['current', 'role'],
 };
 
 const SYNONYMS = {
@@ -85,12 +136,23 @@ const SYNONYMS = {
   fintech: ['payments', 'pix'],
 };
 
-const GREETING = /^\s*(hi|hello|hey|hola|oi|good (morning|afternoon|evening))\b[\s!.,?]*$/i;
-const THANKS = /^\s*(thanks|thank you|thx|cheers|great,? thanks)\b[\s!.,?]*$/i;
+const GREETING = /^\s*(hi|hello|hey|hola|oi|olá|ola|bom dia|boa tarde|boa noite|good (morning|afternoon|evening))\b[\s!.,?]*$/i;
+const THANKS = /^\s*(thanks|thank you|thx|cheers|great,? thanks|obrigado|obrigada|valeu|muito obrigado)\b[\s!.,?]*$/i;
 const CV_REQUEST = /\b(cv|resume|résumé|curriculum|curriculo|currículo|ats)\b/i;
-const IT_ROLE = /\bit (coordinator|manager|coordination)\b|coordinator|itil|itsm|operations|service desk/i;
+const IT_ROLE = /\bit (coordinator|manager|coordination)\b|coordinator|coordenador|itil|itsm|operations|service desk/i;
 
-const YES_NO_START = /^\s*(does|do|did|has|have|had|is|are|was|can|could|will|would)\b/i;
+const YES_NO_START = /^\s*(does|do|did|has|have|had|is|are|was|can|could|will|would|ele|tem|teve|sabe|conhece|ja|já|pode|foi|é)\b/i;
+
+export const detectPortuguese = (text) => {
+  const normalized = text.trim();
+  if (/^(oi|olá|ola|bom dia|boa tarde|boa noite|obrigado|obrigada|valeu)\b/i.test(normalized)) return true;
+  if (/[ãõçáéíóúâêôà]/i.test(normalized)) return true;
+  const ptMarkers = /\b(ele|dele|voce|você|qual|quais|como|onde|quando|quem|sobre|conhece|sabe|trabalhou|trabalha|projetos|experiencia|experiência|curriculo|currículo|disponivel|disponível|fale|conte|tem|teve|pode|salario|salário|entrevista|carreira|riscos|equipe|times|nuvem|dados|seguranca|segurança|pagamentos)\b/i;
+  const words = normalized.split(/\s+/);
+  return words.length >= 2 && ptMarkers.test(normalized);
+};
+
+const stripAccents = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
 const stem = (word) => {
   if (word.length <= 3) return word;
@@ -108,7 +170,7 @@ const STEMMED_SYNONYMS = Object.fromEntries(
 const STEMMED_TECH_TERMS = new Set([...TECH_TERMS].map(stem));
 
 const expandAliases = (text) => {
-  let output = text.toLowerCase();
+  let output = stripAccents(text.toLowerCase());
   Object.entries(ALIASES).forEach(([alias, replacement]) => {
     output = output.split(alias).join(` ${replacement.join(' ')} `);
   });
@@ -168,12 +230,12 @@ const buildQuery = (question) => {
   return { base, weights };
 };
 
-const TOOL_QUESTION = /\b(know|knows|experience|familiar|skill|skills|tool|tools|stack|use|used|proficient)\b/i;
+const TOOL_QUESTION = /\b(know|knows|experience|familiar|skill|skills|tool|tools|stack|use|used|proficient|conhece|sabe|experiencia|ferramenta|usa|usou|domina)\b/i;
 
 export const retrieve = (question, { limit = 3 } = {}) => {
   const { base, weights } = buildQuery(question);
   if (weights.size === 0) return [];
-  const skillsBoost = TOOL_QUESTION.test(question) || base.length <= 2 ? 1.35 : 1;
+  const skillsBoost = TOOL_QUESTION.test(stripAccents(question)) || base.length <= 2 ? 1.35 : 1;
 
   const scored = index.docs
     .map((doc) => {
@@ -221,24 +283,25 @@ const pickBullets = (chunk, queryTokens, max) => {
 
 const SUMMARY = knowledgeBase.find((chunk) => chunk.id === 'profile-summary');
 const CONTACT_LINE = 'Want to go deeper? Wesley replies within 24h at wesley.zilva@gmail.com.';
+const CONTACT_LINE_PT = 'Quer aprofundar? O Wesley responde em até 24h pelo e-mail wesley.zilva@gmail.com.';
 
 const CANONICAL = Object.fromEntries(Object.entries(canonicalNames).map(([key, value]) => [stem(key), value]));
 
 const labelFor = (term, question) => {
   if (CANONICAL[term]) return CANONICAL[term];
-  const raw = question.toLowerCase().match(/[a-z0-9+#.]+/g)?.find((word) => stem(word) === term);
+  const raw = stripAccents(question.toLowerCase()).match(/[a-z0-9+#.]+/g)?.find((word) => stem(word) === term);
   const label = raw ?? term;
   return label.length <= 3 ? label.toUpperCase() : `${label[0].toUpperCase()}${label.slice(1)}`;
 };
 
-const joinLabels = (labels) => {
+const joinLabels = (labels, isPt = false) => {
   if (labels.length <= 1) return labels.join('');
-  return `${labels.slice(0, -1).join(', ')} and ${labels[labels.length - 1]}`;
+  const conj = isPt ? ' e ' : ' and ';
+  return `${labels.slice(0, -1).join(', ')}${conj}${labels[labels.length - 1]}`;
 };
 
 const normalizeQuestion = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
-// Contextual follow-ups come first (closest topic first), then generic ones fill the remaining slots.
 export const buildFollowUps = (question, chunks = [], asked = [], { max = 3, contextual = 2 } = {}) => {
   const seen = new Set([question, ...asked].map(normalizeQuestion));
   const picked = [];
@@ -264,13 +327,14 @@ export const buildFollowUps = (question, chunks = [], asked = [], { max = 3, con
 
 const chunkById = (id) => knowledgeBase.find((chunk) => chunk.id === id);
 
-const guided = (text, confidence, extraBullets = [], suggestions = suggestedQuestions.slice(0, 4)) => ({
+const guided = (text, confidence, extraBullets = [], suggestions = suggestedQuestions.slice(0, 4), isPt = false) => ({
   text,
-  bullets: [...SUMMARY.bullets.slice(0, 3), ...extraBullets, CONTACT_LINE],
+  bullets: [...SUMMARY.bullets.slice(0, 3), ...extraBullets, isPt ? CONTACT_LINE_PT : CONTACT_LINE],
   sources: [{ id: SUMMARY.id, title: SUMMARY.title, section: SUMMARY.section, type: SUMMARY.type }],
   suggestions,
   matchPercent: null,
   confidence,
+  lang: isPt ? 'pt' : 'en',
 });
 
 const findAdjacent = (term, excludedIds) => {
@@ -292,24 +356,34 @@ const findAdjacent = (term, excludedIds) => {
   return best?.chunk ?? null;
 };
 
-const cvAnswer = (question, asked) => {
+const cvAnswer = (question, asked, isPt = false) => {
   const wantsIt = IT_ROLE.test(question);
   const ordered = wantsIt ? [...cvDownloadOptions].reverse() : cvDownloadOptions;
   const profile = knowledgeBase.find((chunk) => chunk.id === 'profile-cv');
 
   return {
-    text: "Absolutely! Here is Wesley's latest CV in an ATS-friendly format: single column, plain text and standard sections, so it imports cleanly into any recruiting platform. Pick the version closest to the role you are hiring for.",
-    bullets: [
-      ...ordered.map((cv) => `${cv.label}: ${cv.description}`),
-      'Both are 2-page PDFs in English, built from his current profile.',
-      'Need another language? The classic CV comes in 6 languages in the Contact section.',
-      CONTACT_LINE,
-    ],
+    text: isPt
+      ? 'Com certeza! Aqui está o currículo atualizado do Wesley em formato compatível com ATS: coluna única, texto limpo e seções padronizadas. Escolha a versão mais alinhada à sua vaga.'
+      : "Absolutely! Here is Wesley's latest CV in an ATS-friendly format: single column, plain text and standard sections, so it imports cleanly into any recruiting platform. Pick the version closest to the role you are hiring for.",
+    bullets: isPt
+      ? [
+          ...ordered.map((cv) => `${cv.label}: ${cv.description}`),
+          'Ambos são PDFs de 2 páginas em inglês, construídos a partir do perfil atual dele.',
+          'Precisa do CV em Português ou outro idioma? A seção de Contato possui versões em 6 idiomas.',
+          CONTACT_LINE_PT,
+        ]
+      : [
+          ...ordered.map((cv) => `${cv.label}: ${cv.description}`),
+          'Both are 2-page PDFs in English, built from his current profile.',
+          'Need another language? The classic CV comes in 6 languages in the Contact section.',
+          CONTACT_LINE,
+        ],
     downloads: ordered.map(({ id, label, fileName }) => ({ id, label, fileName })),
     sources: [{ id: profile.id, title: profile.title, section: profile.section, type: profile.type }],
     suggestions: buildFollowUps(question, [profile], asked),
     matchPercent: null,
     confidence: 'high',
+    lang: isPt ? 'pt' : 'en',
   };
 };
 
@@ -317,30 +391,37 @@ const toSource = (chunk) => ({ id: chunk.id, title: chunk.title, section: chunk.
 
 export const composeAnswer = (question, results, { asked = [] } = {}) => {
   const trimmed = question.trim();
+  const isPt = detectPortuguese(trimmed);
 
   if (GREETING.test(trimmed)) {
     return {
-      text: `Hi! I'm ${AGENT_NAME}. I can answer your screening questions about Wesley's projects, skills, career and availability. Tap a question or type your own.`,
+      text: isPt
+        ? `Olá! Eu sou o ${AGENT_NAME}. Posso responder suas perguntas sobre os projetos, habilidades, carreira e disponibilidade do Wesley em português ou inglês. Escolha uma pergunta abaixo ou digite a sua.`
+        : `Hi! I'm ${AGENT_NAME}. I can answer your screening questions about Wesley's projects, skills, career and availability. Tap a question or type your own.`,
       bullets: [],
       sources: [],
       suggestions: buildFollowUps(trimmed, [], asked, { max: 4, contextual: 0 }),
       matchPercent: null,
       confidence: 'smalltalk',
+      lang: isPt ? 'pt' : 'en',
     };
   }
 
   if (THANKS.test(trimmed)) {
     return {
-      text: 'My pleasure! If you would like to talk to Wesley directly, he replies within 24h at wesley.zilva@gmail.com.',
+      text: isPt
+        ? 'Por nada! Se quiser falar diretamente com o Wesley, ele responde em até 24h no e-mail wesley.zilva@gmail.com.'
+        : 'My pleasure! If you would like to talk to Wesley directly, he replies within 24h at wesley.zilva@gmail.com.',
       bullets: [],
       sources: [],
       suggestions: buildFollowUps(trimmed, [chunkById('profile-contact')], asked),
       matchPercent: null,
       confidence: 'smalltalk',
+      lang: isPt ? 'pt' : 'en',
     };
   }
 
-  if (CV_REQUEST.test(trimmed)) return cvAnswer(trimmed, asked);
+  if (CV_REQUEST.test(trimmed)) return cvAnswer(trimmed, asked, isPt);
 
   const terms = specificTerms(trimmed);
   const covered = (term) => results.some((entry) => entry.vocabulary.has(term));
@@ -349,12 +430,21 @@ export const composeAnswer = (question, results, { asked = [] } = {}) => {
   const labels = (list) => list.map((term) => labelFor(term, trimmed));
 
   if (results.length === 0 || (terms.length > 0 && matched.length === 0 && !missing.some((term) => findAdjacent(term, new Set())))) {
-    const asksAboutTool = terms.length > 0 && (YES_NO_START.test(trimmed) || TOOL_QUESTION.test(trimmed));
+    const asksAboutTool = terms.length > 0 && (YES_NO_START.test(trimmed) || TOOL_QUESTION.test(stripAccents(trimmed)));
     return guided(
-      "Happy to help with your screening! Here is a quick snapshot of Wesley. Tap a question below, or ask about his projects, skills, career or availability.",
+      isPt
+        ? 'Com prazer ajudo na sua triagem! Aqui está um resumo rápido do Wesley. Toque em uma pergunta abaixo ou pergunte sobre os projetos, skills, carreira ou disponibilidade dele.'
+        : 'Happy to help with your screening! Here is a quick snapshot of Wesley. Tap a question below, or ask about his projects, skills, career or availability.',
       'none',
-      asksAboutTool ? [`For ${joinLabels(labels(terms))}, Wesley will gladly walk you through the details.`] : [],
+      asksAboutTool
+        ? [
+            isPt
+              ? `Sobre ${joinLabels(labels(terms), true)}, o Wesley terá prazer em detalhar sua experiência diretamente.`
+              : `For ${joinLabels(labels(terms), false)}, Wesley will gladly walk you through the details.`,
+          ]
+        : [],
       buildFollowUps(trimmed, [SUMMARY], asked, { max: 4, contextual: 2 }),
+      isPt,
     );
   }
 
@@ -367,8 +457,8 @@ export const composeAnswer = (question, results, { asked = [] } = {}) => {
       ? relatable.filter((entry) => terms.some((term) => entry.vocabulary.has(term)))
       : relatable;
   const queryTokens = [...buildQuery(trimmed).weights.keys()];
-  const isYesNo = YES_NO_START.test(trimmed) || /\b(know|knows|experience with)\b/i.test(trimmed);
-  const showFit = terms.length > 0 && (isYesNo || TOOL_QUESTION.test(trimmed) || buildQuery(trimmed).base.length <= 3);
+  const isYesNo = YES_NO_START.test(trimmed) || /\b(know|knows|experience with|conhece|sabe|experiencia com)\b/i.test(stripAccents(trimmed));
+  const showFit = terms.length > 0 && (isYesNo || TOOL_QUESTION.test(stripAccents(trimmed)) || buildQuery(trimmed).base.length <= 3);
 
   const shownIds = new Set([primary, ...related].map((entry) => entry.chunk.id));
   const adjacent = new Map();
@@ -385,32 +475,42 @@ export const composeAnswer = (question, results, { asked = [] } = {}) => {
     ? Math.round(((matched.length + 0.5 * adjacent.size) / terms.length) * 100)
     : null;
 
-  const matchedNames = joinLabels(labels(matched));
+  const matchedNames = joinLabels(labels(matched), isPt);
   let lead = primary.chunk.lead;
   if (primary.chunk.type === 'skills' && matched.length > 0) {
-    lead = `${isYesNo ? 'Yes, ' : ''}${matchedNames} ${matched.length > 1 ? 'are' : 'is'} part of Wesley's toolkit, listed under ${primary.chunk.title}.`;
+    lead = isPt
+      ? `${isYesNo ? 'Sim, ' : ''}${matchedNames} ${matched.length > 1 ? 'fazem' : 'faz'} parte do toolkit do Wesley, listado em ${primary.chunk.title}.`
+      : `${isYesNo ? 'Yes, ' : ''}${matchedNames} ${matched.length > 1 ? 'are' : 'is'} part of Wesley's toolkit, listed under ${primary.chunk.title}.`;
   }
 
   const synthesizedLead = lead !== primary.chunk.lead;
   let opening = '';
-  if (!synthesizedLead && !isInterest && !primary.chunk.plainLead && showFit && matched.length > 0 && (isYesNo || TOOL_QUESTION.test(trimmed))) {
-    opening = missing.length === 0 ? (isYesNo ? 'Yes. ' : '') : `Yes for ${matchedNames}. `;
+  if (!synthesizedLead && !isInterest && !primary.chunk.plainLead && showFit && matched.length > 0 && (isYesNo || TOOL_QUESTION.test(stripAccents(trimmed)))) {
+    if (isPt) {
+      opening = missing.length === 0 ? (isYesNo ? 'Sim. ' : '') : `Sim para ${matchedNames}. `;
+    } else {
+      opening = missing.length === 0 ? (isYesNo ? 'Yes. ' : '') : `Yes for ${matchedNames}. `;
+    }
   }
 
   const bullets = pickBullets(primary.chunk, queryTokens, primary.chunk.maxBullets ?? 4);
-  if (primary.chunk.facts) bullets.unshift(`Scope: ${primary.chunk.facts}`);
-  if (primary.chunk.type === 'skills' && matched.length > 0) bullets.push(`Context: ${primary.chunk.lead}`);
+  if (primary.chunk.facts) bullets.unshift(`${isPt ? 'Escopo' : 'Scope'}: ${primary.chunk.facts}`);
+  if (primary.chunk.type === 'skills' && matched.length > 0) bullets.push(`${isPt ? 'Contexto' : 'Context'}: ${primary.chunk.lead}`);
 
   related.forEach((entry) => {
-    bullets.push(`Related, ${entry.chunk.title}: ${truncate(entry.chunk.lead)}`);
+    bullets.push(`${isPt ? 'Relacionado' : 'Related'}, ${entry.chunk.title}: ${truncate(entry.chunk.lead)}`);
   });
 
   adjacent.forEach((chunk, term) => {
-    bullets.push(`Closest to ${labelFor(term, trimmed)}, ${chunk.title}: ${truncate(chunk.lead)}`);
+    bullets.push(`${isPt ? 'Mais próximo de' : 'Closest to'} ${labelFor(term, trimmed)}, ${chunk.title}: ${truncate(chunk.lead)}`);
   });
 
   if (unmatched.length > 0) {
-    bullets.push(`For ${joinLabels(labels(unmatched))}, Wesley will gladly walk you through the details. ${CONTACT_LINE}`);
+    bullets.push(
+      isPt
+        ? `Para ${joinLabels(labels(unmatched), true)}, o Wesley terá prazer em apresentar os detalhes. ${CONTACT_LINE_PT}`
+        : `For ${joinLabels(labels(unmatched), false)}, Wesley will gladly walk you through the details. ${CONTACT_LINE}`,
+    );
   }
 
   const sourceChunks = [primary, ...related].map((entry) => entry.chunk).concat([...adjacent.values()]);
@@ -422,22 +522,83 @@ export const composeAnswer = (question, results, { asked = [] } = {}) => {
     suggestions: buildFollowUps(trimmed, sourceChunks, asked),
     matchPercent,
     confidence: matchPercent === null || matchPercent >= 100 ? 'high' : 'partial',
+    lang: isPt ? 'pt' : 'en',
   };
 };
 
 const wait = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
 
-// Single integration point: swap the body for a real retrieval + LLM call later.
-export const askAgent = async (question, { onStatus, latency = 1, history = [] } = {}) => {
-  onStatus?.('Searching Wesley\'s CV…');
+let llmWorker = null;
+const getLlmWorker = () => {
+  if (typeof window === 'undefined' || typeof Worker === 'undefined') return null;
+  if (!llmWorker) {
+    try {
+      llmWorker = new Worker(new URL('./llmWorker.js', import.meta.url), { type: 'module' });
+    } catch {
+      llmWorker = null;
+    }
+  }
+  return llmWorker;
+};
+
+export const askAgent = async (question, { onStatus, latency = 1, history = [], useLocalLlm = false } = {}) => {
+  const isPt = detectPortuguese(question);
+
+  onStatus?.(isPt ? 'Buscando no currículo do Wesley…' : 'Searching Wesley\'s CV…');
   await wait(450 * latency);
 
   const results = retrieve(question);
-  onStatus?.(`Reading ${results.length} passage${results.length === 1 ? '' : 's'}…`);
+  onStatus?.(
+    isPt
+      ? `Lendo ${results.length} trecho${results.length === 1 ? '' : 's'}…`
+      : `Reading ${results.length} passage${results.length === 1 ? '' : 's'}…`,
+  );
   await wait(500 * latency);
 
-  onStatus?.('Drafting answer…');
+  onStatus?.(isPt ? 'Elaborando resposta…' : 'Drafting answer…');
   await wait(350 * latency);
 
-  return composeAnswer(question, results, { asked: history });
+  const baseAnswer = composeAnswer(question, results, { asked: history });
+
+  const worker = useLocalLlm ? getLlmWorker() : null;
+  if (!worker || results.length === 0 || baseAnswer.confidence === 'smalltalk' || baseAnswer.downloads) {
+    return baseAnswer;
+  }
+
+  const contextText = results
+    .map((r) => `[${r.chunk.title}]: ${r.chunk.lead}\n${(r.chunk.bullets ?? []).join('\n')}`)
+    .join('\n\n');
+
+  const isInterest = results[0]?.chunk?.type === 'interest';
+
+  return new Promise((resolve) => {
+    const timeoutId = setTimeout(() => {
+      worker.removeEventListener('message', onWorkerMessage);
+      resolve(baseAnswer);
+    }, 15000);
+
+    const onWorkerMessage = (event) => {
+      const { type, text } = event.data || {};
+      if (type === 'STATUS') {
+        onStatus?.(text);
+      } else if (type === 'SUCCESS') {
+        clearTimeout(timeoutId);
+        worker.removeEventListener('message', onWorkerMessage);
+        resolve({
+          ...baseAnswer,
+          text,
+        });
+      } else if (type === 'FALLBACK') {
+        clearTimeout(timeoutId);
+        worker.removeEventListener('message', onWorkerMessage);
+        resolve(baseAnswer);
+      }
+    };
+
+    worker.addEventListener('message', onWorkerMessage);
+    worker.postMessage({
+      action: 'synthesize',
+      payload: { question, contextText, isInterest, lang: isPt ? 'pt' : 'en' },
+    });
+  });
 };

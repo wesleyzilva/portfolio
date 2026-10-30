@@ -1,4 +1,17 @@
 User-agent: *
 Allow: /
 
+# Permitir agentes de IA e scrapers de recrutamento
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
 Sitemap: https://wesleyzilva.github.io/portfolio/sitemap.xml

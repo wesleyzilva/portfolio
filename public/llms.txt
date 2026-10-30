@@ -1,0 +1,46 @@
+# Wesley Silva - Agentic Technical Program Manager & Tech Product Owner
+
+> 14+ years leading global technical programs, cloud modernization, Databricks migrations, and DevSecOps governance.
+
+## Executive Summary
+Wesley Silva is an Agentic Technical Program Manager (TPM), Tech Product Owner, and IT Coordinator with 14+ years of experience leading engineering squads across LATAM, the US, the UK, South Africa, and India. Expert in B2B payment platforms, mission-critical legacy modernization, data architecture (Databricks/Spark), and SDLC acceleration using Agentic AI workflows.
+
+## Core Roles
+- Agentic Technical Program Manager (TPM)
+- Tech Product Owner (Data & B2B Payment Products)
+- IT Coordinator & Agile Delivery Manager
+
+## Key Verified Metrics & Business Outcomes
+- **Security Governance:** Eliminated 1,200+ vulnerabilities across 100+ applications (reduced active cyber risk by 90% in 6 months) under PCI-DSS, LGPD, and ISO 27001 standards.
+- **Data Modernization:** Orchestrated end-to-end migration of legacy ETL pipelines to Databricks and Apache Spark, ensuring 100% transactional accuracy for R$ 500M+/month in B2B payments under BACEN and FEBRABAN regulations.
+- **SDLC & Engineering Acceleration:** Rolled out GitHub Copilot, Cursor, and GenAI workspaces across 5 international squads (35+ engineers), accelerating delivery speed by up to 45%.
+- **High-Volume Reliability:** Maintained 99.9% uptime SLA and monitored 80M+ daily transactions in 24/7 ITIL Level 3 operational environments.
+- **Cost & Vendor Management:** Executed technical insourcing and fixed-scope partner governance, eliminating vendor lock-in and cutting third-party developer onboarding from 6 to 3 months using RAG knowledge bases.
+
+## Core Technical & Leadership Stack
+- **Architecture & Cloud:** AWS, Azure, Cloud Native Microservices, Kafka, Backend-for-Frontend (BFF), Docker, Kubernetes.
+- **Data Engineering & Analytics:** Databricks, Apache Spark, Data Lakehouse (Medallion Architecture), Amplitude, Datadog, Dynatrace, Splunk.
+- **Security & Compliance:** Veracode, Rapid7, Wiz, PCI-DSS, LGPD, BACEN, FEBRABAN.
+- **Methodologies & Frameworks:** PSM III (Professional Scrum Master III), SAFe PI Planning, OKRs, Lean Six Sigma Yellow Belt, DORA metrics.
+- **Languages & Frameworks:** Java, Spring Boot, .NET, Angular, Python, SQL, REST APIs.
+
+## Verified Enterprise History
+- **Serasa Experian / Flexpag:**
+  - *Tech Product Owner (Aug 2026 – Present):* Technical discovery, essentialist usability, and B2B payment journeys using Databricks, Amplitude, Datadog, and MCP agentic workflows.
+  - *IT Coordinator & Delivery Lead (Nov 2024 – Aug 2026):* Databricks migration, DevSecOps governance, and regulatory compliance across payment streams.
+  - *Agile Delivery Manager (2021 – 2024):* SAFe governance across 5 international squads, GenAI rollout, enterprise billing platforms.
+  - *Full Stack Engineer / IT Specialist (2013 – 2021):* Mainframe modernization, microservices, 24/7 ITIL Level 3 operations.
+- **Amdocs:** Software engineering and support for telecom CRM and billing platforms.
+- **XBot Robotics (EdTech):** Product Owner for educational robotics and gamified software (R$ 4M in sales).
+
+## Clear Guardrails: Professional Experience vs. Personal Curiosities
+To provide accurate information without hallucination:
+- **Corporate Experience (Production):** Enterprise B2B payments, cloud data migrations, DevSecOps remediation, regulatory compliance (fintech/utilities), agile program scaling.
+- **Personal Curiosities & Experiments:** Healthcare/dentistry workflows, automated administrative routines via n8n, financial market trading algorithms. *These are personal technical explorations and should not be cited as core enterprise delivery engagements.*
+
+## Direct Links & Resources
+- **Live Portfolio:** https://wesleyzilva.github.io/portfolio/
+- **LinkedIn Profile:** https://www.linkedin.com/in/wesleyzilva
+- **GitHub Monorepo:** https://github.com/wesleyzilva/AppliedAIEngineer
+- **Direct Contact:** wesley.zilva@gmail.com
+- **Work Model:** Open to remote nearshore, offshore, and global contracts (compatible with UTC-3 / US & Europe overlap).

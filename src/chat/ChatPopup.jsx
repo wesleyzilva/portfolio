@@ -1,18 +1,28 @@
+// src/chat/ChatPopup.jsx
 import React from 'react';
 import { AGENT_NAME, askAgent } from './agent';
-import { suggestedQuestions } from './knowledge';
+import { getShuffledSuggestions } from './knowledge';
 
-const WELCOME = {
+// Detecta se o navegador está configurado para português (ex: Brasil)
+const isUserInBrazilOrPt = () => {
+  if (typeof navigator === 'undefined') return false;
+  const lang = navigator.language || navigator.userLanguage || '';
+  return lang.toLowerCase().startsWith('pt');
+};
+
+const getWelcomeMessage = (isPt) => ({
   id: 'welcome',
   role: 'agent',
-  text: `Hi, I'm ${AGENT_NAME}. Ask me anything about Wesley's experience, projects, career milestones, stakeholder management, agentic and AI work, education, scheduling an interview, or what he is curious about, in English.`,
+  text: isPt
+    ? `Olá! Eu sou o ${AGENT_NAME}. Pergunte-me qualquer coisa sobre a experiência do Wesley, projetos, marcos de carreira, gestão de stakeholders, trabalho com IA/Agentic, educação, agendamento de entrevistas ou curiosidades.`
+    : `Hi, I'm ${AGENT_NAME}. Ask me anything about Wesley's experience, projects, career milestones, stakeholder management, agentic and AI work, education, scheduling an interview, or what he is curious about, in English or Portuguese.`,
   bullets: [],
   sources: [],
-};
+});
 
 const MOBILE_QUERY = '(max-width: 720px)';
 
-function AgentMessage({ message, onOpenSource, onAsk, onDownload, canAsk }) {
+function AgentMessage({ message, onOpenSource, onAsk, onDownload, canAsk, isPt }) {
   const hasMatch = typeof message.matchPercent === 'number';
 
   return (
@@ -50,7 +60,7 @@ function AgentMessage({ message, onOpenSource, onAsk, onDownload, canAsk }) {
       ) : null}
       {message.suggestions?.length > 0 ? (
         <div className="chat-suggestions chat-suggestions-inline" aria-label="Suggested questions">
-          <span className="chat-suggestions-label">You might also ask</span>
+          <span className="chat-suggestions-label">{isPt ? 'Você também pode perguntar' : 'You might also ask'}</span>
           {message.suggestions.map((question) => (
             <button key={question} type="button" className="chat-chip" disabled={!canAsk} onClick={() => onAsk(question)}>
               {question}
@@ -79,17 +89,22 @@ function AgentMessage({ message, onOpenSource, onAsk, onDownload, canAsk }) {
 }
 
 function ChatPopup({ onTrack }) {
+  const isPtContext = isUserInBrazilOrPt();
   const [open, setOpen] = React.useState(true);
-  const [messages, setMessages] = React.useState([WELCOME]);
+  const [messages, setMessages] = React.useState([getWelcomeMessage(isPtContext)]);
+  const [dynamicSuggestions, setDynamicSuggestions] = React.useState([]);
   const [draft, setDraft] = React.useState('');
   const [status, setStatus] = React.useState(null);
+  const [useLocalLlm, setUseLocalLlm] = React.useState(false);
   const inputRef = React.useRef(null);
   const logRef = React.useRef(null);
   const launcherRef = React.useRef(null);
   const busy = status !== null;
 
+  // Carrega sugestões dinâmicas e embaralhadas a cada refresh da página
   React.useEffect(() => {
-    onTrack?.('chat_popup_open', { trigger: 'auto' });
+    setDynamicSuggestions(getShuffledSuggestions(isPtContext).slice(0, 5));
+    onTrack?.('chat_popup_open', { trigger: 'auto', locale_pt: isPtContext });
   }, [onTrack]);
 
   React.useEffect(() => {
@@ -125,17 +140,18 @@ function ChatPopup({ onTrack }) {
 
     setMessages((current) => [...current, { id: `u-${Date.now()}`, role: 'user', text: question }]);
     setDraft('');
-    setStatus('Thinking…');
+    setStatus(isPtContext ? 'Pensando…' : 'Thinking…');
 
     try {
       const history = messages.filter((message) => message.role === 'user').map((message) => message.text);
-      const answer = await askAgent(question, { onStatus: setStatus, history });
+      const answer = await askAgent(question, { onStatus: setStatus, history, useLocalLlm });
       setMessages((current) => [...current, { id: `a-${Date.now()}`, role: 'agent', ...answer }]);
       onTrack?.('chat_question', {
         question_length: question.length,
         confidence: answer.confidence,
         match_percent: answer.matchPercent ?? -1,
         top_source: answer.sources[0]?.id ?? 'none',
+        engine_mode: useLocalLlm ? 'webgpu_llm' : 'deterministic_rag',
       });
     } catch {
       setMessages((current) => [
@@ -143,7 +159,7 @@ function ChatPopup({ onTrack }) {
         {
           id: `e-${Date.now()}`,
           role: 'agent',
-          text: 'Something went wrong while searching the CV. Please try again.',
+          text: isPtContext ? 'Ocorreu um erro ao buscar no currículo. Tente novamente.' : 'Something went wrong while searching the CV. Please try again.',
           bullets: [],
           sources: [],
         },
@@ -198,10 +214,22 @@ function ChatPopup({ onTrack }) {
           <span className="chat-avatar" aria-hidden="true">AI</span>
           <div>
             <strong>{AGENT_NAME}</strong>
-            <small>Ask about Wesley's CV · demo mode</small>
+            <small>
+              {useLocalLlm ? 'Edge WebGPU LLM + Guardrails' : isPtContext ? 'RAG Factual · Currículo do Wesley' : "Grounded RAG · Wesley's CV"}
+            </small>
           </div>
         </div>
-        <button type="button" className="chat-close" aria-label="Close chat" onClick={close}>×</button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <button
+            type="button"
+            className="chat-source"
+            title="Toggle between instant deterministic RAG and in-browser WebGPU LLM synthesis"
+            onClick={() => setUseLocalLlm((prev) => !prev)}
+          >
+            {useLocalLlm ? '⚡ WebGPU ON' : '🔒 Fast RAG'}
+          </button>
+          <button type="button" className="chat-close" aria-label="Close chat" onClick={close}>×</button>
+        </div>
       </header>
 
       <div className="chat-log" ref={logRef} role="log" aria-live="polite">
@@ -209,13 +237,14 @@ function ChatPopup({ onTrack }) {
           message.role === 'user' ? (
             <div key={message.id} className="chat-msg chat-msg-user">{message.text}</div>
           ) : (
-            <AgentMessage key={message.id} message={message} onOpenSource={openSource} onAsk={submit} onDownload={downloadCv} canAsk={!busy} />
+            <AgentMessage key={message.id} message={message} onOpenSource={openSource} onAsk={submit} onDownload={downloadCv} canAsk={!busy} isPt={isPtContext} />
           )
         ))}
 
         {showSuggestions ? (
           <div className="chat-suggestions" aria-label="Suggested questions">
-            {suggestedQuestions.slice(0, 10).map((question) => (
+            <span className="chat-suggestions-label">{isPtContext ? 'Sugestões em destaque' : 'Suggested questions'}</span>
+            {dynamicSuggestions.map((question) => (
               <button key={question} type="button" className="chat-chip" onClick={() => submit(question)}>
                 {question}
               </button>
@@ -243,14 +272,16 @@ function ChatPopup({ onTrack }) {
           type="text"
           value={draft}
           maxLength={280}
-          placeholder="e.g. Does he know AWS projects?"
+          placeholder={isPtContext ? "ex: Por que IT Coordinator ou TPM?" : "e.g. Why IT Coordinator or TPM?"}
           aria-label="Your question about Wesley"
           autoComplete="off"
           onChange={(event) => setDraft(event.target.value)}
         />
         <button type="submit" disabled={busy || draft.trim() === ''}>Ask</button>
       </form>
-      <p className="chat-footnote">Answers come from the CV content of this site. A live LLM + RAG backend is coming soon.</p>
+      <p className="chat-footnote">
+        {isPtContext ? 'Guardrails ativos: separa experiência corporativa de interesses pessoais.' : 'Strict CV guardrails active: separates enterprise experience from personal curiosities.'}
+      </p>
     </div>
   );
 }

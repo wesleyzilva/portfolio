@@ -539,3 +539,39 @@ export const allFollowUpQuestions = [...new Set([
   ...Object.values(followUpsById).flat(),
   ...Object.values(followUpsByType).flat(),
 ])];
+// Pergunta estratégica sobre a versatilidade de papéis
+export const strategicRoleQuestionEN = "Why IT Coordinator or TPM or Agentic or Product Owner?";
+export const strategicRoleQuestionPT = "Por que IT Coordinator, TPM, Agentic ou Product Owner?";
+
+// Adicione este bloco aos chunks de TPM em tpmChunks.js ou knowledge.js
+const roleRationaleChunk = {
+  id: 'tpm-role-rationale',
+  type: 'profile',
+  title: 'Why IT Coordinator, TPM, Agentic or Product Owner?',
+  section: 'about',
+  lead: 'Wesley blends technical depth, agile delivery management and product ownership, making him equally effective as an IT Coordinator, TPM, Agentic Lead, or Tech Product Owner depending on organizational scale.',
+  bullets: [
+    'As an IT Coordinator / Delivery Lead: owns end-to-end execution, vendor governance, budget accountability and 24/7 ITIL operations (e.g., eliminating 1,200+ vulnerabilities and managing R$ 500M+/month payment flows).',
+    'As a Technical Program Manager (TPM): coordinates cross-functional, distributed international squads (LATAM, US, UK, South Africa) aligning C-level OKRs with execution flow metrics.',
+    'As an Agentic / Tech Product Owner: drives technical discovery, essentialist usability, and integrates AI agents (MCP, Claude, Cursor) to cut cycle times by 35%-45%.',
+    'Core unifying trait: he is technical enough to understand architecture (Databricks, Spark, Microservices) and senior enough to own business outcomes.',
+  ],
+  keywords: 'why it coordinator tpm agentic product owner role title fit position executive leadership synergy',
+};
+
+// Função para variar as sugestões dinamicamente a cada refresh
+export const getShuffledSuggestions = (isPt = false) => {
+  const baseQuestions = [
+    isPt ? strategicRoleQuestionPT : strategicRoleQuestionEN,
+    isPt ? "Quais são os marcos principais da carreira dele?" : tpmQuestions.milestones,
+    isPt ? "Como ele gerencia stakeholders?" : tpmQuestions.stakeholders,
+    isPt ? "Quais princípios de liderança ele aplica?" : storyQuestions.principles,
+    isPt ? "O que ele sabe sobre entrega agentic e IA?" : 'What does he know about agentic delivery?',
+    isPt ? "Como ele lida com prioridades conflitantes?" : storyQuestions.conflictingPriorities,
+    isPt ? "Como posso agendar uma entrevista?" : 'How can I schedule an interview with Wesley?',
+    isPt ? "Posso ver o currículo atualizado em formato ATS?" : 'Can I get an updated CV in ATS format?',
+  ];
+  
+  // Embaralha de forma aleatória a cada refresh da página
+  return baseQuestions.sort(() => Math.random() - 0.5);
+};
