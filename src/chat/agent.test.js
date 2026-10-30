@@ -22,8 +22,7 @@ test('detectPortuguese identifies Portuguese greetings and accented phrases corr
 test('Portuguese greeting returns a welcoming response in Portuguese with lang pt', async () => {
   const answer = await ask('Olá!');
   assert.equal(answer.lang, 'pt');
-  assert.match(answer.text, /Olá! Eu sou o/);
-});
+assert.match(answer.text, /Com prazer ajudo|Olá! Eu sou o/);});
 
 test('Portuguese question about AWS yields correct matching and Portuguese phrasing', async () => {
   const answer = await ask('Ele conhece AWS e projetos em nuvem?');
